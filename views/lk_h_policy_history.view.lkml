@@ -1,18 +1,22 @@
 view: lk_h_policy_history {
+
+
   derived_table: {
     sql: SELECT
           *
           from
          lk_h_policy_history
-        where schedule_cover_start_dttm = annual_cover_start_dttm and status = 'P'
-        and to_date(sysdate) > to_date(annual_cover_start_dttm)
+        where schedule_cover_start_dttm = annual_cover_start_dttm and status = 'P' and cfi_ind = 0
+
      ;;
   }
+
 
   dimension_group: policy_written_date {
     label: "Policy Written"
     type: time
     timeframes: [
+      raw,
       date,
       week,
       month,
@@ -27,6 +31,7 @@ view: lk_h_policy_history {
     label: "Policy Start"
     type: time
     timeframes: [
+      raw,
       date,
       week,
       month,
