@@ -202,9 +202,10 @@ view: lk_h_tcs_claims {
     timeframes: [
       raw,
       time,
-      date,
+      date
     ]
-    sql: max(${TABLE}.load_dttm) ;;
+    sql: ${TABLE}.load_dttm ;;
+    group_label: "Dates"
   }
 
   dimension_group: notificationdate {
