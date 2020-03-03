@@ -1,10 +1,25 @@
 view: lk_h_tcs_claims {
   sql_table_name: actian.lk_h_tcs_claims ;;
 
+  dimension: chargeable_incident_flag {
+    label: "Chargeable Incident Flag"
+    type: yesno
+    sql: ${TABLE}.tcs_claims = 1 ;;
+    group_label: "Claim Flags"
+  }
+
+  dimension: settled_claim_flag {
+    label: "Settled Claim Flag"
+    type: yesno
+    sql:${TABLE}.FCA_ACCEPTED_PAID + ${TABLE}.FCA_REJECTED + ${TABLE}.FCA_OTHER_SETTLED > 0 ;;
+    group_label: "Claim Flags"
+  }
+
   dimension: lcm_label {
     label: "Last Calendar Month"
     type: string
     sql: CASE WHEN (lk_h_tcs_claims.load_dttm  IS NOT NULL) THEN 'Last Calendar Month' else ' ' end ;;
+    hidden: yes
   }
 
   dimension: claim_peril {
@@ -189,7 +204,7 @@ view: lk_h_tcs_claims {
       time,
       date,
     ]
-    sql: ${TABLE}.load_dttm ;;
+    sql: max(${TABLE}.load_dttm) ;;
   }
 
   dimension_group: notificationdate {
@@ -801,6 +816,24 @@ view: lk_h_tcs_claims {
     group_label: "Reserves"
   }
 
+    ### Excess Amounts ###
+
+  measure: bds_excess{
+    label: "BDS Excess"
+    type: sum
+    sql: ${TABLE}.excess_bds ;;
+    value_format_name: "gbp_0"
+    group_label: "Excess Amounts"
+  }
+
+  measure: cts_excess{
+    label: "CTS Excess"
+    type: sum
+    sql: ${TABLE}.excess_cts ;;
+    value_format_name: "gbp_0"
+    group_label: "Excess Amounts"
+  }
+
   ### Recovery Amounts ###
 
   measure: recovery_paymentamount_bds{
@@ -882,7 +915,7 @@ view: lk_h_tcs_claims {
   measure: settled_claims {
     label: "Settled Claims"
     type: sum
-    sql: ${TABLE}.FCA_ACCEPTED_PAID + ${TABLE}.FCA_REJECTED+FCA_OTHER_SETTLED ;;
+    sql: ${TABLE}.FCA_ACCEPTED_PAID + ${TABLE}.FCA_REJECTED + ${TABLE}.FCA_OTHER_SETTLED ;;
   }
 
   measure: avg_paid_amount {
@@ -905,7 +938,7 @@ view: lk_h_tcs_claims {
     type: sum
     sql: case when (((CAST(lk_h_tcs_claims.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) )))))
       THEN ${TABLE}.FCA_REGISTERED_CLAIMS + ${TABLE}.FCA_REGISTERED_ENQUIRIES else 0 end ;;
-    hidden: no
+    hidden: yes
   }
 
   measure: registered_claims_12m {
@@ -921,7 +954,7 @@ view: lk_h_tcs_claims {
     type: sum
     sql: case when (((CAST(lk_h_tcs_claims.registeredmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.registeredmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) )))))
       THEN ${TABLE}.FCA_REGISTERED_CLAIMS else 0 end ;;
-    hidden: no
+    hidden: yes
   }
 
   measure: rejected_claims_12m {
@@ -937,7 +970,7 @@ view: lk_h_tcs_claims {
     type: sum
     sql: case when (((CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) )))))
       THEN ${TABLE}.FCA_REJECTED else 0 end ;;
-    hidden: no
+    hidden: yes
   }
 
   measure: claims_handing_fee {
@@ -959,6 +992,7 @@ view: lk_h_tcs_claims {
          else 0 end;;
     value_format_name: gbp_0
     group_label: "Incurred"
+    hidden: yes
   }
 
   measure: chargeable_incidents_lcm {
@@ -966,7 +1000,7 @@ view: lk_h_tcs_claims {
     type: sum
     sql: case when (((CAST(lk_h_tcs_claims.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) )))))
       THEN ${TABLE}.tcs_claims else 0 end ;;
-    hidden: no
+    hidden: yes
   }
 
   measure: settled_claims_lcm {
@@ -974,7 +1008,7 @@ view: lk_h_tcs_claims {
     type: sum
     sql: case when (((CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) )))))
       THEN ${TABLE}.FCA_ACCEPTED_PAID + ${TABLE}.FCA_REJECTED + ${TABLE}.FCA_OTHER_SETTLED else 0 end ;;
-    hidden: no
+    hidden: yes
   }
 
   measure: accepted_paid_claims_lcm {
@@ -982,7 +1016,7 @@ view: lk_h_tcs_claims {
     type: sum
     sql: case when (((CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) )))))
       THEN ${TABLE}.FCA_ACCEPTED_PAID else 0 end ;;
-    hidden: no
+    hidden: yes
   }
 
   measure: accepted_paid_amount_lcm {
@@ -991,7 +1025,7 @@ view: lk_h_tcs_claims {
     sql: case when (((CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) )))))
       THEN ${TABLE}.fca_accepted_paid_amount else 0 end ;;
     value_format_name: gbp_0
-    hidden: no
+    hidden: yes
   }
 
 
