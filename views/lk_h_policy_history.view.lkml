@@ -2,11 +2,14 @@ view: lk_h_policy_history {
 
 
   derived_table: {
-    sql: SELECT
-          *
-          from
-         lk_h_policy_history
-        where schedule_cover_start_dttm = annual_cover_start_dttm and status = 'P' and cfi_ind = 0
+    sql: SELECT *
+FROM lk_h_policy_history_scored
+  CROSS JOIN (SELECT 1.0 *SUM(aauicl_sum_insured_tot) / SUM(broker_sum_insured_tot) AS avg_sum_insured_share
+              FROM lk_h_policy_history_scored) competitiveness;
+
+WHERE schedule_cover_start_dttm = annual_cover_start_dttm
+AND   status = 'P'
+AND   cfi_ind = 0
 
      ;;
   }
@@ -186,6 +189,12 @@ view: lk_h_policy_history {
     label: "Average Premium CTS"
     type: number
     sql:  1.0*${net_premium_cts}/nullif(${broker_covers_cts},0) ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_avg_sum_insured_share {
+    label: "Average Sum Insured Share"
+    sql:  ${TABLE}.aauicl_avg_sum_insured_share ;;
     value_format_name: decimal_0
   }
 

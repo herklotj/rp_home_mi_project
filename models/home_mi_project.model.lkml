@@ -17,15 +17,7 @@ datagroup: home_mi_project_default_datagroup {
 
 persist_with: home_mi_project_default_datagroup
 
-explore: lk_h_policy_history {
-  join: lk_h_policy_history_aggregates {
-    from: lk_h_policy_history_aggregates
-    type: left_outer
-    relationship: many_to_one
-    sql_on: 1 = 1 ;;
-  }
-}
-
+explore: lk_h_policy_history {}
 explore: lk_h_adjustment_summary {}
 explore: lk_h_cancel_history {}
 # explore: lk_h_cancel_summary {}
@@ -35,4 +27,4 @@ explore: lk_h_forecast {}
 # explore: lk_h_policy_summary {}
 # explore: lk_h_retention {}
 # explore: lk_h_retention_summary {}
-# explore: lk_h_tcs_claims {}
+explore: lk_h_tcs_claims {}
