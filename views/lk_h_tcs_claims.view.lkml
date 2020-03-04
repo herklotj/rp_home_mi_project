@@ -731,6 +731,14 @@ view: lk_h_tcs_claims {
 
   }
 
+  measure: payment_amount_tot {
+    label: "Payment Amount TOT"
+    type: sum
+    sql: ${TABLE}.paymentamount_bds + ${TABLE}.paymentamount_cts + ${TABLE}.paymentamount_pps ;;
+    value_format_name: "gbp_0"
+    group_label: "Payment Amounts"
+  }
+
   ### FCA Metrics ###
 
 
@@ -817,10 +825,18 @@ view: lk_h_tcs_claims {
     group_label: "Reserves"
   }
 
+  measure: reserve_amount_tot {
+    label: "Reserve Amount TOT"
+    type: sum
+    sql: ${TABLE}.reserveamount_bds + ${TABLE}.reserveamount_cts + ${TABLE}.reserveamount_pps ;;
+    value_format_name: "gbp_0"
+    group_label: "Reserves"
+  }
+
     ### Excess Amounts ###
 
   measure: bds_excess{
-    label: "BDS Excess"
+    label: "Excess BDS"
     type: sum
     sql: ${TABLE}.excess_bds ;;
     value_format_name: "gbp_0"
@@ -828,9 +844,17 @@ view: lk_h_tcs_claims {
   }
 
   measure: cts_excess{
-    label: "CTS Excess"
+    label: "Excess CTS"
     type: sum
     sql: ${TABLE}.excess_cts ;;
+    value_format_name: "gbp_0"
+    group_label: "Excess Amounts"
+  }
+
+  measure: tot_excess{
+    label: "Excess TOT"
+    type: sum
+    sql: ${TABLE}.excess_bds + ${TABLE}.excess_cts ;;
     value_format_name: "gbp_0"
     group_label: "Excess Amounts"
   }
@@ -861,10 +885,18 @@ view: lk_h_tcs_claims {
     group_label: "Recoveries"
   }
 
+  measure: recovery_paymentamount_tot {
+    label: "Recovery Payment Amount TOT"
+    type: sum
+    sql: ${TABLE}.recoverypaymentamount_bds + ${TABLE}.recoverypaymentamount_cts + ${TABLE}.recoverypaymentamount_pps  ;;
+    value_format_name: "gbp_0"
+    group_label: "Recoveries"
+  }
+
   measure: recovery_reserve_bds{
     label: "Recovery Reserve BDS"
     type: sum
-    sql: ${TABLE}.recoveryreserve_bds ;;
+    sql: ${TABLE}.recoveryreserveamount_bds ;;
     value_format_name: "gbp_0"
     group_label: "Recoveries"
   }
@@ -872,7 +904,7 @@ view: lk_h_tcs_claims {
   measure: recovery_reserve_cts{
     label: "Recovery Reserve CTS"
     type: sum
-    sql: ${TABLE}.recoveryreserve_cts ;;
+    sql: ${TABLE}.recoveryreserveamount_cts ;;
     value_format_name: "gbp_0"
     group_label: "Recoveries"
   }
@@ -880,7 +912,15 @@ view: lk_h_tcs_claims {
   measure: recovery_reserve_pps{
     label: "Recovery Reserve PPS"
     type: sum
-    sql: ${TABLE}.recoveryreserve_pps ;;
+    sql: ${TABLE}.recoveryreserveamount_pps ;;
+    value_format_name: "gbp_0"
+    group_label: "Recoveries"
+  }
+
+  measure: recovery_reserve_tot {
+    label: "Recovery Reserve TOT"
+    type: sum
+    sql: ${TABLE}.recoveryreserveamount_bds + ${TABLE}.recoveryreserveamount_cts + ${TABLE}.recoveryreserveamount_pps  ;;
     value_format_name: "gbp_0"
     group_label: "Recoveries"
   }
@@ -1034,7 +1074,7 @@ view: lk_h_tcs_claims {
   measure: paid_to_incurred_ratio {
     label: "Paid to Incurred Ratio"
     type: number
-    sql: ${lk_h_tcs_claims.fca_accepted_paid_amount}/${lk_h_tcs_claims.total_incurred} ;;
+    sql: (${lk_h_tcs_claims.payment_amount_tot} + ${lk_h_tcs_claims.tot_excess} + ${lk_h_tcs_claims.recovery_paymentamount_tot})/nullif(${lk_h_tcs_claims.total_incurred},0) ;;
     value_format_name: percent_0
   }
 
