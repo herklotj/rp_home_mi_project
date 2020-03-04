@@ -1029,6 +1029,15 @@ view: lk_h_tcs_claims {
     hidden: yes
   }
 
+  ### for Martin/Gary ###
+
+  measure: paid_to_incurred_ratio {
+    label: "Paid to Incurred Ratio"
+    type: number
+    sql: ${lk_h_tcs_claims.fca_accepted_paid_amount}/${lk_h_tcs_claims.total_incurred} ;;
+    value_format_name: percent_0
+  }
+
 
 
 
