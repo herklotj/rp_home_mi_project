@@ -18,7 +18,20 @@ view: lk_h_tcs_claims {
   dimension: lcm_label {
     label: "Last Calendar Month"
     type: string
-    sql: CASE WHEN (lk_h_tcs_claims.load_dttm  IS NOT NULL) THEN 'Last Calendar Month' else ' ' end ;;
+    sql: CASE WHEN (lk_h_tcs_claims.load_dttm  IS NOT NULL) THEN 'Last Calendar Month' else '' end ;;
+    hidden: yes
+  }
+
+  measure: load_dttm_count {
+    label: "DATA_LOOP_COUNT"
+    type: count_distinct
+    sql: ${TABLE}.load_dttm ;;
+    hidden: yes
+  }
+
+  measure: data_load_status {
+    label: "Data Load Status"
+    sql: CASE WHEN (${lk_h_tcs_claims.load_dttm_count} < 20) then 'DATA LOAD IN PROGRESS' else max(${lk_h_tcs_claims.load_dttm_time}) end ;;
     hidden: yes
   }
 
