@@ -1092,6 +1092,21 @@ view: lk_h_tcs_claims {
   }
 
 
+  dimension_group: fnol_to_closed_elapsed {
+    label: "FNOL to Closed Elapsed Time"
+    type: duration
+    sql_start: ${lk_h_tcs_claims.fnolcompleteddate_date} ;;  # often this is a single database column
+    sql_end: ${lk_h_tcs_claims.closeddate_date} ;;  # often this is a single database column
+    intervals: [day, month] # valid intervals described below
+    hidden: yes
+  }
+
+  measure: settled_gt_10000 {
+    label: "Settled Claims > £10,000"
+    type: sum
+    sql: case when lk_h_tcs_claims.fca_accepted_paid_amount > 10000 then (${TABLE}.FCA_ACCEPTED_PAID + ${TABLE}.FCA_REJECTED + ${TABLE}.FCA_OTHER_SETTLED) else 0 end ;;
+  }
+
 
 
 
