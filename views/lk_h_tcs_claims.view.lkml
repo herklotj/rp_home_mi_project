@@ -1082,6 +1082,44 @@ view: lk_h_tcs_claims {
     hidden: yes
   }
 
+  measure: bds_days_claim_open_LCM {
+    type: sum
+    sql: case when (((CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) ))))
+         AND (${TABLE}.FCA_ACCEPTED_PAID = 1) AND (${TABLE}.incurred_bds > 0))
+      THEN to_date(${TABLE}.closeddate) - to_date(${TABLE}.notificationdate) else null end ;;
+    value_format_name: decimal_0
+    hidden: yes
+  }
+
+  measure: fca_accepted_paid_bds_LCM {
+    type: sum
+    sql: case when (((CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) ))))
+         AND (${TABLE}.FCA_ACCEPTED_PAID = 1) AND (${TABLE}.incurred_bds > 0))
+      THEN ${TABLE}.FCA_ACCEPTED_PAID else null end ;;
+    value_format_name: decimal_0
+    hidden: yes
+  }
+
+  measure: cts_days_claim_open_LCM {
+    type: sum
+    sql: case when (((CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) ))))
+         AND (${TABLE}.FCA_ACCEPTED_PAID = 1) AND (${TABLE}.incurred_cts > 0))
+      THEN to_date(${TABLE}.closeddate) - to_date(${TABLE}.notificationdate) else null end ;;
+    value_format_name: decimal_0
+    hidden: yes
+  }
+
+  measure: fca_accepted_paid_cts_LCM {
+    type: sum
+    sql: case when (((CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.settledmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) ))))
+         AND (${TABLE}.FCA_ACCEPTED_PAID = 1) AND (${TABLE}.incurred_cts > 0))
+      THEN ${TABLE}.FCA_ACCEPTED_PAID else null end ;;
+    value_format_name: decimal_0
+    hidden: yes
+  }
+
+
+
   ### for Martin/Gary ###
 
   measure: paid_to_incurred_ratio {
@@ -1091,24 +1129,116 @@ view: lk_h_tcs_claims {
     value_format_name: percent_0
   }
 
-
-  dimension_group: fnol_to_closed_elapsed {
-    label: "FNOL to Closed Elapsed Time"
-    type: duration
-    sql_start: ${lk_h_tcs_claims.fnolcompleteddate_date} ;;  # often this is a single database column
-    sql_end: ${lk_h_tcs_claims.closeddate_date} ;;  # often this is a single database column
-    intervals: [day, month] # valid intervals described below
-    hidden: yes
-  }
-
   measure: settled_gt_10000 {
     label: "Settled Claims > £10,000"
     type: sum
     sql: case when lk_h_tcs_claims.fca_accepted_paid_amount > 10000 then (${TABLE}.FCA_ACCEPTED_PAID + ${TABLE}.FCA_REJECTED + ${TABLE}.FCA_OTHER_SETTLED) else 0 end ;;
   }
 
+   ### Claim Lifecycles ###
 
+  measure: days_claim_open {
+    type: sum
+    sql: case when ${TABLE}.FCA_ACCEPTED_PAID = 1 or ${TABLE}.FCA_REJECTED = 1 or ${TABLE}.FCA_OTHER_SETTLED = 1 then
+        to_date(${TABLE}.closeddate) - to_date(${TABLE}.notificationdate) else null end;;
+    hidden: yes
+  }
 
+  measure: claim_lifecycle {
+    label: "Claim Lifeycle"
+    type: number
+    sql: 1.0*${days_claim_open}/nullif(${settled_claims},0) ;;
+    value_format_name: decimal_0
+    group_label: "Claim Lifecycles"
+  }
 
+  measure: days_claim_open_nonnil {
+    type: sum
+    sql: case when ${TABLE}.FCA_ACCEPTED_PAID = 1 then
+      to_date(${TABLE}.closeddate) - to_date(${TABLE}.notificationdate) else null end;;
+    hidden: yes
+  }
+
+  measure: claim_lifecycle_nn {
+    label: "Claim Lifecycle (Non-nil)"
+    type: number
+    sql: 1.0*${days_claim_open_nonnil}/nullif(${fca_accepted_paid_claims},0) ;;
+    value_format_name: decimal_0
+    group_label: "Claim Lifecycles"
+  }
+
+  measure: bds_days_claim_open {
+    type: sum
+    sql: case when ${TABLE}.FCA_ACCEPTED_PAID = 1 and ${TABLE}.incurred_bds > 0 then
+      to_date(${TABLE}.closeddate) - to_date(${TABLE}.notificationdate) else null end;;
+    hidden: yes
+  }
+
+  measure: fca_accepted_paid_bds {
+    type: sum
+    sql: case when ${TABLE}.incurred_bds > 0 then
+      ${TABLE}.FCA_ACCEPTED_PAID else 0 end;;
+    hidden: yes
+  }
+
+  measure: bds_claim_lifecycle_nn {
+    label: "Claim Lifecycle - BDS (Non-nil)"
+    type: number
+    sql: 1.0*${bds_days_claim_open}/nullif(${fca_accepted_paid_bds},0) ;;
+    value_format_name: decimal_0
+    group_label: "Claim Lifecycles"
+  }
+
+  measure: cts_days_claim_open {
+    type: sum
+    sql: case when ${TABLE}.FCA_ACCEPTED_PAID = 1 and ${TABLE}.incurred_cts > 0 then
+      to_date(${TABLE}.closeddate) - to_date(${TABLE}.notificationdate) else null end;;
+    hidden: yes
+  }
+
+  measure: fca_accepted_paid_cts {
+    type: sum
+    sql: case when ${TABLE}.incurred_cts > 0 then
+      ${TABLE}.FCA_ACCEPTED_PAID else 0 end;;
+    hidden: yes
+  }
+
+  measure: cts_claim_lifecycle_nn {
+    label: "Claim Lifecycle - CTS (Non-nil)"
+    type: number
+    sql: 1.0*${cts_days_claim_open}/nullif(${fca_accepted_paid_cts},0) ;;
+    value_format_name: decimal_0
+    group_label: "Claim Lifecycles"
+  }
+
+  measure: days_claim_reopen {
+    type: sum
+    sql: case when ${TABLE}.FCA_ACCEPTED_PAID = 1 or ${TABLE}.FCA_REJECTED = 1 or ${TABLE}.FCA_OTHER_SETTLED = 1 then
+      to_date(${TABLE}.recloseddate) - to_date(${TABLE}.reopeneddate) else null end;;
+    hidden: yes
+  }
+
+  measure: reopen_claim_lifecycle {
+    label: "Re-open Lifeycle"
+    type: number
+    sql: 1.0*${days_claim_reopen}/nullif(${settled_claims},0) ;;
+    value_format_name: decimal_0
+    group_label: "Claim Lifecycles"
+  }
+
+  measure: true_days_claim_open {
+    type: sum
+    sql: case when ${TABLE}.FCA_ACCEPTED_PAID = 1 or ${TABLE}.FCA_REJECTED = 1 or ${TABLE}.FCA_OTHER_SETTLED = 1 then
+      ((to_date(${TABLE}.closeddate) - to_date(${TABLE}.notificationdate))) + (COALESCE((to_date(${TABLE}.recloseddate) - to_date(${TABLE}.reopeneddate)),0)) else null end;;
+    hidden: yes
+  }
+
+  measure: true_claim_lifecycle {
+    label: "True Claim Lifeycle"
+    type: number
+    sql: 1.0*${true_days_claim_open}/nullif(${settled_claims},0) ;;
+    value_format_name: decimal_0
+    group_label: "Claim Lifecycles"
+  }
 
 }
