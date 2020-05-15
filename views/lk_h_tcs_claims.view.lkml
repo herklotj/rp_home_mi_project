@@ -385,6 +385,22 @@ view: lk_h_tcs_claims {
     sql: ${TABLE}.uw_policy_no ;;
   }
 
+  dimension: claim_value {
+    description: "Claim Value"
+    type: tier
+    style:  integer
+    tiers: [100,10000,50000]
+    value_format_name: gbp_0
+    sql: ${TABLE}.totalincurred ;;
+  }
+
+  # dimension: lifecycle {
+  #  label: "Lifecycle Dim"
+  #  type: number
+  #  sql: case when ${TABLE}.FCA_ACCEPTED_PAID = 1 or ${TABLE}.FCA_REJECTED = 1 or ${TABLE}.FCA_OTHER_SETTLED = 1 then
+  #    to_date(${TABLE}.closeddate) - to_date(${TABLE}.notificationdate) else null end;;
+  #}
+
   #### Measures ###
 
   ## Claims ##
@@ -1224,6 +1240,8 @@ view: lk_h_tcs_claims {
     sql: 1.0*${days_claim_reopen}/nullif(${settled_claims},0) ;;
     value_format_name: decimal_0
     group_label: "Claim Lifecycles"
+    hidden: yes
+    ### Not useful - add exclusion for reopened claims
   }
 
   measure: true_days_claim_open {
