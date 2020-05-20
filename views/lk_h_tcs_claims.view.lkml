@@ -228,6 +228,7 @@ view: lk_h_tcs_claims {
       raw,
       time,
       date,
+      week,
       month,
       quarter,
       year
@@ -262,7 +263,7 @@ view: lk_h_tcs_claims {
   }
 
   dimension: notificationweek {
-    label: "Notification Week"
+    label: "FNOL Week"
     type: string
     sql: ${TABLE}.notificationweek ;;
     group_label: "Dates"
