@@ -1714,11 +1714,8 @@ view: lk_h_expoclm_mth {
   }
 
 
-  dimension_group: exposure_yr {
-    type: time
-    timeframes: [
-      year
-    ]
+  dimension: exposure_yr {
+    type: number
     label: "Exposure Year"
     sql: ${TABLE}.exposure_yr ;;
   }
