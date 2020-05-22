@@ -1717,7 +1717,8 @@ view: lk_h_expoclm_mth {
   dimension: exposure_yr {
     type: number
     label: "Exposure Year"
-    sql: ${TABLE}.exposure_yr ;;
+    sql: ${TABLE}.exposure_yr;;
+    value_format: "0"
   }
 
   dimension: flex_discount_amount {

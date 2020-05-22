@@ -1,19 +1,13 @@
 view: lk_h_policy_history {
-
-
   derived_table: {
-    sql: SELECT *
-FROM lk_h_policy_history_scored
-  CROSS JOIN (SELECT 1.0 *SUM(aauicl_sum_insured_tot) / SUM(broker_sum_insured_tot) AS avg_sum_insured_share
-              FROM lk_h_policy_history_scored) competitiveness;
+    sql:
 
-WHERE schedule_cover_start_dttm = annual_cover_start_dttm
-AND   status = 'P'
-AND   cfi_ind = 0
-
-     ;;
+    SELECT *
+    FROM actian.lk_h_policy_history_scored
+    WHERE SCHEDULE_COVER_START_DTTM = ANNUAL_COVER_START_DTTM
+    AND   CFI_IND = 0
+    ;;
   }
-
 
   dimension_group: policy_written_date {
     label: "Policy Written"
@@ -93,6 +87,47 @@ AND   cfi_ind = 0
     sql: ${TABLE}.home_cover_level ;;
   }
 
+  dimension: aauicl_modelled_loss_ratio_inf {
+    description: "Modelled Net Loss Ratio INF"
+    type: tier
+    style:  interval
+    tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
+    value_format_name: percent_0
+    sql: (${TABLE}.buildings_aauicl_rpm_inf + ${TABLE}.contents_aauicl_rpm_inf)/
+                (nullif((${TABLE}.net_written_premium_bds + ${TABLE}.net_written_premium_cts),0));;
+  }
+
+  dimension: aauicl_modelled_loss_ratio_wlc {
+    description: "Modelled Net Loss Ratio WLC"
+    type: tier
+    style:  interval
+    tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
+    value_format_name: percent_0
+    sql: (${TABLE}.buildings_aauicl_rpm_wlc + ${TABLE}.contents_aauicl_rpm_wlc)/
+                (nullif((${TABLE}.net_written_premium_bds + ${TABLE}.net_written_premium_cts),0));;
+  }
+
+  dimension: aauicl_modelled_gross_loss_ratio_inf {
+    description: "Modelled Gross Loss Ratio INF"
+    type: tier
+    style:  interval
+    tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
+    value_format_name: percent_0
+    sql: (${TABLE}.buildings_aauicl_rpm_inf + ${TABLE}.contents_aauicl_rpm_inf)/
+                (nullif((${TABLE}.net_written_premium_bds + ${TABLE}.net_written_premium_cts + ${TABLE}.broker_commission_aauicl),0));;
+  }
+
+  dimension: aauicl_modelled_gross_loss_ratio_wlc {
+    description: "Modelled Gross Loss Ratio WLC"
+    type: tier
+    style:  interval
+    tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
+    value_format_name: percent_0
+    sql: (${TABLE}.buildings_aauicl_rpm_wlc + ${TABLE}.contents_aauicl_rpm_wlc)/
+                (nullif((${TABLE}.net_written_premium_bds + ${TABLE}.net_written_premium_cts + ${TABLE}.broker_commission_aauicl),0));;
+  }
+
+  ### Measures
 
   measure: broker_covers_bds {
     label: "Broker Covers BDS"
@@ -178,33 +213,69 @@ AND   cfi_ind = 0
     value_format_name: decimal_0
   }
 
-  measure: avg_premium_bds {
-    label: "Average Premium BDS"
-    type: number
-    sql:  1.0*${net_premium_bds}/nullif(${broker_covers_bds},0) ;;
+  measure: broker_commission_bds {
+    label: "Commission BDS"
+    type: sum
+    sql:  ${TABLE}.broker_commission_bds ;;
     value_format_name: decimal_0
   }
 
-  measure: avg_premium_cts {
-    label: "Average Premium CTS"
-    type: number
-    sql:  1.0*${net_premium_cts}/nullif(${broker_covers_cts},0) ;;
+  measure: broker_commission_cts {
+    label: "Commission CTS"
+    type: sum
+    sql:  ${TABLE}.broker_commission_cts ;;
     value_format_name: decimal_0
   }
 
-  measure: aauicl_avg_sum_insured_share {
-    label: "Average Sum Insured Share"
-    sql:  ${TABLE}.aauicl_avg_sum_insured_share ;;
+  measure: broker_commission_tot {
+    label: "Commission TOT"
+    type: sum
+    sql:  ${TABLE}.broker_commission_bds + ${TABLE}.broker_commission_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: rpm_inc_inf_bds {
+    label: "RPM Incurred INF BDS"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_bds ;;
+    value_format_name: decimal_0
+  }
+
+  measure: rpm_inc_inf_cts {
+    label: "RPM Incurred INF CTS"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: rpm_inc_inf_tot {
+    label: "RPM Incurred INF TOT"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_bds + ${TABLE}.rpm_inc_inf_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: rpm_inc_wlc_bds {
+    label: "RPM Incurred WLC BDS"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_wlc_bds ;;
+    value_format_name: decimal_0
+  }
+
+  measure: rpm_inc_wlc_cts {
+    label: "RPM Incurred WLC CTS"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_wlc_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: rpm_inc_wlc_tot {
+    label: "RPM Incurred WLC TOT"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_wlc_bds + ${TABLE}.rpm_inc_wlc_cts ;;
     value_format_name: decimal_0
   }
 
 
 
-
-
-
-  measure: count {
-    type: count
-    drill_fields: []
-  }
 }
