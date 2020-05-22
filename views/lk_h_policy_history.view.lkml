@@ -20,7 +20,7 @@ view: lk_h_policy_history {
       quarter,
       year
     ]
-    sql: ${TABLE}.transaction_date ;;
+    sql: ${TABLE}.transaction_dttm ;;
   }
 
 
