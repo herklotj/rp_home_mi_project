@@ -87,6 +87,23 @@ view: lk_h_policy_history {
     sql: ${TABLE}.home_cover_level ;;
   }
 
+  dimension: aa_tenure {
+    label: "AA Tenure (3+)"
+    type: tier
+    tiers: [0,1,2,3]
+    style: integer
+    sql: ${TABLE}.aa_tenure ;;
+  }
+
+  dimension: uw_tenure {
+    label: "UW Tenure (3+)"
+    type: tier
+    tiers: [0,1,2,3]
+    style: integer
+    sql: ${TABLE}.uw_tenure ;;
+  }
+
+
   dimension: aauicl_modelled_loss_ratio_inf {
     description: "Modelled Net Loss Ratio INF"
     type: tier
@@ -94,7 +111,7 @@ view: lk_h_policy_history {
     tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
     value_format_name: percent_0
     sql: (${TABLE}.buildings_aauicl_rpm_inf + ${TABLE}.contents_aauicl_rpm_inf)/
-                (nullif((${TABLE}.net_written_premium_bds + ${TABLE}.net_written_premium_cts),0));;
+                (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts),0));;
   }
 
   dimension: aauicl_modelled_loss_ratio_wlc {
@@ -104,7 +121,7 @@ view: lk_h_policy_history {
     tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
     value_format_name: percent_0
     sql: (${TABLE}.buildings_aauicl_rpm_wlc + ${TABLE}.contents_aauicl_rpm_wlc)/
-                (nullif((${TABLE}.net_written_premium_bds + ${TABLE}.net_written_premium_cts),0));;
+                (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts),0));;
   }
 
   dimension: aauicl_modelled_gross_loss_ratio_inf {
@@ -114,7 +131,7 @@ view: lk_h_policy_history {
     tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
     value_format_name: percent_0
     sql: (${TABLE}.buildings_aauicl_rpm_inf + ${TABLE}.contents_aauicl_rpm_inf)/
-                (nullif((${TABLE}.net_written_premium_bds + ${TABLE}.net_written_premium_cts + ${TABLE}.broker_commission_aauicl),0));;
+                (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_aauicl),0));;
   }
 
   dimension: aauicl_modelled_gross_loss_ratio_wlc {
@@ -124,7 +141,17 @@ view: lk_h_policy_history {
     tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
     value_format_name: percent_0
     sql: (${TABLE}.buildings_aauicl_rpm_wlc + ${TABLE}.contents_aauicl_rpm_wlc)/
-                (nullif((${TABLE}.net_written_premium_bds + ${TABLE}.net_written_premium_cts + ${TABLE}.broker_commission_aauicl),0));;
+                (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_aauicl),0));;
+  }
+
+  dimension: commission_as_percent_of_gross_premium {
+    description: "Commission as % of Gross Premium"
+    type: tier
+    style:  interval
+    tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7]
+    value_format_name: percent_0
+    sql: (${TABLE}.broker_commission_aauicl)/
+      (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_aauicl),0));;
   }
 
   ### Measures
@@ -171,6 +198,13 @@ view: lk_h_policy_history {
     value_format_name: decimal_0
   }
 
+  measure: aauicl_policy_count {
+    label: "AAUICL Policy Count"
+    type: sum
+    sql: greatest(${TABLE}.aauicl_ind_bds,${TABLE}.aauicl_ind_cts) ;;
+    value_format_name: decimal_0
+  }
+
   measure: cover_share_bds {
     label: "Cover Share BDS"
     type: number
@@ -192,90 +226,149 @@ view: lk_h_policy_history {
     value_format_name: percent_1
   }
 
-  measure: net_premium_bds {
-    label: "Net Written Premium BDS"
+  measure: aauicl_net_premium_bds {
+    label: "AAUICL Net Written Premium BDS"
     type: sum
-    sql:  ${TABLE}.net_written_premium_bds ;;
+    sql:  ${TABLE}.net_premium_aauicl_bds ;;
     value_format_name: decimal_0
   }
 
-  measure: net_premium_cts {
-    label: "Net Written Premium CTS"
+  measure: aauicl_net_premium_cts {
+    label: "AAUICL Net Written Premium CTS"
     type: sum
-    sql:  ${TABLE}.net_written_premium_cts ;;
+    sql:  ${TABLE}.net_premium_aauicl_cts ;;
     value_format_name: decimal_0
   }
 
-  measure: net_premium_tot {
-    label: "Net Written Premium TOT"
+  measure: aauicl_net_premium_tot {
+    label: "AAUICL Net Written Premium TOT"
     type: sum
-    sql:  ${TABLE}.net_written_premium_bds + ${TABLE}.net_written_premium_cts ;;
+    sql:  ${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts ;;
     value_format_name: decimal_0
   }
 
-  measure: broker_commission_bds {
+  measure: aauicl_commission_bds {
     label: "Commission BDS"
     type: sum
-    sql:  ${TABLE}.broker_commission_bds ;;
+    sql:  ${TABLE}.broker_commission_aauicl_bds ;;
     value_format_name: decimal_0
   }
 
-  measure: broker_commission_cts {
+  measure: aauicl_commission_cts {
     label: "Commission CTS"
     type: sum
-    sql:  ${TABLE}.broker_commission_cts ;;
+    sql:  ${TABLE}.broker_commission_aauicl_cts ;;
     value_format_name: decimal_0
   }
 
-  measure: broker_commission_tot {
+  measure: aauicl_commission_tot {
     label: "Commission TOT"
     type: sum
-    sql:  ${TABLE}.broker_commission_bds + ${TABLE}.broker_commission_cts ;;
+    sql:  ${TABLE}.broker_commission_aauicl ;;
     value_format_name: decimal_0
   }
 
-  measure: rpm_inc_inf_bds {
-    label: "RPM Incurred INF BDS"
+  measure: aauicl_rpm_buildings {
+    label: "AAUICL RPM Buildings"
     type: sum
-    sql:  ${TABLE}.rpm_inc_inf_bds ;;
+    sql:  ${TABLE}.buildings_aauicl_rpm ;;
     value_format_name: decimal_0
   }
 
-  measure: rpm_inc_inf_cts {
-    label: "RPM Incurred INF CTS"
+  measure: aauicl_rpm_inf_buildings {
+    label: "AAUICL RPM INF Buildings"
     type: sum
-    sql:  ${TABLE}.rpm_inc_inf_cts ;;
+    sql:  ${TABLE}.buildings_aauicl_rpm_inf ;;
     value_format_name: decimal_0
   }
 
-  measure: rpm_inc_inf_tot {
-    label: "RPM Incurred INF TOT"
+  measure: aauicl_rpm_wlc_buildings {
+    label: "AAUICL RPM WLC Buildings"
     type: sum
-    sql:  ${TABLE}.rpm_inc_inf_bds + ${TABLE}.rpm_inc_inf_cts ;;
+    sql:  ${TABLE}.buildings_aauicl_rpm_wlc ;;
     value_format_name: decimal_0
   }
 
-  measure: rpm_inc_wlc_bds {
-    label: "RPM Incurred WLC BDS"
+  measure: aauicl_rpm_wlu_buildings {
+    label: "AAUICL RPM WLU Buildings"
     type: sum
-    sql:  ${TABLE}.rpm_inc_wlc_bds ;;
+    sql:  ${TABLE}.buildings_aauicl_rpm_wlu ;;
     value_format_name: decimal_0
   }
 
-  measure: rpm_inc_wlc_cts {
-    label: "RPM Incurred WLC CTS"
+  measure: aauicl_rpm_contents {
+    label: "AAUICL RPM Contents"
     type: sum
-    sql:  ${TABLE}.rpm_inc_wlc_cts ;;
+    sql:  ${TABLE}.contents_aauicl_rpm ;;
     value_format_name: decimal_0
   }
 
-  measure: rpm_inc_wlc_tot {
-    label: "RPM Incurred WLC TOT"
+  measure: aauicl_rpm_inf_contents {
+    label: "AAUICL RPM INF Contents"
     type: sum
-    sql:  ${TABLE}.rpm_inc_wlc_bds + ${TABLE}.rpm_inc_wlc_cts ;;
+    sql:  ${TABLE}.contents_aauicl_rpm_inf ;;
     value_format_name: decimal_0
   }
 
+  measure: aauicl_rpm_wlc_contents {
+    label: "AAUICL RPM WLC Contents"
+    type: sum
+    sql:  ${TABLE}.contents_aauicl_rpm_wlc ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_rpm_wlu_contents {
+    label: "AAUICL RPM WLU Contents"
+    type: sum
+    sql:  ${TABLE}.contents_aauicl_rpm_wlu ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_rpm_total {
+    label: "AAUICL RPM Total"
+    type: sum
+    sql:  ${TABLE}.buildings_aauicl_rpm + ${TABLE}.contents_aauicl_rpm ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_rpm_inf_total {
+    label: "AAUICL RPM INF Total"
+    type: sum
+    sql:  ${TABLE}.buildings_aauicl_rpm_inf + ${TABLE}.contents_aauicl_rpm_inf ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_rpm_wlc_total {
+    label: "AAUICL RPM WLC Total"
+    type: sum
+    sql:  ${TABLE}.buildings_aauicl_rpm_wlc + ${TABLE}.contents_aauicl_rpm_wlc ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_rpm_wlu_total {
+    label: "AAUICL RPM WLU Total"
+    type: sum
+    sql:  ${TABLE}.buildings_aauicl_rpm_wlu + ${TABLE}.contents_aauicl_rpm_wlu ;;
+    value_format_name: decimal_0
+  }
+
+
+
+
+  measure: net_loss_ratio_wlc {
+    label: "AAUICL Net Modelled Loss Ratio WLC"
+    type: number
+    sql:  1.0*${aauicl_rpm_wlu_total}/nullif(${aauicl_net_premium_tot},0) ;;
+    value_format_name: percent_1
+
+  }
+
+  measure: gross_loss_ratio_wlc {
+    label: "AAUICL Gross Modelled Loss Ratio WLC"
+    type: number
+    sql:  1.0*${aauicl_rpm_wlu_total}/nullif((${aauicl_net_premium_tot}+${aauicl_commission_tot}),0) ;;
+    value_format_name: percent_1
+  }
 
 
 }
