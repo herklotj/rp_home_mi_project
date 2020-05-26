@@ -352,19 +352,61 @@ view: lk_h_policy_history {
     value_format_name: decimal_0
   }
 
+  measure: net_loss_ratio {
+    label: "AAUICL Net Modelled Loss Ratio"
+    type: number
+    sql:  1.0*${aauicl_rpm_total}/nullif(${aauicl_net_premium_tot},0) ;;
+    value_format_name: percent_1
 
+  }
 
+  measure: gross_loss_ratio {
+    label: "AAUICL Gross Modelled Loss Ratio"
+    type: number
+    sql:  1.0*${aauicl_rpm_total}/nullif((${aauicl_net_premium_tot}+${aauicl_commission_tot}),0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: net_loss_ratio_inf {
+    label: "AAUICL Net Modelled Loss Ratio INF"
+    type: number
+    sql:  1.0*${aauicl_rpm_inf_total}/nullif(${aauicl_net_premium_tot},0) ;;
+    value_format_name: percent_1
+
+  }
+
+  measure: gross_loss_ratio_inf {
+    label: "AAUICL Gross Modelled Loss Ratio INF"
+    type: number
+    sql:  1.0*${aauicl_rpm_inf_total}/nullif((${aauicl_net_premium_tot}+${aauicl_commission_tot}),0) ;;
+    value_format_name: percent_1
+  }
 
   measure: net_loss_ratio_wlc {
     label: "AAUICL Net Modelled Loss Ratio WLC"
     type: number
-    sql:  1.0*${aauicl_rpm_wlu_total}/nullif(${aauicl_net_premium_tot},0) ;;
+    sql:  1.0*${aauicl_rpm_wlc_total}/nullif(${aauicl_net_premium_tot},0) ;;
     value_format_name: percent_1
 
   }
 
   measure: gross_loss_ratio_wlc {
     label: "AAUICL Gross Modelled Loss Ratio WLC"
+    type: number
+    sql:  1.0*${aauicl_rpm_wlc_total}/nullif((${aauicl_net_premium_tot}+${aauicl_commission_tot}),0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: net_loss_ratio_wlu {
+    label: "AAUICL Net Modelled Loss Ratio WLU"
+    type: number
+    sql:  1.0*${aauicl_rpm_wlu_total}/nullif(${aauicl_net_premium_tot},0) ;;
+    value_format_name: percent_1
+
+  }
+
+  measure: gross_loss_ratio_wlu {
+    label: "AAUICL Gross Modelled Loss Ratio WLU"
     type: number
     sql:  1.0*${aauicl_rpm_wlu_total}/nullif((${aauicl_net_premium_tot}+${aauicl_commission_tot}),0) ;;
     value_format_name: percent_1
