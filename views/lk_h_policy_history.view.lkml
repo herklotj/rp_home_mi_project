@@ -38,6 +38,34 @@ view: lk_h_policy_history {
     sql: ${TABLE}.policy_start_date ;;
   }
 
+  dimension_group: inception_date {
+    label: "Inception"
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.inception_dt ;;
+  }
+
+  dimension_group: _original_inception_date {
+    label: "Original Inception"
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.original_inception_dttm ;;
+  }
+
 
   dimension: cfi_ind_lapse {
     label: "CFI IND Lapse"
