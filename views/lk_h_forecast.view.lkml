@@ -1,61 +1,48 @@
 view: lk_h_forecast {
   sql_table_name: actian.lk_h_forecast ;;
 
-  dimension: aauicl_written_nb {
-    type: number
-    sql: ${TABLE}.aauicl_written_nb ;;
-  }
 
-  dimension: aauicl_written_ren {
-    type: number
-    sql: ${TABLE}.aauicl_written_ren ;;
-  }
-
-  dimension: aauicl_written_sw {
-    type: number
-    sql: ${TABLE}.aauicl_written_sw ;;
-  }
-
-  dimension: broker_written_nb {
-    type: number
-    sql: ${TABLE}.broker_written_nb ;;
-  }
-
-  dimension: broker_written_rb {
-    type: number
-    sql: ${TABLE}.broker_written_rb ;;
-  }
 
   dimension_group: inception_month {
     type: time
     timeframes: [
-      raw,
-      time,
-      date,
-      week,
       month,
       quarter,
-      year
+      year,
+      fiscal_year
     ]
-    sql: ${TABLE}.inception_month ;;
+    sql: cast(${TABLE}.inception_month as timestamp) ;;
   }
 
-  dimension_group: load_dttm {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.load_dttm ;;
+  measure: aauicl_nb_forecast {
+    label: "AAUICL NB Written Forecast"
+    type: sum
+    sql: ${TABLE}.aauicl_written_nb ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
+  measure: aauicl_ren_forecast {
+    label: "AAUICL Ren Written Forecast"
+    type: sum
+    sql: ${TABLE}.aauicl_written_ren ;;
   }
+
+  measure: aauicl_sw_forecast {
+    label: "AAUICL XQ Written Forecast"
+    type: sum
+    sql: ${TABLE}.aauicl_written_sw ;;
+  }
+
+  measure: broker_nb_forecast {
+    label: "Broker NB Written Forecast"
+    type: sum
+    sql: ${TABLE}.broker_written_nb ;;
+  }
+
+  measure: broker_rb_forecast {
+    label: "Broker RB Written Forecast"
+    type: sum
+    sql: ${TABLE}.broker_written_rb ;;
+  }
+
+
 }
