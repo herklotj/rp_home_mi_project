@@ -1700,7 +1700,7 @@ view: lk_h_expoclm_mth {
   }
 
 
-##### NEEDS WORK
+
   dimension_group: exposure_mth {
     type: time
     timeframes: [
@@ -1710,7 +1710,7 @@ view: lk_h_expoclm_mth {
       fiscal_quarter,
       fiscal_year
     ]
-    sql: ${TABLE}.exposure_mth ;;
+    sql: cast(${TABLE}.exposure_mth as timestamp) ;;
   }
 
 
