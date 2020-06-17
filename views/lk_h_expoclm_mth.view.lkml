@@ -3510,14 +3510,14 @@ view: lk_h_expoclm_mth {
     value_format_name: decimal_0
   }
 
-  measure: tcs_incident_freq {
+  measure: tcs_incident_freq_undev {
     label: "TCS Incident Frequency (undeveloped)"
     type: number
     sql:  1.0*${tcs_incidents_undev}/nullif(${evy},0) ;;
     value_format_name: percent_2
   }
 
-  measure: tcs_incident_freq_undev {
+  measure: tcs_incident_freq {
     label: "TCS Incident Frequency"
     type: number
     sql:  1.0*${incidents_tcs}/nullif(${evy},0) ;;
