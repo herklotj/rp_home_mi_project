@@ -3203,21 +3203,22 @@ view: lk_h_expoclm_mth {
     label: "AAUICL Claims Frequency"
     type: number
     sql:  1.0*${claims_total}/nullif(${exposure_combined},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: bds_claim_frequency {
     label: "AAUICL Claims Frequency - BDS"
     type: number
     sql:  1.0*${bds_claims}/nullif(${bds_exposure},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: cts_claim_frequency {
     label: "AAUICL Claims Frequency - CTS"
     type: number
     sql:  1.0*${cts_claims}/nullif(${cts_exposure},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
+
   }
 
   measure: loss_ratio {
@@ -3245,42 +3246,42 @@ view: lk_h_expoclm_mth {
     label: "Modelled Claims Frequency"
     type: number
     sql:  1.0*${rfq_inf_earned}/nullif(${exposure_combined},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: modelled_claim_frequency_inf_bds {
     label: "Modelled Claims Frequency - BDS"
     type: number
     sql:  1.0*${bds_earned_rfq_inf}/nullif(${bds_exposure},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: modelled_claim_frequency_inf_cts {
     label: "Modelled Claims Frequency - CTS"
     type: number
     sql:  1.0*${cts_earned_rfq_inf}/nullif(${cts_exposure},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: modelled_claim_frequency_wlc {
     label: "Modelled Claims Frequency (WLC)"
     type: number
     sql:  1.0*${rfq_wlc_earned}/nullif(${exposure_combined},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: modelled_claim_frequency_wlc_bds {
     label: "Modelled Claims Frequency - BDS (WLC)"
     type: number
     sql:  1.0*${bds_earned_rfq_wlc}/nullif(${bds_exposure},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: modelled_claim_frequency_wlc_cts {
     label: "Modelled Claims Frequency - CTS (WLC)"
     type: number
     sql:  1.0*${cts_earned_rfq_wlc}/nullif(${cts_exposure},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: modelled_loss_ratio_inf {
@@ -3451,42 +3452,42 @@ view: lk_h_expoclm_mth {
     label: "Claims Frequency (REN)"
     type: number
     sql:  1.0*${total_claims_ren}/nullif(${combined_exposure_ren},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: claim_frequency_ren_bds {
     label: "Claims Frequency - BDS (REN)"
     type: number
     sql:  1.0*${claims_ren_bds}/nullif(${exposure_ren_bds},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: claim_frequency_ren_cts {
     label: "Claims Frequency - CTS (REN)"
     type: number
     sql:  1.0*${claims_ren_cts}/nullif(${exposure_ren_cts},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: loss_ratio_ren {
     label: "AAUICL Loss Ratio (Ren)"
     type: number
     sql:  1.0*${total_incurred_ren}/nullif(${earned_premium_ren},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: loss_ratio_ren_bds {
     label: "AAUICL Loss Ratio - BDS (Ren)"
     type: number
     sql:  1.0*${incurred_ren_bds}/nullif(${earned_premium_ren_bds},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: loss_ratio_ren_cts {
     label: "AAUICL Loss Ratio - CTS (Ren)"
     type: number
     sql:  1.0*${incurred_ren_cts}/nullif(${earned_premium_ren_cts},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: incidents_tcs {
@@ -3497,7 +3498,7 @@ view: lk_h_expoclm_mth {
   }
 
   measure: tcs_incidents_undev {
-    label: "TCS Incidents"
+    label: "TCS Incidents (Undeveloped)"
     type: sum
     sql:  ${TABLE}.tcs_incidents_undeveloped ;;
     value_format_name: decimal_0
@@ -3514,14 +3515,14 @@ view: lk_h_expoclm_mth {
     label: "TCS Incident Frequency (undeveloped)"
     type: number
     sql:  1.0*${tcs_incidents_undev}/nullif(${evy},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: tcs_incident_freq {
     label: "TCS Incident Frequency"
     type: number
     sql:  1.0*${incidents_tcs}/nullif(${evy},0) ;;
-    value_format_name: percent_2
+    value_format_name: percent_1
   }
 
   measure: claims_fee_ratio {

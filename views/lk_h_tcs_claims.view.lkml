@@ -975,6 +975,50 @@ view: lk_h_tcs_claims {
     sql: ${TABLE}.tcs_enquiries ;;
   }
 
+  measure: tcsincidents {
+    label: "TCS Incidents"
+    type: sum
+    sql: ${TABLE}.TCS_CLAIMS + ${TABLE}.TCS_CLAIMS_NC + ${TABLE}.TCS_ENQUIRIES ;;
+  }
+
+  measure: tcsincidents_undev {
+    label: "TCS Incidents (Undeveloped)"
+    type: sum
+    sql: ${TABLE}.INMONTH_TCS_CLAIMS + ${TABLE}.INMONTH_TCS_CLAIMS_NC + ${TABLE}.INMONTH_TCS_ENQUIRIES ;;
+  }
+
+  measure: tcsincidents_weather {
+    label: "TCS Incidents - Weather"
+    type: sum
+    sql: case when ${TABLE}.CLAIM_PERIL in('FLOOD','STORM','SUBSIDENCE')
+        then ${TABLE}.TCS_CLAIMS + ${TABLE}.TCS_CLAIMS_NC + ${TABLE}.TCS_ENQUIRIES
+        else null end;;
+  }
+
+  measure: tcsincidents_weather_undev {
+    label: "TCS Incidents - Weather (Undeveloped)"
+    type: sum
+    sql: case when ${TABLE}.CLAIM_PERIL in('FLOOD','STORM','SUBSIDENCE')
+        then ${TABLE}.INMONTH_TCS_CLAIMS + ${TABLE}.INMONTH_TCS_CLAIMS_NC + ${TABLE}.INMONTH_TCS_ENQUIRIES
+        else null end;;
+  }
+
+  measure: tcsincidents_nonweather {
+    label: "TCS Incidents - Non-Weather"
+    type: sum
+    sql: case when ${TABLE}.CLAIM_PERIL in('AD','EOW','THEFT','OTHER','FIRE')
+        then ${TABLE}.TCS_CLAIMS + ${TABLE}.TCS_CLAIMS_NC + ${TABLE}.TCS_ENQUIRIES
+        else null end;;
+  }
+
+  measure: tcsincidents_nonweather_undev {
+    label: "TCS Incidents - Non-Weather (Undeveloped)"
+    type: sum
+    sql: case when ${TABLE}.CLAIM_PERIL in('AD','EOW','THEFT','OTHER','FIRE')
+        then ${TABLE}.INMONTH_TCS_CLAIMS + ${TABLE}.INMONTH_TCS_CLAIMS_NC + ${TABLE}.INMONTH_TCS_ENQUIRIES
+        else null end;;
+  }
+
   ### Insurer Insights ###
 
   measure: reported_incidents {
@@ -1259,5 +1303,7 @@ view: lk_h_tcs_claims {
     value_format_name: decimal_0
     group_label: "Claim Lifecycles"
   }
+
+
 
 }
