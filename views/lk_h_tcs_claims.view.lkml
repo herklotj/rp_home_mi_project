@@ -181,7 +181,8 @@ view: lk_h_tcs_claims {
       week,
       month,
       quarter,
-      year
+      year,
+      fiscal_year
     ]
     sql: ${TABLE}.incidentdate ;;
     group_label: "Dates"
