@@ -1019,6 +1019,20 @@ view: lk_h_tcs_claims {
         else null end;;
   }
 
+  measure: chargeable_weather {
+    label: "Chargeable Incidents - Weather"
+    type: sum
+    sql: case when ${TABLE}.CLAIM_PERIL in('FLOOD','STORM')
+        then ${TABLE}.TCS_CLAIMS else null end;;
+  }
+
+  measure: chargeable_nonweather {
+    label: "Chargeable Incidents - Non-Weather"
+    type: sum
+    sql: case when ${TABLE}.CLAIM_PERIL in('AD','EOW','THEFT','OTHER','FIRE','SUBSIDENCE')
+        then ${TABLE}.TCS_CLAIMS else null end;;
+  }
+
   ### Insurer Insights ###
 
   measure: reported_incidents {
