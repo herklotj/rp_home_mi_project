@@ -463,5 +463,29 @@ view: lk_h_policy_history {
     value_format_name: percent_1
   }
 
+  #### Plan Loss Ratio
+
+  measure: record_ind {
+    label: "record ind"
+    type: sum
+    sql: 1 ;;
+    value_format_name: decimal_0
+    hidden: yes
+  }
+
+  measure: plan_risk_score {
+    label: "Plan Loss Ratio"
+    type: sum
+    sql: case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2017-10-01') THEN 0.635 else 0.615 end ;;
+    value_format_name: percent_1
+    hidden: yes
+  }
+
+  measure: plan_loss_ratio {
+    label: "Plan Loss Ratio"
+    type: number
+    sql:  ${plan_risk_score}/nullif(${record_ind},0);;
+    value_format_name: percent_1
+  }
 
 }

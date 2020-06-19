@@ -990,7 +990,7 @@ view: lk_h_tcs_claims {
   measure: tcsincidents_weather {
     label: "TCS Incidents - Weather"
     type: sum
-    sql: case when ${TABLE}.CLAIM_PERIL in('FLOOD','STORM','SUBSIDENCE')
+    sql: case when ${TABLE}.CLAIM_PERIL in('FLOOD','STORM')
         then ${TABLE}.TCS_CLAIMS + ${TABLE}.TCS_CLAIMS_NC + ${TABLE}.TCS_ENQUIRIES
         else null end;;
   }
@@ -998,7 +998,7 @@ view: lk_h_tcs_claims {
   measure: tcsincidents_weather_undev {
     label: "TCS Incidents - Weather (Undeveloped)"
     type: sum
-    sql: case when ${TABLE}.CLAIM_PERIL in('FLOOD','STORM','SUBSIDENCE')
+    sql: case when ${TABLE}.CLAIM_PERIL in('FLOOD','STORM')
         then ${TABLE}.INMONTH_TCS_CLAIMS + ${TABLE}.INMONTH_TCS_CLAIMS_NC + ${TABLE}.INMONTH_TCS_ENQUIRIES
         else null end;;
   }
@@ -1006,7 +1006,7 @@ view: lk_h_tcs_claims {
   measure: tcsincidents_nonweather {
     label: "TCS Incidents - Non-Weather"
     type: sum
-    sql: case when ${TABLE}.CLAIM_PERIL in('AD','EOW','THEFT','OTHER','FIRE')
+    sql: case when ${TABLE}.CLAIM_PERIL in('AD','EOW','THEFT','OTHER','FIRE','SUBSIDENCE')
         then ${TABLE}.TCS_CLAIMS + ${TABLE}.TCS_CLAIMS_NC + ${TABLE}.TCS_ENQUIRIES
         else null end;;
   }
@@ -1014,7 +1014,7 @@ view: lk_h_tcs_claims {
   measure: tcsincidents_nonweather_undev {
     label: "TCS Incidents - Non-Weather (Undeveloped)"
     type: sum
-    sql: case when ${TABLE}.CLAIM_PERIL in('AD','EOW','THEFT','OTHER','FIRE')
+    sql: case when ${TABLE}.CLAIM_PERIL in('AD','EOW','THEFT','OTHER','FIRE','SUBSIDENCE')
         then ${TABLE}.INMONTH_TCS_CLAIMS + ${TABLE}.INMONTH_TCS_CLAIMS_NC + ${TABLE}.INMONTH_TCS_ENQUIRIES
         else null end;;
   }
