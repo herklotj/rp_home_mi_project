@@ -18,7 +18,8 @@ view: lk_h_policy_history {
       week,
       month,
       quarter,
-      year
+      year,
+      fiscal_year
     ]
     sql: ${TABLE}.transaction_dttm ;;
   }
@@ -33,7 +34,8 @@ view: lk_h_policy_history {
       week,
       month,
       quarter,
-      year
+      year,
+      fiscal_year
     ]
     sql: ${TABLE}.policy_start_date ;;
   }
@@ -47,7 +49,8 @@ view: lk_h_policy_history {
       week,
       month,
       quarter,
-      year
+      year,
+      fiscal_year
     ]
     sql: ${TABLE}.inception_dt ;;
   }
