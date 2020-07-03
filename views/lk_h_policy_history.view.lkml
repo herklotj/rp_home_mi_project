@@ -185,6 +185,451 @@ view: lk_h_policy_history {
       (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_aauicl),0));;
   }
 
+  dimension: area_ad {
+    label: "Rated Area - AD"
+    type: string
+    sql: ${TABLE}.area_ad ;;
+  }
+
+  dimension: area_bds_margin {
+    type: string
+    sql: ${TABLE}.area_bds_margin ;;
+    hidden: yes
+  }
+
+  dimension: area_cts_margin {
+    type: string
+    sql: ${TABLE}.area_cts_margin ;;
+    hidden: yes
+  }
+
+  dimension: area_eow {
+    type: string
+    sql: ${TABLE}.area_eow ;;
+    label: "Rated Area - EoW"
+  }
+
+  dimension: area_fire {
+    type: string
+    sql: ${TABLE}.area_fire ;;
+    label: "Rated Area - Fire"
+  }
+
+  dimension: area_flood {
+    type: string
+    sql: ${TABLE}.area_flood ;;
+    label: "Rated Area - Flood"
+  }
+
+  dimension: area_other {
+    type: string
+    sql: ${TABLE}.area_other ;;
+    label: "Rated Area - Other"
+  }
+
+  dimension: area_pps {
+    type: string
+    sql: ${TABLE}.area_pps ;;
+    label: "Rated Area - PPS"
+  }
+
+  dimension: area_storm {
+    type: string
+    sql: ${TABLE}.area_storm ;;
+    label: "Rated Area - Storm"
+  }
+
+  dimension: area_subs {
+    type: string
+    sql: ${TABLE}.area_subs ;;
+    label: "Rated Area - Subsidence"
+  }
+
+  dimension: area_theft {
+    type: string
+    sql: ${TABLE}.area_theft ;;
+    label: "Rated Area - Theft"
+  }
+
+  dimension: cranfield_score_clay {
+    label: "Cranfield Score Clay"
+    type: string
+    sql: ${TABLE}.cranfield_score_clay ;;
+  }
+
+  dimension: cranfield_score_nonclay {
+    label: "Cranfield Score Non-Clay"
+    type: string
+    sql: ${TABLE}.cranfield_score_nonclay ;;
+  }
+
+  dimension: cranfield_score_wind {
+    label: "Cranfield Score Wind"
+    type: string
+    sql: ${TABLE}.cranfield_score_wind ;;
+  }
+
+  dimension: jba_score {
+    label: "JBA Score"
+    type: string
+    sql: ${TABLE}.jba_score ;;
+  }
+
+  dimension: jba_score_ad {
+    label: "JBA Score - AD"
+    type: string
+    sql: ${TABLE}.jba_score_ad ;;
+  }
+
+  dimension: jba_unflood {
+    label: "JBA Unflood"
+    type: string
+    sql: ${TABLE}.jba_unflood ;;
+  }
+
+  dimension: p_adbds {
+    type: string
+    sql: ${TABLE}.p_adbds ;;
+  }
+
+  dimension: p_adcts {
+    type: string
+    sql: ${TABLE}.p_adcts ;;
+  }
+
+  dimension: p_alarm {
+    type: string
+    sql: ${TABLE}.p_alarm ;;
+  }
+
+  dimension: p_bedrooms {
+    type: string
+    sql: ${TABLE}.p_bedrooms ;;
+  }
+
+  dimension: p_bldval {
+    type: string
+    sql: ${TABLE}.p_bldval ;;
+  }
+
+  dimension: p_clmad {
+    type: string
+    sql: ${TABLE}.p_clmad ;;
+  }
+
+  dimension: p_clmall {
+    type: string
+    sql: ${TABLE}.p_clmall ;;
+  }
+
+  dimension: p_clmbds {
+    type: string
+    sql: ${TABLE}.p_clmbds ;;
+  }
+
+  dimension: p_clmcts {
+    type: string
+    sql: ${TABLE}.p_clmcts ;;
+  }
+
+  dimension: p_clmeow {
+    type: string
+    sql: ${TABLE}.p_clmeow ;;
+  }
+
+  dimension: p_clmflood {
+    type: string
+    sql: ${TABLE}.p_clmflood ;;
+  }
+
+  dimension: p_clmfreeyrs {
+    type: string
+    sql: ${TABLE}.p_clmfreeyrs ;;
+  }
+
+  dimension: p_clmother {
+    type: string
+    sql: ${TABLE}.p_clmother ;;
+  }
+
+  dimension: p_clmpps {
+    type: string
+    sql: ${TABLE}.p_clmpps ;;
+  }
+
+  dimension: p_clmstorm {
+    type: string
+    sql: ${TABLE}.p_clmstorm ;;
+  }
+
+  dimension: p_clmsubs {
+    type: string
+    sql: ${TABLE}.p_clmsubs ;;
+  }
+
+  dimension: p_clmtheft {
+    type: string
+    sql: ${TABLE}.p_clmtheft ;;
+  }
+
+  dimension: p_cover {
+    type: string
+    sql: ${TABLE}.p_cover ;;
+  }
+
+  dimension: p_csgroup {
+    type: string
+    sql: ${TABLE}.p_csgroup ;;
+  }
+
+  dimension: p_ctscov {
+    type: string
+    sql: ${TABLE}.p_ctscov ;;
+  }
+
+  dimension: p_detector {
+    type: string
+    sql: ${TABLE}.p_detector ;;
+  }
+
+  dimension: p_extracov {
+    type: string
+    sql: ${TABLE}.p_extracov ;;
+  }
+
+  dimension: p_fsthouse {
+    type: string
+    sql: ${TABLE}.p_fsthouse ;;
+  }
+
+  dimension: p_incident {
+    type: string
+    sql: ${TABLE}.p_incident ;;
+  }
+
+  dimension: p_locksdrs {
+    type: string
+    sql: ${TABLE}.p_locksdrs ;;
+  }
+
+  dimension: p_locksfrch {
+    type: string
+    sql: ${TABLE}.p_locksfrch ;;
+  }
+
+  dimension: p_lockspatio {
+    type: string
+    sql: ${TABLE}.p_lockspatio ;;
+  }
+
+  dimension: p_lockswds {
+    type: string
+    sql: ${TABLE}.p_lockswds ;;
+  }
+
+  dimension: p_memcallfreq {
+    type: string
+    sql: ${TABLE}.p_memcallfreq ;;
+  }
+
+  dimension: p_memcallnum {
+    type: string
+    sql: ${TABLE}.p_memcallnum ;;
+  }
+
+  dimension: p_memtenure {
+    type: string
+    sql: ${TABLE}.p_memtenure ;;
+  }
+
+  dimension: p_multjobs {
+    type: string
+    sql: ${TABLE}.p_multjobs ;;
+  }
+
+  dimension: p_nbsw {
+    type: string
+    sql: ${TABLE}.p_nbsw ;;
+  }
+
+  dimension: p_nhoodwatch {
+    type: string
+    sql: ${TABLE}.p_nhoodwatch ;;
+  }
+
+  dimension: p_occup {
+    type: string
+    sql: ${TABLE}.p_occup ;;
+  }
+
+  dimension: p_occupants {
+    type: string
+    sql: ${TABLE}.p_occupants ;;
+  }
+
+  dimension: p_phage {
+    type: string
+    sql: ${TABLE}.p_phage ;;
+  }
+
+  dimension: p_polyear {
+    type: string
+    sql: ${TABLE}.p_polyear ;;
+  }
+
+  dimension: p_proptype {
+    type: string
+    sql: ${TABLE}.p_proptype ;;
+  }
+
+  dimension: p_service {
+    type: string
+    sql: ${TABLE}.p_service ;;
+  }
+
+  dimension: p_specmaxs1 {
+    type: string
+    sql: ${TABLE}.p_specmaxs1 ;;
+  }
+
+  dimension: p_specmaxs3a {
+    type: string
+    sql: ${TABLE}.p_specmaxs3a ;;
+  }
+
+  dimension: p_specnums1 {
+    type: string
+    sql: ${TABLE}.p_specnums1 ;;
+  }
+
+  dimension: p_specnums3a {
+    type: string
+    sql: ${TABLE}.p_specnums3a ;;
+  }
+
+  dimension: p_spectots1 {
+    type: string
+    sql: ${TABLE}.p_spectots1 ;;
+  }
+
+  dimension: p_spectots3a {
+    type: string
+    sql: ${TABLE}.p_spectots3a ;;
+  }
+
+  dimension: p_unoccday {
+    type: string
+    sql: ${TABLE}.p_unoccday ;;
+  }
+
+  dimension: p_volxsbds {
+    type: string
+    sql: ${TABLE}.p_volxsbds ;;
+  }
+
+  dimension: p_volxscts {
+    type: string
+    sql: ${TABLE}.p_volxscts ;;
+  }
+
+  dimension: p_yearblt {
+    type: string
+    sql: ${TABLE}.p_yearblt ;;
+  }
+
+  dimension: p_yer {
+    type: string
+    sql: ${TABLE}.p_yer ;;
+  }
+
+
+  dimension: r_mem_score {
+    type: string
+    sql: ${TABLE}.r_mem_score ;;
+  }
+
+  dimension: r_paymtd {
+    type: string
+    sql: ${TABLE}.r_paymtd ;;
+  }
+
+  dimension: r_tenure {
+    type: string
+    sql: ${TABLE}.r_tenure ;;
+  }
+
+  dimension: renfac1 {
+    type: number
+    sql: ${TABLE}.renfac1 ;;
+  }
+
+  dimension: renfac2 {
+    type: number
+    sql: ${TABLE}.renfac2 ;;
+  }
+
+  dimension: renfac3 {
+    type: number
+    sql: ${TABLE}.renfac3 ;;
+  }
+
+
+  dimension: u_bususe {
+    type: string
+    sql: ${TABLE}.u_bususe ;;
+  }
+
+  dimension: u_convic {
+    type: string
+    sql: ${TABLE}.u_convic ;;
+  }
+
+  dimension: u_occnight {
+    type: string
+    sql: ${TABLE}.u_occnight ;;
+  }
+
+  dimension: u_occstatus {
+    type: string
+    sql: ${TABLE}.u_occstatus ;;
+  }
+
+  dimension: u_refused {
+    type: string
+    sql: ${TABLE}.u_refused ;;
+  }
+
+  dimension: u_repair {
+    type: string
+    sql: ${TABLE}.u_repair ;;
+  }
+
+  dimension: u_roof {
+    type: string
+    sql: ${TABLE}.u_roof ;;
+  }
+
+  dimension: u_selfcon {
+    type: string
+    sql: ${TABLE}.u_selfcon ;;
+  }
+
+  dimension: u_subs {
+    type: string
+    sql: ${TABLE}.u_subs ;;
+  }
+
+  dimension: u_unocc30 {
+    type: string
+    sql: ${TABLE}.u_unocc30 ;;
+  }
+
+  dimension: u_wall {
+    type: string
+    sql: ${TABLE}.u_wall ;;
+  }
+
+
   ### Measures
 
   measure: broker_covers_bds {
