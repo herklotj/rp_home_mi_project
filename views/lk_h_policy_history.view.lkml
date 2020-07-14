@@ -924,7 +924,8 @@ view: lk_h_policy_history {
   measure: plan_risk_score {
     label: "Plan Loss Ratio"
     type: sum
-    sql: case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2017-10-01') THEN 0.635 else 0.615 end ;;
+    sql: case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2017-10-01') THEN 0.635 else
+        case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2018-10-01') THEN 0.615 else 0.623 end end ;;
     value_format_name: percent_1
     hidden: yes
   }
