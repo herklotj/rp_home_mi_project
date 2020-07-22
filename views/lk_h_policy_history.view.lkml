@@ -1,4 +1,4 @@
-view: lk_h_policy_history_scored {
+view: lk_h_policy_history {
   derived_table: {
     sql:
 

@@ -17,13 +17,13 @@ datagroup: home_mi_project_default_datagroup {
 
 persist_with: home_mi_project_default_datagroup
 
-explore: lk_h_policy_history_scored {}
+explore: lk_h_policy_history {}
 explore: lk_h_adjustment_summary {}
 explore: lk_h_cancel_history {}
 # explore: lk_h_cancel_summary {}
 explore: lk_h_expoclm_mth {}
 explore: lk_h_forecast {}
-# explore: lk_h_policy_history {}
+# explore: lk_h_policy_history_scored {}
 # explore: lk_h_policy_summary {}
 # explore: lk_h_retention {}
 # explore: lk_h_retention_summary {}
