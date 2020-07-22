@@ -826,11 +826,6 @@ view: lk_h_expoclm_mth {
     hidden: yes
   }
 
-  dimension: buildings_earned_sum_insured {
-    type: number
-    sql: ${TABLE}.buildings_earned_sum_insured ;;
-    hidden: yes
-  }
 
   dimension: buildings_eow_claims {
     type: number
@@ -1261,11 +1256,6 @@ view: lk_h_expoclm_mth {
     hidden: yes
   }
 
-  dimension: contents_earned_sum_insured {
-    type: number
-    sql: ${TABLE}.contents_earned_sum_insured ;;
-    hidden: yes
-  }
 
   dimension: contents_eow_claims {
     type: number
@@ -1678,12 +1668,6 @@ view: lk_h_expoclm_mth {
   dimension: earned_rpm_wlu {
     type: number
     sql: ${TABLE}.earned_rpm_wlu ;;
-    hidden: yes
-  }
-
-  dimension: earned_sum_insured {
-    type: number
-    sql: ${TABLE}.earned_sum_insured ;;
     hidden: yes
   }
 
@@ -3199,6 +3183,27 @@ view: lk_h_expoclm_mth {
     value_format_name: decimal_0
   }
 
+  measure: incurred_total_weather {
+    label: "Incurred - Weather"
+    type: sum
+    sql:  ${TABLE}.total_weather_incurred ;;
+    value_format_name: decimal_0
+  }
+
+  measure: bds_incurred_weather {
+    label: "Incurred - BDS Weather"
+    type: sum
+    sql:  ${TABLE}.buildings_weather_incurred ;;
+    value_format_name: decimal_0
+  }
+
+  measure: cts_incurred_weather {
+    label: "Incurred - CTS Weather"
+    type: sum
+    sql:  ${TABLE}.contents_weather_incurred ;;
+    value_format_name: decimal_0
+  }
+
   measure: claim_frequency {
     label: "AAUICL Claims Frequency"
     type: number
@@ -3508,6 +3513,13 @@ view: lk_h_expoclm_mth {
     label: "TCS Claims"
     type: sum
     sql:  ${TABLE}.TCS_CLAIMS ;;
+    value_format_name: decimal_0
+  }
+
+  measure: claims_tcs_weather {
+    label: "TCS Claims - Weather"
+    type: sum
+    sql:  ${TABLE}.TCS_CLAIMS_WEATHER ;;
     value_format_name: decimal_0
   }
 
@@ -4439,6 +4451,79 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_1
   }
 
+  ### Earned Sum Insured
+
+  measure: sum_insured_earned {
+    label: "Earned Sum Insured"
+    type: sum
+    sql:  ${TABLE}.earned_sum_insured ;;
+    value_format_name: decimal_0
+  }
+
+  measure: sum_insured_earned_bds{
+    label: "Earned Sum Insured - BDS"
+    type: sum
+    sql:  ${TABLE}.buildings_earned_sum_insured ;;
+    value_format_name: decimal_0
+  }
+
+  measure: sum_insured_earned_cts {
+    label: "Earned Sum Insured - CTS"
+    type: sum
+    sql:  ${TABLE}.contents_earned_sum_insured ;;
+    value_format_name: decimal_0
+  }
+
+
+### Weather Losses as % of TIV
+
+  measure: weather_losses_perc_earned_tiv_modelled {
+    label: "All Weather Losses as % of Earned TIV (modelled)"
+    type: number
+    sql:  1.0*(${rpm_inf_bds_storm_earned}+${rpm_inf_cts_storm_earned}+${rpm_inf_bds_flood_earned}+${rpm_inf_cts_flood_earned})/nullif(${sum_insured_earned},0) ;;
+    value_format_name: percent_4
+    group_label: "Weather Losses as % of Earned TIV"
+  }
+
+  measure: storm_losses_perc_earned_tiv_modelled {
+    label: "Storm Losses as % of Earned TIV (modelled)"
+    type: number
+    sql:  1.0*(${rpm_inf_bds_storm_earned}+${rpm_inf_cts_storm_earned})/nullif(${sum_insured_earned},0) ;;
+    value_format_name: percent_4
+    group_label: "Weather Losses as % of Earned TIV"
+  }
+
+  measure: flood_losses_perc_earned_tiv_modelled {
+    label: "Flood Losses as % of Earned TIV (modelled)"
+    type: number
+    sql:  1.0*(${rpm_inf_bds_flood_earned}+${rpm_inf_cts_flood_earned})/nullif(${sum_insured_earned},0) ;;
+    value_format_name: percent_4
+    group_label: "Weather Losses as % of Earned TIV"
+  }
+
+  measure: weather_losses_perc_earned_tiv_actual {
+    label: "All Weather Losses as % of Earned TIV (actual)"
+    type: number
+    sql:  1.0*(${bds_storm_incurred}+${cts_storm_incurred}+${bds_flood_incurred}+${cts_flood_incurred})/nullif(${sum_insured_earned},0) ;;
+    value_format_name: percent_4
+    group_label: "Weather Losses as % of Earned TIV"
+  }
+
+  measure: storm_losses_perc_earned_tiv_actual {
+    label: "Storm Losses as % of Earned TIV (actual)"
+    type: number
+    sql:  1.0*(${bds_storm_incurred}+${cts_storm_incurred})/nullif(${sum_insured_earned},0) ;;
+    value_format_name: percent_4
+    group_label: "Weather Losses as % of Earned TIV"
+  }
+
+  measure: flood_losses_perc_earned_tiv_actual {
+    label: "Flood Losses as % of Earned TIV (actual)"
+    type: number
+    sql:  1.0*(${bds_flood_incurred}+${cts_flood_incurred})/nullif(${sum_insured_earned},0) ;;
+    value_format_name: percent_4
+    group_label: "Weather Losses as % of Earned TIV"
+  }
 
   # ----- Sets of fields for drilling ------
   set: detail {
