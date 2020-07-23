@@ -4504,7 +4504,7 @@ view: lk_h_expoclm_mth {
   measure: weather_losses_perc_earned_tiv_actual {
     label: "All Weather Losses as % of Earned TIV (actual)"
     type: number
-    sql:  1.0*(${bds_storm_incurred}+${cts_storm_incurred}+${bds_flood_incurred}+${cts_flood_incurred})/nullif(${sum_insured_earned},0) ;;
+    sql:  1.0*(${incurred_total_weather})/nullif(${sum_insured_earned},0) ;;
     value_format_name: percent_4
     group_label: "Weather Losses as % of Earned TIV"
   }
