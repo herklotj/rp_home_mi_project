@@ -3204,6 +3204,22 @@ view: lk_h_expoclm_mth {
     value_format_name: decimal_0
   }
 
+  measure: claims_handing_fee {
+    label: "Claims Handling Fee"
+    type: sum
+    sql: case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
+      THEN ${TABLE}.tcs_claims*175 else ${TABLE}.tcs_claims*210 end ;;
+    value_format_name: gbp_0
+  }
+
+  measure: claims_handing_fee_weather {
+    label: "Claims Handling Fee - Weather"
+    type: sum
+    sql: case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
+      THEN ${TABLE}.tcs_claims_weather*175 else ${TABLE}.tcs_claims_weather*210 end ;;
+    value_format_name: gbp_0
+  }
+
   measure: claim_frequency {
     label: "AAUICL Claims Frequency"
     type: number
@@ -3540,28 +3556,28 @@ view: lk_h_expoclm_mth {
   measure: claims_fee_ratio {
     label: "Claims Fee Ratio"
     type: number
-    sql:  175.0*${claims_tcs}/nullif(${premium_earned},0) ;;
+    sql:  ${claims_handing_fee}/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
   }
 
   measure: claims_fee_ratio_aauicl {
     label: "Claims Fee Ratio (AAUICL)"
     type: number
-    sql:  175.0*${claims_tcs}/nullif((0.2*${premium_earned})+(0.8*0.16*${premium_earned}),0) ;;
+    sql:  ${claims_handing_fee}/nullif((0.2*${premium_earned})+(0.8*0.16*${premium_earned}),0) ;;
     value_format_name: percent_1
   }
 
   measure: loss_claims_fee_ratio {
     label: "Loss & Claims Fee Ratio"
     type: number
-    sql:  ((175.0*${claims_tcs})+${incurred_total})/nullif(${premium_earned},0) ;;
+    sql:  (${claims_handing_fee}+${incurred_total})/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
   }
 
   measure: loss_claims_fee_ratio_aauicl {
     label: "Loss & Claims Fee Ratio (AAUICL)"
     type: number
-    sql: ((175.0*${claims_tcs})+(0.2*${incurred_total}))/nullif((0.2*${premium_earned})+(0.8*0.16*${premium_earned}),0) ;;
+    sql: (${claims_handing_fee}+(0.2*${incurred_total}))/nullif((0.2*${premium_earned})+(0.8*0.16*${premium_earned}),0) ;;
     value_format_name: percent_1
   }
 
@@ -4485,6 +4501,8 @@ view: lk_h_expoclm_mth {
     group_label: "Weather Losses as % of Earned TIV"
   }
 
+  # Need to add modelled weather losses + modelled claims handing fee
+
   measure: storm_losses_perc_earned_tiv_modelled {
     label: "Storm Losses as % of Earned TIV (modelled)"
     type: number
@@ -4505,6 +4523,14 @@ view: lk_h_expoclm_mth {
     label: "All Weather Losses as % of Earned TIV (actual)"
     type: number
     sql:  1.0*(${incurred_total_weather})/nullif(${sum_insured_earned},0) ;;
+    value_format_name: percent_4
+    group_label: "Weather Losses as % of Earned TIV"
+  }
+
+  measure: weather_losses_chf_perc_earned_tiv_actual {
+    label: "All Weather Losses + Claims Handling as % of Earned TIV (actual)"
+    type: number
+    sql:  1.0*(${incurred_total_weather}+${claims_handing_fee_weather})/nullif(${sum_insured_earned},0) ;;
     value_format_name: percent_4
     group_label: "Weather Losses as % of Earned TIV"
   }
