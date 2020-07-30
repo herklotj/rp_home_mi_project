@@ -9,6 +9,12 @@ view: lk_h_policy_history {
     ;;
   }
 
+  dimension: uw_policy_no {
+    type: string
+    sql: ${TABLE}.uw_policy_no ;;
+    label: "UW Policy Number"
+  }
+
   dimension_group: policy_written_date {
     label: "Policy Written"
     type: time
@@ -37,7 +43,7 @@ view: lk_h_policy_history {
       year,
       fiscal_year
     ]
-    sql: ${TABLE}.policy_start_date ;;
+    sql: CAST(${TABLE}.policy_start_date AS TIMESTAMP WITHOUT TIME ZONE) ;;
   }
 
   dimension_group: inception_date {

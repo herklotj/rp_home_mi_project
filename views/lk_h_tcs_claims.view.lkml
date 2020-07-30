@@ -396,12 +396,6 @@ view: lk_h_tcs_claims {
     sql: ${TABLE}.totalincurred ;;
   }
 
-  # dimension: lifecycle {
-  #  label: "Lifecycle Dim"
-  #  type: number
-  #  sql: case when ${TABLE}.FCA_ACCEPTED_PAID = 1 or ${TABLE}.FCA_REJECTED = 1 or ${TABLE}.FCA_OTHER_SETTLED = 1 then
-  #    to_date(${TABLE}.closeddate) - to_date(${TABLE}.notificationdate) else null end;;
-  #}
 
   #### Measures ###
 

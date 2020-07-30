@@ -2943,6 +2943,7 @@ view: lk_h_expoclm_mth {
   dimension: uw_policy_no {
     type: string
     sql: ${TABLE}.uw_policy_no ;;
+    label: "UW Policy Number"
   }
 
   dimension: uw_tenure {
