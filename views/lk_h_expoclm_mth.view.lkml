@@ -2537,7 +2537,7 @@ view: lk_h_expoclm_mth {
       quarter,
       year
     ]
-    sql: ${TABLE}.policy_start_date ;;
+    sql: CAST(${TABLE}.policy_start_date AS TIMESTAMP WITHOUT TIME ZONE) ;;
   }
 
   dimension_group: policy_start_mth {

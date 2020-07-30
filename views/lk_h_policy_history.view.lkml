@@ -191,6 +191,46 @@ view: lk_h_policy_history {
       (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_aauicl),0));;
   }
 
+  dimension: aauicl_net_premium_banded_5 {
+    label: "AAUICL Net Premium (£5 Banded)"
+    type: tier
+    style:  integer
+    tiers: [20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230,235,240,245,250]
+    value_format_name: gbp_0
+    sql: ${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts;;
+    group_label: "Premium Distributions"
+  }
+
+  dimension: aauicl_net_premium_banded_10 {
+    label: "AAUICL Net Premium (£10 Banded)"
+    type: tier
+    style:  integer
+    tiers: [20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,330,340,350,360,370,380,390,400,410,420,430,440,450,460,470,480,490,500]
+    value_format_name: gbp_0
+    sql: ${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts;;
+    group_label: "Premium Distributions"
+  }
+
+  dimension: aauicl_gross_premium_banded_5 {
+    label: "AAUICL Gross Premium (£5 Banded)"
+    type: tier
+    style:  integer
+    tiers: [20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230,235,240,245,250]
+    value_format_name: gbp_0
+    sql: ${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_aauicl;;
+    group_label: "Premium Distributions"
+  }
+
+  dimension: aauicl_gross_premium_banded_10 {
+    label: "AAUICL Gross Premium (£10 Banded)"
+    type: tier
+    style:  integer
+    tiers: [20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,330,340,350,360,370,380,390,400,410,420,430,440,450,460,470,480,490,500]
+    value_format_name: gbp_0
+    sql: ${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_aauicl;;
+    group_label: "Premium Distributions"
+  }
+
   dimension: area_ad {
     label: "Rated Area - AD"
     type: string
