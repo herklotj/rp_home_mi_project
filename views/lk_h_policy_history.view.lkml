@@ -983,4 +983,152 @@ view: lk_h_policy_history {
     value_format_name: percent_1
   }
 
+  #### Ren vs. Non-Ren Covers
+
+  measure: aauicl_bds_ren {
+    label: "AAUICL Covers BDS (Ren)"
+    type: sum
+    sql:  ${TABLE}.AAUICL_REN_BDS ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_bds_non_ren {
+    label: "AAUICL Covers BDS (non-Ren)"
+    type: sum
+    sql:  ${TABLE}.AAUICL_IND_BDS - ${TABLE}.AAUICL_REN_BDS ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_cts_ren {
+    label: "AAUICL Covers CTS (Ren)"
+    type: sum
+    sql:  ${TABLE}.AAUICL_REN_CTS ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_cts_non_ren {
+    label: "AAUICL Covers CTS (non-Ren)"
+    type: sum
+    sql:  ${TABLE}.AAUICL_IND_CTS - ${TABLE}.AAUICL_REN_CTS ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_tot_ren {
+    label: "AAUICL Covers TOT (Ren)"
+    type: sum
+    sql:  ${TABLE}.AAUICL_REN_BDS + ${TABLE}.AAUICL_REN_CTS ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_tot_non_ren {
+    label: "AAUICL Covers TOT (non-Ren)"
+    type: sum
+    sql:  ${TABLE}.AAUICL_IND_BDS - ${TABLE}.AAUICL_REN_BDS + ${TABLE}.AAUICL_IND_CTS - ${TABLE}.AAUICL_REN_CTS ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_holding_bds {
+    label: "AAUICL Hold BDS"
+    type: sum
+    sql:  ${TABLE}.AAUICL_HOLD_BDS ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_holding_cts {
+    label: "AAUICL Hold CTS"
+    type: sum
+    sql:  ${TABLE}.AAUICL_HOLD_CTS ;;
+    value_format_name: decimal_0
+  }
+
+
+
+  measure: xq_win_rate_bds {
+    label: "XQ Win Rate - BDS"
+    type: number
+    sql:  ${aauicl_bds_non_ren}/nullif(1.0*((${broker_covers_bds}-${aauicl_holding_bds})),0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: xq_win_rate_cts {
+    label: "XQ Win Rate - CTS"
+    type: number
+    sql:  ${aauicl_cts_non_ren}/nullif(1.0*((${broker_covers_cts}-${aauicl_holding_cts})),0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: xq_win_rate_tot {
+    label: "XQ Win Rate - TOT"
+    type: number
+    sql:  ${aauicl_tot_non_ren}/nullif(1.0*((${broker_covers_tot}-${aauicl_holding_bds}-${aauicl_holding_cts})),0) ;;
+    value_format_name: percent_1
+  }
+
+
+
+  measure: renewal_win_rate_bds {
+    label: "Renewal Win Rate - BDS"
+    type: number
+    sql:  ${aauicl_bds_ren}/nullif(1.0*${aauicl_holding_bds},0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: renewal_win_rate_cts {
+    label: "Renewal Win Rate - CTS"
+    type: number
+    sql:  ${aauicl_cts_ren}/nullif(1.0*${aauicl_holding_cts},0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: renewal_win_rate_tot {
+    label: "Renewal Win Rate - TOT"
+    type: number
+    sql:  ${aauicl_tot_ren}/nullif(1.0*(${aauicl_holding_bds}+${aauicl_holding_cts}),0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: cover_share_bds_ren {
+    label: "Cover Share BDS (Ren)"
+    type: number
+    sql:  1.0*${aauicl_bds_ren}/nullif(${broker_covers_bds},0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: cover_share_cts_ren {
+    label: "Cover Share CTS (Ren) "
+    type: number
+    sql:  1.0*${aauicl_cts_ren}/nullif(${broker_covers_cts},0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: cover_share_tot_ren {
+    label: "Cover Share TOT (Ren)"
+    type: number
+    sql:  1.0*${aauicl_tot_ren}/nullif(${broker_covers_tot},0) ;;
+    value_format_name: percent_1
+  }
+
+
+  measure: cover_share_bds_non_ren {
+    label: "Cover Share BDS (non-Ren)"
+    type: number
+    sql:  1.0*${aauicl_bds_non_ren}/nullif(${broker_covers_bds},0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: cover_share_cts_non_ren {
+    label: "Cover Share CTS (non-Ren) "
+    type: number
+    sql:  1.0*${aauicl_cts_non_ren}/nullif(${broker_covers_cts},0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: cover_share_tot_non_ren {
+    label: "Cover Share TOT (non-Ren)"
+    type: number
+    sql:  1.0*${aauicl_tot_non_ren}/nullif(${broker_covers_tot},0) ;;
+    value_format_name: percent_1
+  }
+
+
 }
