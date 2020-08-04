@@ -9,6 +9,18 @@ view: lk_h_policy_history {
     ;;
   }
 
+  dimension: aa_logo_new {
+    type: string
+    sql: ${TABLE}.broker_nb_rb;;
+    html: <img src="https://i.ibb.co/9yYnQjL/AA-logo-new.png" height="100" /> ;;
+  }
+
+  dimension: aa_logo_old {
+    type: string
+    sql: ${TABLE}.broker_nb_rb;;
+    html: <img src="https://i.ibb.co/svTXf6M/AA-logo-old.png" height="100" /> ;;
+  }
+
   dimension: uw_policy_no {
     type: string
     sql: ${TABLE}.uw_policy_no ;;
