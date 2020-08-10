@@ -345,6 +345,15 @@ view: lk_h_policy_history {
     sql: ${TABLE}.jba_unflood ;;
   }
 
+  dimension: sub_channel {
+    type: string
+    sql: case when ${TABLE}.provenance_code IN(089,098,293,433,434,467,833,834) then 'Money Supermarket' else
+         case when ${TABLE}.provenance_code IN(091,092,105,106,827,828,829,830) then 'Compare the Market' else
+         case when ${TABLE}.provenance_code IN(137,096,825,826) then 'Confused' else
+         case when ${TABLE}.provenance_code IN(292,102,823,824) then 'Go Compare' else
+        'Other' end end end end ;;
+  }
+
   dimension: p_adbds {
     type: string
     sql: ${TABLE}.p_adbds ;;
