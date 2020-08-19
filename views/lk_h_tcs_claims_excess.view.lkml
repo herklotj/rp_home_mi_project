@@ -2,14 +2,18 @@ view: lk_h_tcs_claims_excess {
   derived_table: {
     sql:
 
-    SELECT *
-      FROM (SELECT a.*,
-             b.tia_transation_no AS tia_transation_no_e,
-             b.p_volxsbds as volxs_bds,
-             b.p_volxscts as volxs_cts
-      FROM actian.lk_h_tcs_claims a
-        LEFT JOIN actian.home_aau_excess b ON a.uw_policy_no = b.uw_policy_no) x
-    WHERE tia_transation_no_e IS NOT NULL
+  SELECT *
+  FROM (SELECT a.*,
+               b.tia_transation_no AS tia_transation_no_e,
+               b.p_volxsbds AS volxs_bds,
+               b.p_volxscts AS volxs_cts,
+               b.renewal_date,
+               timestampadd(YEAR,-1,b.renewal_date) AS policy_year_start
+        FROM actian.lk_h_tcs_claims a
+          LEFT JOIN actian.home_aau_excess b ON a.uw_policy_no = b.uw_policy_no) x
+  WHERE tia_transation_no_e IS NOT NULL
+  AND   policy_year_start < incidentdate
+  AND   incidentdate < renewal_date
 
     ;;
   }
@@ -1320,25 +1324,25 @@ view: lk_h_tcs_claims_excess {
     sql: case when ${TABLE}.CLAIM_PERIL = 'SUBSIDENCE' then 1000
               when ${TABLE}.CLAIM_PERIL = 'EOW' then 250
               else 100 end ;;
-    value_format_name: decimal_0
+    value_format_name: gbp_0
     hidden: yes
   }
 
   measure: excess_required_bds {
     label: "Required Excess - BDS"
     type: sum
-    sql: case when ${TABLE}.paymentamount_bds > 0 then ${TABLE}.volxs_bds + (case when ${TABLE}.CLAIM_PERIL = 'SUBSIDENCE' then 1000
+    sql: case when ${TABLE}.paymentamount_bds > 0 then ${TABLE}.volxs_bds + ${TABLE}.excess_bds + (case when ${TABLE}.CLAIM_PERIL = 'SUBSIDENCE' then 1000
               when ${TABLE}.CLAIM_PERIL = 'EOW' then 250 else 100 end) else 0 end ;;
-    value_format_name: decimal_0
+    value_format_name: gbp_0
     hidden: no
   }
 
   measure: excess_required_cts {
     label: "Required Excess - CTS"
     type: sum
-    sql: case when (${TABLE}.paymentamount_cts > 0 or ${TABLE}.paymentamount_pps > 0) then ${TABLE}.volxs_cts + (case when ${TABLE}.CLAIM_PERIL = 'SUBSIDENCE' then 1000
+    sql: case when (${TABLE}.paymentamount_cts > 0 or ${TABLE}.paymentamount_pps > 0) then ${TABLE}.volxs_cts + ${TABLE}.excess_cts + (case when ${TABLE}.CLAIM_PERIL = 'SUBSIDENCE' then 1000
               when ${TABLE}.CLAIM_PERIL = 'EOW' then 250 else 100 end) else 0 end ;;
-    value_format_name: decimal_0
+    value_format_name: gbp_0
     hidden: no
   }
 
