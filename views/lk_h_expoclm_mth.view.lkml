@@ -1697,6 +1697,24 @@ view: lk_h_expoclm_mth {
     sql: cast(${TABLE}.exposure_mth as timestamp) ;;
   }
 
+  dimension: cat_period {
+    type: string
+    sql: case when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2017-10-01')))
+                    then 'Aug16 - Sep17'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2017-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2018-10-01')))
+                    then 'Oct17 - Sep18'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2018-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2019-10-01')))
+                    then 'Oct18 - Sep19'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2019-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2020-10-01')))
+                    then 'Oct19 - Sep20'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2020-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2021-10-01')))
+                    then 'Oct20 - Sep21'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2021-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2022-10-01')))
+                    then 'Oct21 - Sep22'
+              else null end   ;;
+    label: "Cat Period"
+  }
+
 
   dimension: exposure_yr {
     type: number
@@ -4551,6 +4569,68 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_4
     group_label: "Weather Losses as % of Earned TIV"
   }
+
+  ### Fields for COR
+
+  ## NEEDS UPDATING FOR 2021 ###
+  measure: flood_re_levy {
+    label: "Flood Re Levy"
+    type: sum
+    sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then ${TABLE}.earned_premium*0.0565
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2017 then ${TABLE}.earned_premium*0.0567
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2018 then ${TABLE}.earned_premium*0.0561
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then ${TABLE}.earned_premium*0.0537
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then ${TABLE}.earned_premium*0.0517
+              else 0 end ;;
+    value_format_name: decimal_0
+  }
+
+  ## NEEDS UPDATING FOR CAT 2020 RENEWAL ###
+  measure: cat_cost {
+    label: "Cat Cover Cost"
+    type: sum
+    sql: case when ${cat_period} = 'Aug16 - Sep17' then ${TABLE}.earned_premium*0.0800
+              when ${cat_period} = 'Oct17 - Sep18' then ${TABLE}.earned_premium*0.0995
+              when ${cat_period} = 'Oct18 - Sep19' then ${TABLE}.earned_premium*0.0917
+              when ${cat_period} = 'Oct19 - Sep20' then ${TABLE}.earned_premium*0.0917
+              else 0 end ;;
+    value_format_name: decimal_0
+  }
+
+  measure: flood_re_ratio {
+    label: "Flood Re Ratio"
+    type: number
+    sql: 1.0*${flood_re_levy}/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: cat_cost_ratio {
+    label: "Cat Cost Ratio"
+    type: number
+    sql: 1.0*${cat_cost}/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: fixed_commission {
+    label: "Fixed Commission"
+    type: number
+    sql: 0.16 ;;
+    value_format_name: percent_1
+  }
+
+  measure: abe_by_uw_year{
+    label: "ABE by UW Year"
+    type: number
+    sql: case when ${TABLE}.policy_period_qs = '1' then 0.603
+              when ${TABLE}.policy_period_qs = '2' then 0.552
+              when ${TABLE}.policy_period_qs = '3' then 0.501
+              when ${TABLE}.policy_period_qs = '4' then 0.452
+              else 0 end ;;
+    value_format_name: percent_1
+  }
+
+
+
 
   # ----- Sets of fields for drilling ------
   set: detail {
