@@ -1,4 +1,4 @@
-connection: "preprod_echo_actian"
+connection: "echo_actian"
 
 # include all the views
 include: "/views/**/*.view"
