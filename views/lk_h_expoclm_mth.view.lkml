@@ -4547,7 +4547,7 @@ view: lk_h_expoclm_mth {
   }
 
   measure: weather_losses_chf_perc_earned_tiv_actual {
-    label: "All Weather Losses + Claims Handling as % of Earned TIV (actual)"
+    label: "All Weather Losses + Claims Handling Fee as % of Earned TIV (actual)"
     type: number
     sql:  1.0*(${incurred_total_weather}+${claims_handing_fee_weather})/nullif(${sum_insured_earned},0) ;;
     value_format_name: percent_4

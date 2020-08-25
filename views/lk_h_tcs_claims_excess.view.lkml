@@ -1331,7 +1331,7 @@ view: lk_h_tcs_claims_excess {
   measure: excess_required_bds {
     label: "Required Excess - BDS"
     type: sum
-    sql: case when ${TABLE}.paymentamount_bds > 0 then ${TABLE}.volxs_bds + ${TABLE}.excess_bds + (case when ${TABLE}.CLAIM_PERIL = 'SUBSIDENCE' then 1000
+    sql: case when ${TABLE}.paymentamount_bds > 0 and ${TABLE}.substatus = 'Settled - Paid' then ${TABLE}.volxs_bds + (case when ${TABLE}.CLAIM_PERIL = 'SUBSIDENCE' then 1000
               when ${TABLE}.CLAIM_PERIL = 'EOW' then 250 else 100 end) else 0 end ;;
     value_format_name: gbp_0
     hidden: no
@@ -1340,7 +1340,7 @@ view: lk_h_tcs_claims_excess {
   measure: excess_required_cts {
     label: "Required Excess - CTS"
     type: sum
-    sql: case when (${TABLE}.paymentamount_cts > 0 or ${TABLE}.paymentamount_pps > 0) then ${TABLE}.volxs_cts + ${TABLE}.excess_cts + (case when ${TABLE}.CLAIM_PERIL = 'SUBSIDENCE' then 1000
+    sql: case when (${TABLE}.paymentamount_cts > 0 or ${TABLE}.paymentamount_pps > 0) and ${TABLE}.substatus = 'Settled - Paid' then ${TABLE}.volxs_cts + (case when ${TABLE}.CLAIM_PERIL = 'SUBSIDENCE' then 1000
               when ${TABLE}.CLAIM_PERIL = 'EOW' then 250 else 100 end) else 0 end ;;
     value_format_name: gbp_0
     hidden: no
