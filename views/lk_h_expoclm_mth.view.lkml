@@ -4577,12 +4577,20 @@ view: lk_h_expoclm_mth {
     group_label: "Weather Losses as % of Earned TIV"
   }
 
-  # Weather Losses + CHF as % of ANNUALISED Actual TIV
+  # Weather Losses as % of ANNUALISED Actual TIV
 
   measure: weather_losses_chf_perc_earned_tiv_actual_annualised {
     label: "All Weather Losses + Claims Handling Fee as % of Annualised TIV (actual)"
     type: number
     sql:  1.0*(${incurred_total_weather}+${claims_handing_fee_weather})/nullif(${sum_insured_earned_annualised},0) ;;
+    value_format_name: percent_4
+    group_label: "Weather Losses as % of Earned TIV"
+  }
+
+  measure: weather_losses_perc_earned_tiv_actual_annualised {
+    label: "All Weather Losses as % of Annualised TIV (actual)"
+    type: number
+    sql:  1.0*(${incurred_total_weather})/nullif(${sum_insured_earned_annualised},0) ;;
     value_format_name: percent_4
     group_label: "Weather Losses as % of Earned TIV"
   }
