@@ -4509,6 +4509,13 @@ view: lk_h_expoclm_mth {
     value_format_name: decimal_0
   }
 
+  measure: sum_insured_earned_annualised {
+    label: "Earned Sum Insured Annualised"
+    type: sum
+    sql:  ${TABLE}.earned_sum_insured*12 ;;
+    value_format_name: decimal_0
+  }
+
 
 ### Weather Losses as % of TIV
 
@@ -4570,6 +4577,16 @@ view: lk_h_expoclm_mth {
     group_label: "Weather Losses as % of Earned TIV"
   }
 
+  # Weather Losses + CHF as % of ANNUALISED Actual TIV
+
+  measure: weather_losses_chf_perc_earned_tiv_actual_annualised {
+    label: "All Weather Losses + Claims Handling Fee as % of Annualised TIV (actual)"
+    type: number
+    sql:  1.0*(${incurred_total_weather}+${claims_handing_fee_weather})/nullif(${sum_insured_earned_annualised},0) ;;
+    value_format_name: percent_4
+    group_label: "Weather Losses as % of Earned TIV"
+  }
+
   ### Fields for COR
 
   ## NEEDS UPDATING FOR 2021 ###
@@ -4618,7 +4635,15 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_1
   }
 
-  ## NEEDS UPDATING FOR UWY5 ABE ###
+  measure: fixed_commission_costs {
+    label: "Fixed Commission (£)"
+    type: number
+    sql: 0.16*${premium_earned} ;;
+    value_format_name: decimal_0
+  }
+
+
+## NEEDS UPDATING FOR UWY5 ABE ###
   measure: abe_by_uw_year{
     label: "ABE by UW Year"
     type: number
@@ -4628,6 +4653,13 @@ view: lk_h_expoclm_mth {
               when ${TABLE}.policy_period_qs = '4' then 0.452
               else 0 end ;;
     value_format_name: percent_1
+  }
+
+  measure: abe_projected_incurred {
+    label: "ABE Projected Incurred"
+    type: number
+    sql: ${abe_by_uw_year}*${premium_earned} ;;
+    value_format_name: decimal_0
   }
 
 
