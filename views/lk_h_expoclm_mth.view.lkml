@@ -4512,7 +4512,7 @@ view: lk_h_expoclm_mth {
   measure: sum_insured_earned_annualised {
     label: "Earned Sum Insured Annualised"
     type: sum
-    sql:  ${TABLE}.earned_sum_insured*12 ;;
+    sql:  ${TABLE}.earned_sum_insured*365.25/extract('day',last_day(${TABLE}.exposure_mth)) ;;
     value_format_name: decimal_0
   }
 
