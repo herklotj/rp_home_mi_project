@@ -4608,6 +4608,7 @@ view: lk_h_expoclm_mth {
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then ${TABLE}.earned_premium*0.0517
               else 0 end ;;
     value_format_name: decimal_0
+    group_label: "COR Measures"
   }
 
   measure: flood_re_ratio {
@@ -4615,6 +4616,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 1.0*${flood_re_levy}/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
+    group_label: "COR Measures"
   }
 
   ## NEEDS UPDATING FOR CAT 2020 RENEWAL ###
@@ -4627,6 +4629,7 @@ view: lk_h_expoclm_mth {
               when ${cat_period} = 'Oct19 - Sep20' then ${TABLE}.earned_premium*0.0917
               else 0 end ;;
     value_format_name: decimal_0
+    group_label: "COR Measures"
   }
 
   measure: cat_cost_ratio {
@@ -4634,6 +4637,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 1.0*${cat_cost}/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
+    group_label: "COR Measures"
   }
 
 
@@ -4647,6 +4651,7 @@ view: lk_h_expoclm_mth {
               when ${TABLE}.policy_period_qs = '4' then 0.452*${TABLE}.earned_premium
               else 0 end ;;
     value_format_name: decimal_0
+    group_label: "COR Measures"
   }
 
   measure: abe_by_uw_year{
@@ -4654,6 +4659,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 1.0*${abe_projected_incurred}/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
+    group_label: "COR Measures"
   }
 
   measure: fixed_commission {
@@ -4661,6 +4667,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 0.16 ;;
     value_format_name: percent_1
+    group_label: "COR Measures"
   }
 
   measure: fixed_commission_costs {
@@ -4668,6 +4675,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 0.16*${premium_earned} ;;
     value_format_name: decimal_0
+    group_label: "COR Measures"
   }
 
 
