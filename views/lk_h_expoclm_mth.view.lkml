@@ -4610,6 +4610,13 @@ view: lk_h_expoclm_mth {
     value_format_name: decimal_0
   }
 
+  measure: flood_re_ratio {
+    label: "Flood Re Ratio"
+    type: number
+    sql: 1.0*${flood_re_levy}/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+  }
+
   ## NEEDS UPDATING FOR CAT 2020 RENEWAL ###
   measure: cat_cost {
     label: "Cat Cover Cost"
@@ -4622,17 +4629,30 @@ view: lk_h_expoclm_mth {
     value_format_name: decimal_0
   }
 
-  measure: flood_re_ratio {
-    label: "Flood Re Ratio"
-    type: number
-    sql: 1.0*${flood_re_levy}/nullif(${premium_earned},0) ;;
-    value_format_name: percent_1
-  }
-
   measure: cat_cost_ratio {
     label: "Cat Cost Ratio"
     type: number
     sql: 1.0*${cat_cost}/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+  }
+
+
+  ## NEEDS UPDATING FOR UWY5 ABE ###
+  measure: abe_projected_incurred{
+    label: "ABE Projected Incurred"
+    type: sum
+    sql: case when ${TABLE}.policy_period_qs = '1' then 0.603*${TABLE}.earned_premium
+              when ${TABLE}.policy_period_qs = '2' then 0.552*${TABLE}.earned_premium
+              when ${TABLE}.policy_period_qs = '3' then 0.501*${TABLE}.earned_premium
+              when ${TABLE}.policy_period_qs = '4' then 0.452*${TABLE}.earned_premium
+              else 0 end ;;
+    value_format_name: decimal_0
+  }
+
+  measure: abe_by_uw_year{
+    label: "ABE by UW Year"
+    type: number
+    sql: 1.0*${abe_projected_incurred}/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
   }
 
@@ -4651,24 +4671,6 @@ view: lk_h_expoclm_mth {
   }
 
 
-## NEEDS UPDATING FOR UWY5 ABE ###
-  measure: abe_by_uw_year{
-    label: "ABE by UW Year"
-    type: number
-    sql: case when ${TABLE}.policy_period_qs = '1' then 0.603
-              when ${TABLE}.policy_period_qs = '2' then 0.552
-              when ${TABLE}.policy_period_qs = '3' then 0.501
-              when ${TABLE}.policy_period_qs = '4' then 0.452
-              else 0 end ;;
-    value_format_name: percent_1
-  }
-
-  measure: abe_projected_incurred {
-    label: "ABE Projected Incurred"
-    type: number
-    sql: ${abe_by_uw_year}*${premium_earned} ;;
-    value_format_name: decimal_0
-  }
 
 
 
