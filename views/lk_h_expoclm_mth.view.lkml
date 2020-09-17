@@ -2764,6 +2764,7 @@ view: lk_h_expoclm_mth {
       year
     ]
     sql: ${TABLE}.schedule_cover_end_dttm ;;
+    label: "Schedule Cover End DTTM"
   }
 
   dimension_group: schedule_cover_start_dttm {
@@ -2778,57 +2779,10 @@ view: lk_h_expoclm_mth {
       year
     ]
     sql: ${TABLE}.schedule_cover_start_dttm ;;
+    label: "Schedule Cover Start DTTM"
   }
 
-  dimension: sect1_net_written_premium {
-    type: number
-    sql: ${TABLE}.sect1_net_written_premium ;;
-  }
 
-  dimension: sect2_net_written_premium {
-    type: number
-    sql: ${TABLE}.sect2_net_written_premium ;;
-  }
-
-  dimension: sect3_net_written_premium {
-    type: number
-    sql: ${TABLE}.sect3_net_written_premium ;;
-  }
-
-  dimension: sect3a_net_written_premium {
-    type: number
-    sql: ${TABLE}.sect3a_net_written_premium ;;
-  }
-
-  dimension: sect4_net_written_premium {
-    type: number
-    sql: ${TABLE}.sect4_net_written_premium ;;
-  }
-
-  dimension: tcs_claims {
-    type: number
-    sql: ${TABLE}.tcs_claims ;;
-  }
-
-  dimension: tcs_claims_nc {
-    type: number
-    sql: ${TABLE}.tcs_claims_nc ;;
-  }
-
-  dimension: tcs_enquiries {
-    type: number
-    sql: ${TABLE}.tcs_enquiries ;;
-  }
-
-  dimension: tcs_incidents {
-    type: number
-    sql: ${TABLE}.tcs_incidents ;;
-  }
-
-  dimension: tcs_incidents_undeveloped {
-    type: number
-    sql: ${TABLE}.tcs_incidents_undeveloped ;;
-  }
 
   dimension: tia_combined_reference {
     type: string

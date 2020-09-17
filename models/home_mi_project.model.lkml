@@ -18,7 +18,11 @@ datagroup: home_mi_project_default_datagroup {
 persist_with: home_mi_project_default_datagroup
 
 explore: lk_h_policy_history {
-  label: "Home Policy History Scored"
+  label: "Home Policy History Scored (Written Records)"
+}
+
+explore: lk_h_policy_history_scored_all {
+  label: "Home Policy History Scored (All)"
 }
 # explore: lk_h_adjustment_summary {}
 explore: lk_h_cancel_history {

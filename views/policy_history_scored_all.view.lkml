@@ -1,13 +1,13 @@
-view: lk_h_policy_history {
+view: lk_h_policy_history_scored_all {
   derived_table: {
     sql:
 
     SELECT *,
            CASE WHEN substring(postcode_full,2,1) NOT IN ('0','1','2','3','4','5','6','7','8','9') THEN LEFT (postcode_full,2)
            ELSE LEFT (postcode_full,1) end as postcode_area
+
     FROM actian.lk_h_policy_history_scored
-    WHERE SCHEDULE_COVER_START_DTTM = ANNUAL_COVER_START_DTTM
-    AND   CFI_IND = 0
+    WHERE CFI_IND = 0
     ;;
   }
 
@@ -192,7 +192,7 @@ view: lk_h_policy_history {
     tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
     value_format_name: percent_0
     sql: (${TABLE}.buildings_aauicl_rpm_inf + ${TABLE}.contents_aauicl_rpm_inf)/
-                (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts),0));;
+      (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts),0));;
   }
 
   dimension: aauicl_modelled_loss_ratio_wlc {
@@ -202,7 +202,7 @@ view: lk_h_policy_history {
     tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
     value_format_name: percent_0
     sql: (${TABLE}.buildings_aauicl_rpm_wlc + ${TABLE}.contents_aauicl_rpm_wlc)/
-                (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts),0));;
+      (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts),0));;
   }
 
   dimension: aauicl_modelled_gross_loss_ratio_inf {
@@ -212,7 +212,7 @@ view: lk_h_policy_history {
     tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
     value_format_name: percent_0
     sql: (${TABLE}.buildings_aauicl_rpm_inf + ${TABLE}.contents_aauicl_rpm_inf)/
-                (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_aauicl),0));;
+      (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_aauicl),0));;
   }
 
   dimension: aauicl_modelled_gross_loss_ratio_wlc {
@@ -222,7 +222,7 @@ view: lk_h_policy_history {
     tiers: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
     value_format_name: percent_0
     sql: (${TABLE}.buildings_aauicl_rpm_wlc + ${TABLE}.contents_aauicl_rpm_wlc)/
-                (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_aauicl),0));;
+      (nullif((${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_aauicl),0));;
   }
 
   dimension: commission_as_percent_of_gross_premium {
@@ -1116,7 +1116,7 @@ view: lk_h_policy_history {
     label: "Plan Loss Ratio"
     type: sum
     sql: case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2017-10-01') THEN 0.635 else
-        case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2018-10-01') THEN 0.615 else 0.623 end end ;;
+      case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2018-10-01') THEN 0.615 else 0.623 end end ;;
     value_format_name: percent_1
     hidden: yes
   }
