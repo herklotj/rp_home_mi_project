@@ -1699,17 +1699,17 @@ view: lk_h_expoclm_mth {
 
   dimension: cat_period {
     type: string
-    sql: case when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2017-10-01')))
+    sql: case when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2017-10-01')))
                     then 'Aug16 - Sep17'
-              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2017-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2018-10-01')))
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2017-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2018-10-01')))
                     then 'Oct17 - Sep18'
-              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2018-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2019-10-01')))
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2018-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2019-10-01')))
                     then 'Oct18 - Sep19'
-              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2019-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2020-10-01')))
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2019-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2020-10-01')))
                     then 'Oct19 - Sep20'
-              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2020-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2021-10-01')))
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2020-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2021-10-01')))
                     then 'Oct20 - Sep21'
-              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2021-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2022-10-01')))
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2021-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2022-10-01')))
                     then 'Oct21 - Sep22'
               else null end   ;;
     label: "Cat Period"
@@ -1778,6 +1778,26 @@ view: lk_h_expoclm_mth {
     ]
     label: "Inception Date"
     sql: ${TABLE}.inception_dt ;;
+  }
+
+  dimension: policy_period_qs_inception {
+    type: string
+    sql: case when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2017-07-31')))
+                    then '1'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2017-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2018-07-31')))
+                    then '2'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2018-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2019-07-31')))
+                    then '3'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2019-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2020-07-31')))
+                    then '4'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2020-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2021-07-31')))
+                    then '5'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2021-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2022-07-31')))
+                    then '6'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2022-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2023-07-31')))
+                    then '7'
+              else null end   ;;
+    label: "QS Period - Inception"
   }
 
   dimension: installment_flag {
@@ -2542,6 +2562,7 @@ view: lk_h_expoclm_mth {
   dimension: policy_period_qs {
     type: number
     sql: ${TABLE}.policy_period_qs ;;
+    label: "QS Period"
   }
 
   dimension_group: policy_start {
