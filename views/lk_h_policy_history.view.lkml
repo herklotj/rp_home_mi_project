@@ -105,6 +105,26 @@ view: lk_h_policy_history {
     sql: ${TABLE}.inception_dt ;;
   }
 
+  dimension: policy_period_qs_inception {
+    type: string
+    sql: case when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2017-07-31')))
+                    then '1'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2017-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2018-07-31')))
+                    then '2'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2018-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2019-07-31')))
+                    then '3'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2019-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2020-07-31')))
+                    then '4'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2020-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2021-07-31')))
+                    then '5'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2021-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2022-07-31')))
+                    then '6'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2022-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2023-07-31')))
+                    then '7'
+              else null end   ;;
+    label: "QS Period - Inception"
+  }
+
   dimension_group: _original_inception_date {
     label: "Original Inception"
     type: time
