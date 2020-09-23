@@ -2923,6 +2923,11 @@ view: lk_h_expoclm_mth {
     sql: ${TABLE}.uw_tenure ;;
   }
 
+  dimension: aa_tenure {
+    type: number
+    sql: ${TABLE}.aa_tenure ;;
+  }
+
   dimension: woff_discount_amount {
     type: number
     sql: ${TABLE}.woff_discount_amount ;;
