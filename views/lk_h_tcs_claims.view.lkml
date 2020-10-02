@@ -15,6 +15,14 @@ view: lk_h_tcs_claims {
     group_label: "Claim Flags"
   }
 
+  dimension: claim_w_recovery_flag {
+    label: "Claim with Recovery Payment Flag"
+    type: yesno
+    sql:${TABLE}.recoverypaymentamount_bds + ${TABLE}.recoverypaymentamount_cts + ${TABLE}.recoverypaymentamount_pps < 0 ;;
+    group_label: "Claim Flags"
+    hidden: yes
+  }
+
   dimension: lcm_label {
     label: "Last Calendar Month"
     type: string

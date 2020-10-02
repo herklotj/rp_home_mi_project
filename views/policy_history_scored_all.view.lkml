@@ -29,6 +29,18 @@ view: lk_h_policy_history_scored_all {
     label: "UW Policy Number"
   }
 
+  dimension: tia_transaction_no {
+    type: string
+    sql: ${TABLE}.tia_transaction_no ;;
+    label: "TIA Transaction No"
+  }
+
+  dimension: tia_reference {
+    type: string
+    sql: ${TABLE}.tia_reference ;;
+    label: "TIA Reference"
+  }
+
   dimension_group: schedule_cover_end_dttm {
     type: time
     timeframes: [
@@ -117,6 +129,36 @@ view: lk_h_policy_history_scored_all {
       year
     ]
     sql: ${TABLE}.original_inception_dttm ;;
+  }
+
+  dimension_group: annual_cover_start_dttm {
+    label: "Annual Cover Start DTTM"
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_year
+    ]
+    sql: CAST(${TABLE}.annual_cover_start_dttm AS TIMESTAMP WITHOUT TIME ZONE) ;;
+  }
+
+  dimension_group: annual_cover_end_dttm {
+    label: "Annual Cover End DTTM"
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_year
+    ]
+    sql: CAST(${TABLE}.annual_cover_end_dttm AS TIMESTAMP WITHOUT TIME ZONE) ;;
   }
 
 
@@ -861,7 +903,7 @@ view: lk_h_policy_history_scored_all {
     label: "AAUICL Net Written Premium TOT"
     type: sum
     sql:  ${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts ;;
-    value_format_name: decimal_0
+    value_format_name: decimal_2
   }
 
   measure: aauicl_commission_bds {
@@ -882,7 +924,7 @@ view: lk_h_policy_history_scored_all {
     label: "Commission TOT"
     type: sum
     sql:  ${TABLE}.broker_commission_aauicl ;;
-    value_format_name: decimal_0
+    value_format_name: decimal_2
   }
 
   measure: aauicl_rpm_buildings {
@@ -1273,6 +1315,48 @@ view: lk_h_policy_history_scored_all {
     type: number
     sql:  1.0*${aauicl_tot_non_ren}/nullif(${broker_covers_tot},0) ;;
     value_format_name: percent_1
+  }
+
+  measure: average_nwp_buildings {
+    label: "AAUICL Average Net Premium BDS"
+    type: number
+    sql:  ${aauicl_net_premium_bds}/nullif(${aauicl_covers_bds},0) ;;
+    value_format_name: decimal_0
+  }
+
+  measure: average_nwp_contents {
+    label: "AAUICL Average Net Premium CTS"
+    type: number
+    sql:  ${aauicl_net_premium_cts}/nullif(${aauicl_covers_cts},0) ;;
+    value_format_name: decimal_0
+  }
+
+  measure: average_nwp_total {
+    label: "AAUICL Average Net Premium TOT"
+    type: number
+    sql:  ${aauicl_net_premium_tot}/nullif(${aauicl_covers_tot},0) ;;
+    value_format_name: decimal_0
+  }
+
+  measure: average_commission_buildings {
+    label: "AAUICL Average Commission BDS"
+    type: number
+    sql:  ${aauicl_commission_bds}/nullif(${aauicl_covers_bds},0) ;;
+    value_format_name: decimal_0
+  }
+
+  measure: average_commission_contents {
+    label: "AAUICL Average Commission CTS"
+    type: number
+    sql:  ${aauicl_commission_cts}/nullif(${aauicl_covers_cts},0) ;;
+    value_format_name: decimal_0
+  }
+
+  measure: average_commission_total {
+    label: "AAUICL Average Commission TOT"
+    type: number
+    sql:  ${aauicl_commission_tot}/nullif(${aauicl_covers_tot},0) ;;
+    value_format_name: decimal_0
   }
 
 
