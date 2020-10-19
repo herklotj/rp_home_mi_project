@@ -117,6 +117,26 @@ view: lk_h_policy_history_scored_all {
     sql: ${TABLE}.inception_dt ;;
   }
 
+  dimension: policy_period_qs_inception {
+    type: string
+    sql: case when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2017-07-31')))
+                    then '1'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2017-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2018-07-31')))
+                    then '2'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2018-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2019-07-31')))
+                    then '3'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2019-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2020-07-31')))
+                    then '4'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2020-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2021-07-31')))
+                    then '5'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2021-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2022-07-31')))
+                    then '6'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2022-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2023-07-31')))
+                    then '7'
+              else null end   ;;
+    label: "QS Period - Inception"
+  }
+
   dimension_group: _original_inception_date {
     label: "Original Inception"
     type: time
@@ -907,23 +927,37 @@ view: lk_h_policy_history_scored_all {
   }
 
   measure: aauicl_commission_bds {
-    label: "Commission BDS"
+    label: "AAUICL Commission BDS"
     type: sum
     sql:  ${TABLE}.broker_commission_aauicl_bds ;;
     value_format_name: decimal_0
   }
 
   measure: aauicl_commission_cts {
-    label: "Commission CTS"
+    label: "AAUICL Commission CTS"
     type: sum
     sql:  ${TABLE}.broker_commission_aauicl_cts ;;
     value_format_name: decimal_0
   }
 
   measure: aauicl_commission_tot {
-    label: "Commission TOT"
+    label: "AAUICL Commission TOT"
     type: sum
     sql:  ${TABLE}.broker_commission_aauicl ;;
+    value_format_name: decimal_2
+  }
+
+  measure: broker_commission_tot {
+    label: "Broker Commission TOT"
+    type: sum
+    sql:  ${TABLE}.broker_commission ;;
+    value_format_name: decimal_2
+  }
+
+  measure: broker_commission_xfees {
+    label: "Broker Commission exc. Fees"
+    type: sum
+    sql:  ${TABLE}.broker_commission_xfees ;;
     value_format_name: decimal_2
   }
 
@@ -1031,6 +1065,7 @@ view: lk_h_policy_history_scored_all {
     sql:  ${aauicl_rpm_total}/nullif(${aauicl_covers_tot},0) ;;
     value_format_name: decimal_0
   }
+
 
 
 
@@ -1358,6 +1393,16 @@ view: lk_h_policy_history_scored_all {
     sql:  ${aauicl_commission_tot}/nullif(${aauicl_covers_tot},0) ;;
     value_format_name: decimal_0
   }
+
+  measure: transaction_premium_gross {
+    label: "AAUICL Transaction Premium Gross"
+    type: sum
+    sql:  (${TABLE}.net_premium_aauicl_bds + ${TABLE}.broker_commission_aauicl})*(1+${TABLE}.ipt_rate)+${TABLE}.broker_commission_aauicl-${TABLE}.broker_commission_xfees;;
+    value_format_name: decimal_0
+  }
+
+
+
 
 
 }

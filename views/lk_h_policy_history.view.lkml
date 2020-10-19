@@ -923,27 +923,41 @@ view: lk_h_policy_history {
     label: "AAUICL Net Written Premium TOT"
     type: sum
     sql:  ${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts ;;
-    value_format_name: decimal_2
+    value_format_name: decimal_0
   }
 
   measure: aauicl_commission_bds {
-    label: "Commission BDS"
+    label: "AAUICL Commission BDS"
     type: sum
     sql:  ${TABLE}.broker_commission_aauicl_bds ;;
     value_format_name: decimal_0
   }
 
   measure: aauicl_commission_cts {
-    label: "Commission CTS"
+    label: "AAUICL Commission CTS"
     type: sum
     sql:  ${TABLE}.broker_commission_aauicl_cts ;;
     value_format_name: decimal_0
   }
 
   measure: aauicl_commission_tot {
-    label: "Commission TOT"
+    label: "AAUICL Commission TOT"
     type: sum
     sql:  ${TABLE}.broker_commission_aauicl ;;
+    value_format_name: decimal_2
+  }
+
+  measure: broker_commission_tot {
+    label: "Broker Commission TOT"
+    type: sum
+    sql:  ${TABLE}.broker_commission ;;
+    value_format_name: decimal_2
+  }
+
+  measure: broker_commission_xfees {
+    label: "Broker Commission exc. Fees"
+    type: sum
+    sql:  ${TABLE}.broker_commission_xfees ;;
     value_format_name: decimal_2
   }
 
@@ -1379,6 +1393,28 @@ view: lk_h_policy_history {
     sql:  ${aauicl_commission_tot}/nullif(${aauicl_covers_tot},0) ;;
     value_format_name: decimal_0
   }
+
+  measure: transaction_premium_gross {
+    label: "AAUICL Gross Premium (exc. Fees)"
+    type: sum
+    sql:  (${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_xfees)*(1+${TABLE}.ipt_rate) ;;
+    value_format_name: decimal_0
+  }
+
+  measure: transaction_premium_gross_exc_ipt {
+    label: "AAUICL Gross Premium (exc. Fees & IPT)"
+    type: sum
+    sql:  (${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission_xfees) ;;
+    value_format_name: decimal_0
+  }
+
+  measure: ipt {
+    label: "AAUICL IPT"
+    type: sum
+    sql:  ${TABLE}.ipt_amount ;;
+    value_format_name: decimal_0
+  }
+
 
 
 }

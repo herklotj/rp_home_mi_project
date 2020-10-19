@@ -1,5 +1,234 @@
 view: lk_h_cancel_history {
-  sql_table_name: actian.lk_h_cancel_history ;;
+  derived_table: {
+    sql:
+
+    SELECT tia_reference,
+       tia_customer_no,
+       tia_transaction_no,
+       uw_policy_no,
+       status,
+       policy_year,
+       provenance_code,
+       installment_flag,
+       channel,
+       broked_ind,
+       inception_dt,
+       tia_combined_reference,
+       merlin_reference,
+       membership_no,
+       cover_type,
+       cover_type_requested,
+       annual_cover_start_dttm,
+       annual_cover_end_dttm,
+       schedule_cover_start_dttm,
+       schedule_cover_end_dttm,
+       renewal_date,
+       transaction_dttm,
+       original_inception_dttm,
+       home_cover_level,
+       nb_sw_flag,
+       cfi_status,
+       cfi_dttm,
+       cfi_reason,
+       cfi_ind_lapse_dttm,
+       cfi_ind,
+       cfi_ind_lapse,
+       cfi_ind_lapse_bds,
+       cfi_ind_lapse_cts,
+       transaction_date,
+       policy_start_date,
+       policy_start_wk,
+       policy_start_mth,
+       policy_start_yr,
+       policy_written_wk,
+       policy_written_mth,
+       policy_written_yr,
+       broker_ind_bds,
+       broker_ind_cts,
+       broker_flag_joint,
+       aauicl_ind_bds,
+       aauicl_ind_cts,
+       aauicl_flag_joint,
+       aauicl_scheme,
+       broker_nb_rb,
+       insurer_nb_rb,
+       aa_tenure,
+       uw_tenure,
+       aa_membership,
+       addon_ind_hle,
+       addon_commission_hle,
+       addon_ind_hec,
+       addon_commission_hec,
+       addon_ind_her,
+       addon_commission_her,
+       mta_dttm,
+       mta_ind,
+       mta_add_net_written_premium,
+       mta_add_undiscounted_commission,
+       mta_add_ipt_amount,
+       mta_add_flex_discount_amount,
+       mta_add_woff_discount_amount,
+       mta_add_iaf_commission_discount,
+       mta_cov_bds,
+       mta_cov_cts,
+       mta_add_net_premium_bds,
+       mta_add_net_premium_cts,
+       mta_add_commission_bds,
+       mta_add_commission_cts,
+       net_written_premium,
+       undiscounted_commission,
+       ipt_amount,
+       flex_discount_amount,
+       woff_discount_amount,
+       ipt_rate,
+       iaf_amount_t AS iaf_amount,
+       iaf_commission_discount,
+       sect1_net_written_premium,
+       sect2_net_written_premium,
+       sect3_net_written_premium,
+       sect3a_net_written_premium,
+       sect4_net_written_premium,
+       policy_mta_date,
+       policy_mta_mth,
+       policy_mta_yr,
+       cover_type_customer,
+       broker_iaf,
+       broker_commission_t AS broker_commission,
+       broker_commission_xfees_t AS broker_commission_xfees,
+       broker_commission_woff,
+       broker_commission_disc,
+       broker_iaf_ipt,
+       broker_lapse_disc,
+       net_written_premium_bds,
+       net_written_premium_cts,
+       broker_commission_bds,
+       broker_commission_cts,
+       broker_lapse_disc_bds,
+       broker_lapse_disc_cts,
+       mta_add_broker_iaf,
+       mta_add_broker_commission,
+       mta_add_broker_commission_xfees,
+       mta_add_broker_commission_woff,
+       mta_add_broker_commission_disc,
+       mta_add_broker_iaf_ipt,
+       mta_add_broker_commission_bds,
+       mta_add_broker_commission_cts,
+       perc_broker_commission,
+       perc_broker_commission_xfees,
+       net_written_premium_aauicl,
+       broker_commission_aauicl,
+       mta_add_net_premium_aauicl,
+       mta_add_commission_aauicl,
+       mta_cov_aauicl_bds,
+       mta_cov_aauicl_cts,
+       net_premium_aauicl_bds,
+       net_premium_aauicl_cts,
+       broker_commission_aauicl_bds,
+       broker_commission_aauicl_cts,
+       mta_add_premium_aauicl_bds,
+       mta_add_premium_aauicl_cts,
+       mta_add_commission_aauicl_bds,
+       mta_add_commission_aauicl_cts,
+       net_written_premium_other,
+       broker_commission_other,
+       mta_add_net_premium_other,
+       mta_add_commission_other,
+       mta_cov_other_bds,
+       mta_cov_other_cts,
+       net_premium_other_bds,
+       net_premium_other_cts,
+       broker_commission_other_bds,
+       broker_commission_other_cts,
+       mta_add_premium_other_bds,
+       mta_add_premium_other_cts,
+       mta_add_commission_other_bds,
+       mta_add_commission_other_cts,
+       load_dttm,
+       cancel_effective_dttm_t AS cancel_effective_dttm,
+       cancel_reason,
+       policy_cancel_date_t AS policy_cancel_date,
+       policy_cancel_mth_t AS policy_cancel_mth,
+       policy_cancel_yr_t AS policy_cancel_yr,
+       policy_cancel_notified_mth_t AS policy_cancel_notified_mth,
+       policy_cancel_notified_yr_t AS policy_cancel_notified_yr,
+       cancel_cooling,
+       cancel_cooling_bds,
+       cancel_cooling_cts,
+       time_on_risk,
+       broker_ind_bds*time_on_risk AS broker_tor_bds,
+       broker_ind_cts*time_on_risk AS broker_tor_cts,
+       aauicl_ind_bds*time_on_risk AS aauicl_tor_bds,
+       aauicl_ind_cts*time_on_risk AS aauicl_tor_cts,
+       case when cancel_reason in(13,25,26,27,30,36,40) then net_written_premium else net_written_premium*(1 - time_on_risk) end AS net_cancelled_premium,
+       case when cancel_reason in(13,25,26,27,30,36,40) then net_written_premium_bds else net_written_premium_bds*(1 - time_on_risk) end AS net_cancelled_premium_bds,
+       case when cancel_reason in(13,25,26,27,30,36,40) then net_written_premium_cts else net_written_premium_cts*(1 - time_on_risk) end AS net_cancelled_premium_cts,
+       case when cancel_reason in(13,25,26,27,30,36,40) then net_written_premium_aauicl else net_written_premium_aauicl*(1 - time_on_risk) end AS net_cancelled_premium_aauicl,
+       case when cancel_reason in(13,25,26,27,30,36,40) then net_premium_aauicl_bds else net_premium_aauicl_bds*(1 - time_on_risk) end AS net_can_premium_aauicl_bds,
+       case when cancel_reason in(13,25,26,27,30,36,40) then net_premium_aauicl_cts else net_premium_aauicl_cts*(1 - time_on_risk) end AS net_can_premium_aauicl_cts,
+       case when cancel_reason in(13,25,26,27,30,36,40) then broker_commission_xfees_t else broker_commission_xfees_t*(1 - time_on_risk) end AS cancelled_broker_commission_xfees
+
+FROM (SELECT c.*,
+             CASE
+               WHEN cfi_ind_lapse = 1 THEN annual_cover_start_dttm
+               ELSE cancel_effective_dttm
+             END AS cancel_effective_dttm_t,
+             CASE
+               WHEN cfi_ind_lapse = 1 THEN CAST(cfi_ind_lapse_dttm,ansidate)
+               ELSE policy_cancel_date
+             END AS policy_cancel_date_t,
+             CASE
+               WHEN cfi_ind_lapse = 1 THEN CAST(DATE_TRUNC ('MONTH',cfi_ind_lapse_dttm),ansidate)
+               ELSE policy_cancel_mth
+             END AS policy_cancel_mth_t,
+             CASE
+               WHEN cfi_ind_lapse = 1 THEN date_part ('year',cfi_ind_lapse_dttm)
+               ELSE policy_cancel_yr
+             END AS policy_cancel_yr_t,
+             CASE
+               WHEN cfi_ind_lapse = 1 THEN CAST(DATE_TRUNC ('MONTH',cfi_ind_lapse_dttm),ansidate)
+               ELSE policy_cancel_notified_mth
+             END AS policy_cancel_notified_mth_t,
+             CASE
+               WHEN cfi_ind_lapse = 1 THEN date_part ('year',cfi_ind_lapse_dttm)
+               ELSE policy_cancel_notified_yr
+             END AS policy_cancel_notified_yr_t,
+             CASE
+               WHEN cfi_ind_lapse = 1 THEN 0
+               ELSE broker_commission
+             END AS broker_commission_t,
+             CASE
+               WHEN cfi_ind_lapse = 1 THEN 0
+               ELSE broker_commission_xfees
+             END AS broker_commission_xfees_t,
+             CASE
+               WHEN cfi_ind_lapse = 1 THEN 0
+               ELSE iaf_amount
+             END AS iaf_amount_t,
+             ((CASE
+               WHEN cfi_ind_lapse = 1 THEN annual_cover_start_dttm
+               ELSE cancel_effective_dttm
+             END) - annual_cover_start_dttm) /(annual_cover_end_dttm - annual_cover_start_dttm) AS time_on_risk
+      FROM (SELECT a.*,
+                   b.cancel_effective_dttm,
+                   b.cancel_reason,
+                   b.policy_cancel_date,
+                   b.policy_cancel_mth,
+                   b.policy_cancel_yr,
+                   b.policy_cancel_notified_mth,
+                   b.policy_cancel_notified_yr,
+                   b.cancel_cooling,
+                   b.cancel_cooling_bds,
+                   b.cancel_cooling_cts
+            FROM (SELECT *
+                  FROM actian.lk_h_policy_history
+                  WHERE schedule_cover_start_dttm = annual_cover_start_dttm
+                  AND   cfi_ind = 0) a
+              LEFT JOIN actian.lk_h_cancel_history b
+                     ON a.tia_reference = b.tia_reference
+                    AND a.annual_cover_start_dttm = b.annual_cover_start_dttm) c) d
+WHERE cancel_effective_dttm_t IS NOT NULL
+
+    ;; }
 
   dimension: aauicl_flag_joint {
     type: number
@@ -227,17 +456,17 @@ view: lk_h_cancel_history {
   }
 
   dimension: tia_customer_no {
-    type: number
+    type: string
     sql: ${TABLE}.tia_customer_no ;;
   }
 
   dimension: tia_reference {
-    type: number
+    type: string
     sql: ${TABLE}.tia_reference ;;
   }
 
   dimension: tia_transaction_no {
-    type: number
+    type: string
     sql: ${TABLE}.tia_transaction_no ;;
   }
 
@@ -273,6 +502,148 @@ view: lk_h_cancel_history {
     type: string
     sql: ${TABLE}.uw_policy_no ;;
   }
+
+  dimension: cfi_ind_lapse {
+    type: number
+    sql: ${TABLE}.cfi_ind_lapse ;;
+  }
+
+  measure: broker_covers_bds {
+    label: "Broker Covers BDS"
+    type: sum
+    sql: ${TABLE}.broker_ind_bds ;;
+    value_format_name: decimal_0
+  }
+
+  measure: broker_covers_cts {
+    label: "Broker Covers CTS"
+    type: sum
+    sql: ${TABLE}.broker_ind_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: broker_covers_tot {
+    label: "Broker Covers TOT"
+    type: sum
+    sql: ${TABLE}.broker_ind_bds + ${TABLE}.broker_ind_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_covers_bds {
+    label: "AAUICL Covers BDS"
+    type: sum
+    sql: ${TABLE}.aauicl_ind_bds ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_covers_cts {
+    label: "AAUICL Covers CTS"
+    type: sum
+    sql: ${TABLE}.aauicl_ind_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_covers_tot {
+    label: "AAUICL Covers TOT"
+    type: sum
+    sql: ${TABLE}.aauicl_ind_bds + ${TABLE}.aauicl_ind_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: broker_tor_bds {
+    label: "Broker TOR BDS"
+    type: sum
+    sql: ${TABLE}.broker_tor_bds ;;
+    value_format_name: decimal_0
+  }
+
+  measure: broker_tor_cts {
+    label: "Broker TOR CTS"
+    type: sum
+    sql: ${TABLE}.broker_tor_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: broker_tor_tot {
+    label: "Broker TOR TOT"
+    type: sum
+    sql: ${TABLE}.broker_tor_bds + ${TABLE}.broker_tor_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_tor_bds {
+    label: "AAUICL TOR BDS"
+    type: sum
+    sql: ${TABLE}.aauicl_tor_bds ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_tor_cts {
+    label: "AAUICL TOR CTS"
+    type: sum
+    sql: ${TABLE}.aauicl_tor_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_tor_tot {
+    label: "AAUICL TOR TOT"
+    type: sum
+    sql: ${TABLE}.aauicl_tor_bds + ${TABLE}.aauicl_tor_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_net_can_prem_bds {
+    label: "AAUICL Net Cancelled Premium BDS"
+    type: sum
+    sql: -1.0*${TABLE}.NET_CAN_PREMIUM_AAUICL_BDS ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_net_can_prem_cts {
+    label: "AAUICL Net Cancelled Premium CTS"
+    type: sum
+    sql: -1.0*${TABLE}.NET_CAN_PREMIUM_AAUICL_CTS ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_net_can_prem_tot {
+    label: "AAUICL Net Cancelled Premium TOT"
+    type: sum
+    sql: -1.0*${TABLE}.net_cancelled_premium_aauicl ;;
+    value_format_name: decimal_0
+  }
+
+  measure: aauicl_net_written_prem_tot {
+    label: "AAUICL Net Written Premium TOT"
+    type: sum
+    sql: ${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts ;;
+    value_format_name: decimal_0
+  }
+
+  measure: broker_canc_commission_xfees {
+    label: "Broker Cancelled Commission (exc. Fees)"
+    type: sum
+    sql: -1.0*${TABLE}.cancelled_broker_commission_xfees ;;
+    value_format_name: decimal_0
+  }
+
+  measure: cancelled_gross_premium_xfees  {
+    label: "Cancelled Gross Premium (exc. Fees)"
+    type: sum
+    sql: -1.0*(${TABLE}.net_cancelled_premium_aauicl+${TABLE}.cancelled_broker_commission_xfees) ;;
+    value_format_name: decimal_0
+  }
+
+  measure: cancelled_transaction_premium_xfees  {
+    label: "Cancelled Transaction Premium (exc. Fees)"
+    type: sum
+    sql: -1.0*(${TABLE}.net_cancelled_premium_aauicl+${TABLE}.cancelled_broker_commission_xfees)*(1+${TABLE}.ipt_rate) ;;
+    value_format_name: decimal_0
+  }
+
+
+
+
 
   measure: count {
     type: count
