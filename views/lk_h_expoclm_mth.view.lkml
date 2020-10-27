@@ -4599,7 +4599,7 @@ view: lk_h_expoclm_mth {
     group_label: "COR Measures"
   }
 
-  ## NEEDS UPDATING FOR CAT 2020 RENEWAL ###
+  ## NEEDS UPDATING FOR CAT 2021 RENEWAL ###
   measure: cat_cost {
     label: "Cat Cover Cost"
     type: sum
@@ -4607,6 +4607,20 @@ view: lk_h_expoclm_mth {
               when ${cat_period} = 'Oct17 - Sep18' then ${TABLE}.earned_premium*0.0995
               when ${cat_period} = 'Oct18 - Sep19' then ${TABLE}.earned_premium*0.0917
               when ${cat_period} = 'Oct19 - Sep20' then ${TABLE}.earned_premium*0.0917
+              when ${cat_period} = 'Oct20 - Sep21' then ${TABLE}.earned_premium*0.0951
+              else 0 end ;;
+    value_format_name: decimal_0
+    group_label: "COR Measures"
+  }
+
+  measure: cat_cost_topup {
+    label: "Cat Cover Cost (Top Up Layer)"
+    type: sum
+    sql: case when ${cat_period} = 'Aug16 - Sep17' then ${TABLE}.earned_premium*0.0000
+              when ${cat_period} = 'Oct17 - Sep18' then ${TABLE}.earned_premium*0.0080
+              when ${cat_period} = 'Oct18 - Sep19' then ${TABLE}.earned_premium*0.0098
+              when ${cat_period} = 'Oct19 - Sep20' then ${TABLE}.earned_premium*0.0098
+              when ${cat_period} = 'Oct20 - Sep21' then ${TABLE}.earned_premium*0.0126
               else 0 end ;;
     value_format_name: decimal_0
     group_label: "COR Measures"
@@ -4642,18 +4656,36 @@ view: lk_h_expoclm_mth {
     group_label: "COR Measures"
   }
 
+  measure: fixed_commission_costs {
+    label: "Fixed Commission (£)"
+    type: sum
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0.16*${TABLE}.earned_premium else 0.08*${TABLE}.earned_premium end ;;
+    value_format_name: decimal_0
+    group_label: "COR Measures"
+  }
+
   measure: fixed_commission {
     label: "Fixed Commission"
     type: number
-    sql: 0.16 ;;
+    sql: ${fixed_commission_costs}/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
 
-  measure: fixed_commission_costs {
-    label: "Fixed Commission (£)"
+  measure: claim_fees_qs {
+    label: "Fixed Commission"
     type: number
-    sql: 0.16*${premium_earned} ;;
+    sql: ${fixed_commission_costs}/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Measures"
+  }
+
+
+  measure: claims_handing_fee_qs {
+    label: "Claims Handling Fee (Quota Share)"
+    type: sum
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0 else case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
+      THEN ${TABLE}.tcs_claims*175 else ${TABLE}.tcs_claims*210 end end ;;
     value_format_name: decimal_0
     group_label: "COR Measures"
   }

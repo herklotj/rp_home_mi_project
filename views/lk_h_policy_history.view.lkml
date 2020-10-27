@@ -1401,6 +1401,13 @@ view: lk_h_policy_history {
     value_format_name: decimal_0
   }
 
+  measure: gross_premium_inc_fees {
+    label: "AAUICL Gross Premium (exc. IPT)"
+    type: sum
+    sql:  (${TABLE}.net_premium_aauicl_bds + ${TABLE}.net_premium_aauicl_cts + ${TABLE}.broker_commission) ;;
+    value_format_name: decimal_0
+  }
+
   measure: transaction_premium_gross_exc_ipt {
     label: "AAUICL Gross Premium (exc. Fees & IPT)"
     type: sum

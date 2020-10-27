@@ -396,12 +396,43 @@ view: lk_h_tcs_claims {
   }
 
   dimension: claim_value {
-    description: "Claim Value"
+    description: "Claim Value (S/M/L)"
     type: tier
     style:  integer
     tiers: [100,10000,50000]
     value_format_name: gbp_0
     sql: ${TABLE}.totalincurred ;;
+    group_label: "Incurred Distributions"
+  }
+
+  dimension: incurred_banded {
+    label: "Incurred Banded (£5,000)"
+    type: tier
+    style:  integer
+    tiers: [5000,10000,15000,20000,25000,30000,35000,40000,45000,50000,55000,60000,65000,70000,75000]
+    value_format_name: gbp_0
+    sql: ${TABLE}.totalincurred;;
+    group_label: "Incurred Distributions"
+  }
+
+  dimension: incurred_banded_bds {
+    label: "Incurred Banded BDS (£5,000)"
+    type: tier
+    style:  integer
+    tiers: [5000,10000,15000,20000,25000,30000,35000,40000,45000,50000,55000,60000,65000,70000,75000]
+    value_format_name: gbp_0
+    sql: ${TABLE}.incurred_bds;;
+    group_label: "Incurred Distributions"
+  }
+
+  dimension: incurred_banded_cts {
+    label: "Incurred Banded CTS (£2,500)"
+    type: tier
+    style:  integer
+    tiers: [2500,5000,7500,10000,12500,15000,17500,20000,22500,25000,27500,30000,32500,35000,37500]
+    value_format_name: gbp_0
+    sql: ${TABLE}.incurred_cts;;
+    group_label: "Incurred Distributions"
   }
 
 
@@ -1321,6 +1352,23 @@ view: lk_h_tcs_claims {
     group_label: "Claim Lifecycles"
   }
 
+
+  measure: chargeable_contents {
+    label: "Chargeable Incidents - Contents"
+    type: sum
+    sql: case when ${TABLE}.incurred_cts > 0
+      then ${TABLE}.TCS_CLAIMS else null end;;
+      hidden: yes
+
+  }
+
+  measure: chargeable_buildings {
+    label: "Chargeable Incidents - Buildings"
+    type: sum
+    sql: case when ${TABLE}.incurred_bds > 0
+      then ${TABLE}.TCS_CLAIMS else null end;;
+      hidden: yes
+  }
 
 
 }
