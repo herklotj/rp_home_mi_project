@@ -435,6 +435,15 @@ view: lk_h_tcs_claims {
     group_label: "Incurred Distributions"
   }
 
+  dimension: claim_cover_type {
+    label: "Claim Cover Type"
+    type: string
+    sql: case when ${TABLE}.incurred_bds > 0 and ${TABLE}.incurred_cts > 0 then 'Buildings & Contents' else
+         case when ${TABLE}.incurred_bds > 0 then 'Buildings' else
+         case when ${TABLE}.incurred_cts > 0 then 'Contents' else
+         case when ${TABLE}.incurred_bds = 0 and ${TABLE}.incurred_cts = 0 then 'N/A' else null end end end end;;
+  }
+
 
   #### Measures ###
 
