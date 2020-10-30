@@ -1,6 +1,84 @@
 view: lk_h_expoclm_mth {
   sql_table_name: actian.lk_h_expoclm_mth ;;
 
+
+  #### MANUAL ENTRY DIMENSIONS e.g. Cat Costs/Periods, Flood Re rates, ABE by UWYR etc. ###
+
+  ### ASAT November 1st 2020 ###
+  dimension: cat_period {
+    type: string
+    sql: case when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2017-10-01')))
+                    then 'Aug16 - Sep17'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2017-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2018-10-01')))
+                    then 'Oct17 - Sep18'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2018-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2019-10-01')))
+                    then 'Oct18 - Sep19'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2019-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2020-10-01')))
+                    then 'Oct19 - Sep20'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2020-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2021-10-01')))
+                    then 'Oct20 - Sep21'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2021-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2022-10-01')))
+                    then 'Oct21 - Sep22'
+              else null end   ;;
+    label: "Cat Period"
+  }
+
+  ### ASAT November 1st 2020 ###
+  dimension: cat_xol_rate {
+    type: number
+    sql: case when ${cat_period} = 'Aug16 - Sep17' then 0.0800
+              when ${cat_period} = 'Oct17 - Sep18' then 0.0995
+              when ${cat_period} = 'Oct18 - Sep19' then 0.0917
+              when ${cat_period} = 'Oct19 - Sep20' then 0.0917
+              when ${cat_period} = 'Oct20 - Sep21' then 0.0951
+              else 0 end;;
+    hidden: yes
+    value_format_name: percent_2
+  }
+
+  dimension: cat_xol_topup_rate {
+    type: number
+    sql: case when ${cat_period} = 'Aug16 - Sep17' then ${TABLE}.earned_premium*0.0000
+              when ${cat_period} = 'Oct17 - Sep18' then ${TABLE}.earned_premium*0.0080
+              when ${cat_period} = 'Oct18 - Sep19' then ${TABLE}.earned_premium*0.0098
+              when ${cat_period} = 'Oct19 - Sep20' then ${TABLE}.earned_premium*0.0098
+              when ${cat_period} = 'Oct20 - Sep21' then ${TABLE}.earned_premium*0.0126
+              else 0 end ;;
+    hidden: yes
+    value_format_name: percent_2
+  }
+
+
+  ### ASAT November 1st 2020 ###
+  dimension: flood_re_rate {
+    type: number
+    sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then 0.0565
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2017 then 0.0567
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2018 then 0.0561
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then 0.0537
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then 0.0517
+              else 0 end ;;
+    hidden: yes
+    value_format_name: percent_2
+  }
+
+  ### ASAT June 30th 2020 ###
+  dimension: latest_abe_rate {
+    type: number
+    sql: case when ${TABLE}.policy_period_qs = '1' then 0.603
+              when ${TABLE}.policy_period_qs = '2' then 0.552
+              when ${TABLE}.policy_period_qs = '3' then 0.501
+              when ${TABLE}.policy_period_qs = '4' then 0.452
+              else 0 end ;;
+    hidden: yes
+    value_format_name: percent_1
+  }
+
+  ########
+
+
+
+
   dimension: aa_membership {
     label: "AA Membership"
     type: string
@@ -1697,25 +1775,6 @@ view: lk_h_expoclm_mth {
     sql: cast(${TABLE}.exposure_mth as timestamp) ;;
   }
 
-  dimension: cat_period {
-    type: string
-    sql: case when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2017-10-01')))
-                    then 'Aug16 - Sep17'
-              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2017-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2018-10-01')))
-                    then 'Oct17 - Sep18'
-              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2018-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2019-10-01')))
-                    then 'Oct18 - Sep19'
-              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2019-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2020-10-01')))
-                    then 'Oct19 - Sep20'
-              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2020-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2021-10-01')))
-                    then 'Oct20 - Sep21'
-              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2021-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) <= (TIMESTAMP '2022-10-01')))
-                    then 'Oct21 - Sep22'
-              else null end   ;;
-    label: "Cat Period"
-  }
-
-
   dimension: exposure_yr {
     type: number
     label: "Exposure Year"
@@ -3040,6 +3099,7 @@ view: lk_h_expoclm_mth {
     type: sum
     sql:  ${TABLE}.earned_premium ;;
     value_format_name: decimal_0
+    group_label: "COR Income Measures"
   }
 
   measure: bds_premium_earned {
@@ -4577,7 +4637,96 @@ view: lk_h_expoclm_mth {
 
   ### Fields for COR
 
+### Income ###
+
+  measure: earned_premium_netcatre {
+    label: "Earned Premium Net CatRe"
+    type: sum
+    sql:  ${TABLE}.earned_premium*(1-${cat_xol_rate}) ;;
+    value_format_name: decimal_0
+    group_label: "COR Income Measures"
+  }
+
+  measure: earned_premium_pure {
+    label: "Earned Premium (AAUICL)"
+    type: sum
+    sql:  0.2*${TABLE}.earned_premium;;
+    value_format_name: decimal_0
+    group_label: "COR Income Measures"
+  }
+
+
+  measure: earned_premium_pure_netcatre {
+    label: "Earned Premium Net CatRe (AAUICL)"
+    type: sum
+    sql:  0.2*${TABLE}.earned_premium*(1-${cat_xol_rate}) ;;
+    value_format_name: decimal_0
+    group_label: "COR Income Measures"
+  }
+
+  measure: earned_gross_premium {
+    label: "Earned Gross Premium"
+    type: sum
+    sql:  ${TABLE}.earned_premium + ${TABLE}.earned_commission ;;
+    value_format_name: decimal_0
+    group_label: "COR Income Measures"
+  }
+
+  measure: earned_gross_premium_netcatre {
+    label: "Earned Gross Premium Net CatRe"
+    type: sum
+    sql:  ${TABLE}.earned_premium*(1-${cat_xol_rate}) + ${TABLE}.earned_commission ;;
+    value_format_name: decimal_0
+    group_label: "COR Income Measures"
+  }
+
+  measure: earned_gross_premium_pure {
+    label: "Earned Gross Premium (AAUICL)"
+    type: sum
+    sql:  0.2*${TABLE}.earned_premium + ${TABLE}.earned_commission;;
+    value_format_name: decimal_0
+    group_label: "COR Income Measures"
+  }
+
+
+  measure: earned_gross_premium_pure_netcatre {
+    label: "Earned Gross Premium Net CatRe (AAUICL)"
+    type: sum
+    sql:  0.2*${TABLE}.earned_premium*(1-${cat_xol_rate}) + ${TABLE}.earned_commission;;
+    value_format_name: decimal_0
+    group_label: "COR Income Measures"
+  }
+
+  ### Expenses ###
+
   ## NEEDS UPDATING FOR 2021 ###
+
+  measure: cat_cost {
+    label: "Cat XoL Cost"
+    type: sum
+    sql: case when ${cat_period} = 'Aug16 - Sep17' then ${TABLE}.earned_premium*0.0800
+              when ${cat_period} = 'Oct17 - Sep18' then ${TABLE}.earned_premium*0.0995
+              when ${cat_period} = 'Oct18 - Sep19' then ${TABLE}.earned_premium*0.0917
+              when ${cat_period} = 'Oct19 - Sep20' then ${TABLE}.earned_premium*0.0917
+              when ${cat_period} = 'Oct20 - Sep21' then ${TABLE}.earned_premium*0.0951
+              else 0 end ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
+  measure: cat_cost_topup {
+    label: "Cat XoL Cost (Top Up Layer)"
+    type: sum
+    sql: case when ${cat_period} = 'Aug16 - Sep17' then ${TABLE}.earned_premium*0.0000
+              when ${cat_period} = 'Oct17 - Sep18' then ${TABLE}.earned_premium*0.0080
+              when ${cat_period} = 'Oct18 - Sep19' then ${TABLE}.earned_premium*0.0098
+              when ${cat_period} = 'Oct19 - Sep20' then ${TABLE}.earned_premium*0.0098
+              when ${cat_period} = 'Oct20 - Sep21' then ${TABLE}.earned_premium*0.0126
+              else 0 end ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
   measure: flood_re_levy {
     label: "Flood Re Levy"
     type: sum
@@ -4588,50 +4737,25 @@ view: lk_h_expoclm_mth {
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then ${TABLE}.earned_premium*0.0517
               else 0 end ;;
     value_format_name: decimal_0
-    group_label: "COR Measures"
+    group_label: "COR Expense Measures"
   }
 
-  measure: flood_re_ratio {
-    label: "Flood Re Ratio"
-    type: number
-    sql: 1.0*${flood_re_levy}/nullif(${premium_earned},0) ;;
-    value_format_name: percent_1
-    group_label: "COR Measures"
-  }
-
-  ## NEEDS UPDATING FOR CAT 2021 RENEWAL ###
-  measure: cat_cost {
-    label: "Cat Cover Cost"
+  measure: fixed_commission_costs {
+    label: "Fixed Commission (£)"
     type: sum
-    sql: case when ${cat_period} = 'Aug16 - Sep17' then ${TABLE}.earned_premium*0.0800
-              when ${cat_period} = 'Oct17 - Sep18' then ${TABLE}.earned_premium*0.0995
-              when ${cat_period} = 'Oct18 - Sep19' then ${TABLE}.earned_premium*0.0917
-              when ${cat_period} = 'Oct19 - Sep20' then ${TABLE}.earned_premium*0.0917
-              when ${cat_period} = 'Oct20 - Sep21' then ${TABLE}.earned_premium*0.0951
-              else 0 end ;;
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0.16*${TABLE}.earned_premium else 0.08*${TABLE}.earned_premium end ;;
     value_format_name: decimal_0
-    group_label: "COR Measures"
+    group_label: "COR Expense Measures"
   }
 
-  measure: cat_cost_topup {
-    label: "Cat Cover Cost (Top Up Layer)"
+
+  measure: claims_handing_fee_qs {
+    label: "Claims Handling Fee (Quota Share)"
     type: sum
-    sql: case when ${cat_period} = 'Aug16 - Sep17' then ${TABLE}.earned_premium*0.0000
-              when ${cat_period} = 'Oct17 - Sep18' then ${TABLE}.earned_premium*0.0080
-              when ${cat_period} = 'Oct18 - Sep19' then ${TABLE}.earned_premium*0.0098
-              when ${cat_period} = 'Oct19 - Sep20' then ${TABLE}.earned_premium*0.0098
-              when ${cat_period} = 'Oct20 - Sep21' then ${TABLE}.earned_premium*0.0126
-              else 0 end ;;
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0 else case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
+      THEN ${TABLE}.tcs_claims*175 else ${TABLE}.tcs_claims*210 end end ;;
     value_format_name: decimal_0
-    group_label: "COR Measures"
-  }
-
-  measure: cat_cost_ratio {
-    label: "Cat Cost Ratio"
-    type: number
-    sql: 1.0*${cat_cost}/nullif(${premium_earned},0) ;;
-    value_format_name: percent_1
-    group_label: "COR Measures"
+    group_label: "COR Expense Measures"
   }
 
 
@@ -4656,14 +4780,6 @@ view: lk_h_expoclm_mth {
     group_label: "COR Measures"
   }
 
-  measure: fixed_commission_costs {
-    label: "Fixed Commission (£)"
-    type: sum
-    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0.16*${TABLE}.earned_premium else 0.08*${TABLE}.earned_premium end ;;
-    value_format_name: decimal_0
-    group_label: "COR Measures"
-  }
-
   measure: fixed_commission {
     label: "Fixed Commission"
     type: number
@@ -4672,24 +4788,21 @@ view: lk_h_expoclm_mth {
     group_label: "COR Measures"
   }
 
-  measure: claim_fees_qs {
-    label: "Fixed Commission"
+  measure: flood_re_ratio {
+    label: "Flood Re Ratio"
     type: number
-    sql: ${fixed_commission_costs}/nullif(${premium_earned},0) ;;
+    sql: 1.0*${flood_re_levy}/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
 
-
-  measure: claims_handing_fee_qs {
-    label: "Claims Handling Fee (Quota Share)"
-    type: sum
-    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0 else case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
-      THEN ${TABLE}.tcs_claims*175 else ${TABLE}.tcs_claims*210 end end ;;
-    value_format_name: decimal_0
+  measure: cat_cost_ratio {
+    label: "Cat Cost Ratio"
+    type: number
+    sql: 1.0*${cat_cost}/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
     group_label: "COR Measures"
   }
-
 
 
 
