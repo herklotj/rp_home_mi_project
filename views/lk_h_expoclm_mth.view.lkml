@@ -24,6 +24,22 @@ view: lk_h_expoclm_mth {
   }
 
   ### ASAT November 1st 2020 ###
+
+  dimension: seed_rate {
+    type: number
+    sql: 0.2 ;;
+    hidden: yes
+    value_format_name: percent_1
+  }
+
+  dimension: fixed_commission_rate {
+    type: number
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0.16 else 0.08 end ;;
+    hidden: yes
+    value_format_name: percent_0
+  }
+
+
   dimension: cat_xol_rate {
     type: number
     sql: case when ${cat_period} = 'Aug16 - Sep17' then 0.0800
@@ -4652,7 +4668,7 @@ view: lk_h_expoclm_mth {
   measure: earned_premium_pure {
     label: "Earned Premium (AAUICL)"
     type: sum
-    sql:  0.2*${TABLE}.earned_premium;;
+    sql:  ${seed_rate}*${TABLE}.earned_premium;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4661,7 +4677,7 @@ view: lk_h_expoclm_mth {
   measure: earned_premium_pure_netcatre {
     label: "Earned Premium Net CatRe (AAUICL)"
     type: sum
-    sql:  0.2*${TABLE}.earned_premium*(1-${cat_xol_rate}) - (${TABLE}.earned_premium*${cat_xol_topup_rate}) ;;
+    sql:  ${seed_rate}*${TABLE}.earned_premium*(1-${cat_xol_rate}) - (${TABLE}.earned_premium*${cat_xol_topup_rate}) ;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4685,7 +4701,7 @@ view: lk_h_expoclm_mth {
   measure: earned_gross_premium_pure {
     label: "Earned Gross Premium (AAUICL)"
     type: sum
-    sql:  0.2*${TABLE}.earned_premium + ${TABLE}.earned_commission;;
+    sql:  ${seed_rate}*${TABLE}.earned_premium + ${TABLE}.earned_commission;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4694,7 +4710,7 @@ view: lk_h_expoclm_mth {
   measure: earned_gross_premium_pure_netcatre {
     label: "Earned Gross Premium Net CatRe (AAUICL)"
     type: sum
-    sql:  0.2*${TABLE}.earned_premium*(1-${cat_xol_rate}) - (${TABLE}.earned_premium*${cat_xol_topup_rate}) + ${TABLE}.earned_commission;;
+    sql:  ${seed_rate}*${TABLE}.earned_premium*(1-${cat_xol_rate}) - (${TABLE}.earned_premium*${cat_xol_topup_rate}) + ${TABLE}.earned_commission;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4730,7 +4746,7 @@ view: lk_h_expoclm_mth {
   measure: fixed_commission_costs {
     label: "Fixed Commission (£)"
     type: sum
-    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0.16*${TABLE}.earned_premium else 0.08*${TABLE}.earned_premium end ;;
+    sql: ${fixed_commission_rate}*${TABLE}.earned_premium ;;
     value_format_name: decimal_0
     group_label: "COR Expense Measures"
   }
@@ -4773,7 +4789,7 @@ view: lk_h_expoclm_mth {
   measure: cor_actual_pure {
     label: "COR Actual Pure (AAUICL)"
     type: number
-    sql: 1.0*(${cat_cost_topup}+0.2*${cat_cost}+0.2*${flood_re_levy}+0.2*${claims_handing_fee}+0.2*${incurred_total}-${fixed_commission_costs})/nullif(${earned_premium_pure},0) ;;
+    sql: 1.0*(${cat_cost_topup}+ ${seed_rate}*(${cat_cost}+${flood_re_levy}+${claims_handing_fee}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_premium_pure},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4781,7 +4797,7 @@ view: lk_h_expoclm_mth {
   measure: cor_actual_pure_netcatre {
     label: "COR Actual Pure Net Catre (AAUICL)"
     type: number
-    sql: 1.0*(0.2*${flood_re_levy}+0.2*${claims_handing_fee}+0.2*${incurred_total}-${fixed_commission_costs})/nullif(${earned_premium_pure_netcatre},0) ;;
+    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${claims_handing_fee}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4805,7 +4821,7 @@ view: lk_h_expoclm_mth {
   measure: group_cor_actual_pure {
     label: "Group COR Actual Pure (AAUICL)"
     type: number
-    sql: 1.0*(${cat_cost_topup}+0.2*${cat_cost}+0.2*${flood_re_levy}+0.2*${claims_handing_fee}+0.2*${incurred_total}-${fixed_commission_costs})/nullif(${earned_gross_premium_pure},0) ;;
+    sql: 1.0*(${cat_cost_topup}+${seed_rate}*(${cat_cost}+${flood_re_levy}+${claims_handing_fee}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_gross_premium_pure},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4813,7 +4829,7 @@ view: lk_h_expoclm_mth {
   measure: group_cor_actual_pure_netcatre {
     label: "Group COR Actual Pure Net Catre (AAUICL)"
     type: number
-    sql: 1.0*(0.2*${flood_re_levy}+0.2*${claims_handing_fee}+0.2*${incurred_total}-${fixed_commission_costs})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
+    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${claims_handing_fee}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
