@@ -69,12 +69,12 @@ view: lk_h_expoclm_mth {
   ### ASAT November 4th 2020 ###
   dimension: flood_re_rate {
     type: number
-    sql: case when ${TABLE}.policy_period_qs = '1' then 0.0555
-              when ${TABLE}.policy_period_qs = '2' then 0.0567
-              when ${TABLE}.policy_period_qs = '3' then 0.0546
-              when ${TABLE}.policy_period_qs = '4' then 0.0526
-              when ${TABLE}.policy_period_qs = '5' then 0.0508
-              else 0.0540 end ;;
+    sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then 0.0565
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2017 then 0.0567
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2018 then 0.0561
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then 0.0537
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then 0.0513
+              else 0 end ;;
     hidden: yes
     value_format_name: percent_2
   }
