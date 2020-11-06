@@ -4768,6 +4768,15 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
     group_label: "COR Expense Measures"
   }
 
+  measure: claims_handing_fee_aauicl {
+    label: "Claims Handling Fee (Incurred)"
+    type: sum
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
+      THEN ${TABLE}.tcs_claims*175 else ${TABLE}.tcs_claims*210 end else 0 end ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
   measure: abe_projected_incurred{
     label: "ABE Projected Incurred"
     type: sum
@@ -4797,7 +4806,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: cor_actual_pure {
     label: "COR Actual Pure (AAUICL)"
     type: number
-    sql: 1.0*(${cat_cost_topup}+ ${seed_rate}*(${cat_cost}+${flood_re_levy}+${claims_handing_fee}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_premium_pure},0) ;;
+    sql: 1.0*(${cat_cost_topup}+ ${seed_rate}*(${cat_cost}+${flood_re_levy}+${claims_handing_fee_aauicl}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_premium_pure},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4805,7 +4814,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: cor_actual_pure_netcatre {
     label: "COR Actual Pure Net Catre (AAUICL)"
     type: number
-    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${claims_handing_fee}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_premium_pure_netcatre},0) ;;
+    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${claims_handing_fee_aauicl}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4829,7 +4838,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: group_cor_actual_pure {
     label: "Group COR Actual Pure (AAUICL)"
     type: number
-    sql: 1.0*(${cat_cost_topup}+${seed_rate}*(${cat_cost}+${flood_re_levy}+${claims_handing_fee}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_gross_premium_pure},0) ;;
+    sql: 1.0*(${cat_cost_topup}+${seed_rate}*(${cat_cost}+${flood_re_levy}+${claims_handing_fee_aauicl}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_gross_premium_pure},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4837,7 +4846,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: group_cor_actual_pure_netcatre {
     label: "Group COR Actual Pure Net Catre (AAUICL)"
     type: number
-    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${claims_handing_fee}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
+    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${claims_handing_fee_aauicl}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
