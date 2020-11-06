@@ -137,6 +137,18 @@ view: lk_h_policy_history_scored_all {
     label: "QS Period - Inception"
   }
 
+  dimension: qs_period {
+    type: string
+    sql: ${TABLE}.policy_period_qs ;;
+    label: "QS Period"
+  }
+
+  dimension: fuwy_period {
+    type: string
+    sql: ${TABLE}.policy_period_fuwy ;;
+    label: "FUWY Period"
+  }
+
   dimension_group: _original_inception_date {
     label: "Original Inception"
     type: time

@@ -117,6 +117,19 @@ view: lk_h_policy_history {
     sql: ${TABLE}.inception_dt ;;
   }
 
+  dimension: qs_period {
+    type: string
+    sql: ${TABLE}.policy_period_qs ;;
+    label: "QS Period"
+  }
+
+  dimension: fuwy_period {
+    type: string
+    sql: ${TABLE}.policy_period_fuwy ;;
+    label: "FUWY Period"
+  }
+
+
   dimension: policy_period_qs_inception {
     type: string
     sql: case when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2017-07-31')))

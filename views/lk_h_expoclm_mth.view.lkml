@@ -2737,6 +2737,12 @@ view: lk_h_expoclm_mth {
     sql: ${TABLE}.postcode_sector ;;
   }
 
+  dimension: postcode_area {
+    type: string
+    sql: CASE WHEN substring(${TABLE}.postcode_full,2,1) NOT IN ('0','1','2','3','4','5','6','7','8','9') THEN LEFT (${TABLE}.postcode_full,2)
+ELSE LEFT (${TABLE}.postcode_full,1) END ;;
+  }
+
   dimension_group: proposer1_dob {
     type: time
     timeframes: [
