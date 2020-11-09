@@ -3317,6 +3317,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
     value_format_name: percent_1
   }
 
+
   measure: bds_claim_frequency {
     label: "AAUICL Claims Frequency - BDS"
     type: number
@@ -3622,11 +3623,19 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
     value_format_name: decimal_0
   }
 
+
   measure: claims_tcs_weather {
     label: "TCS Claims - Weather"
     type: sum
     sql:  ${TABLE}.TCS_CLAIMS_WEATHER ;;
     value_format_name: decimal_0
+  }
+
+  measure: tcs_claim_freq {
+    label: "TCS Chargeable Claims Frequency"
+    type: number
+    sql:  1.0*${claims_tcs}/nullif(${evy},0) ;;
+    value_format_name: percent_1
   }
 
   measure: tcs_incident_freq_undev {
