@@ -31,6 +31,13 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_1
   }
 
+  dimension: claim_fee_rate {
+    type: number
+    sql: case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01')) then 175 else 210 end ;;
+    hidden: yes
+    value_format_name: decimal_0
+  }
+
   ### ASAT November 1st 2020 ###
   dimension: fixed_commission_rate {
     type: number
@@ -3291,8 +3298,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: claims_handing_fee {
     label: "Claims Handling Fee"
     type: sum
-    sql: case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
-      THEN ${TABLE}.tcs_claims*175 else ${TABLE}.tcs_claims*210 end ;;
+    sql: ${claim_fee_rate}*${TABLE}.tcs_claims ;;
     value_format_name: gbp_0
     group_label: "COR Expense Measures"
   }
@@ -3300,8 +3306,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: claims_handing_fee_weather {
     label: "Claims Handling Fee - Weather"
     type: sum
-    sql: case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
-      THEN ${TABLE}.tcs_claims_weather*175 else ${TABLE}.tcs_claims_weather*210 end ;;
+    sql: ${claim_fee_rate}*${TABLE}.tcs_claims_weather ;;
     value_format_name: gbp_0
   }
 
@@ -4762,8 +4767,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: claims_handing_fee_qs {
     label: "Claims Handling Fee (Quota Share)"
     type: sum
-    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0 else case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
-      THEN ${TABLE}.tcs_claims*175 else ${TABLE}.tcs_claims*210 end end ;;
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0 else ${claim_fee_rate}*${TABLE}.tcs_claims end ;;
     value_format_name: decimal_0
     group_label: "COR Expense Measures"
   }
@@ -4771,8 +4775,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: claims_handing_fee_aauicl {
     label: "Claims Handling Fee (Incurred)"
     type: sum
-    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
-      THEN ${TABLE}.tcs_claims*175 else ${TABLE}.tcs_claims*210 end else 0 end ;;
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then ${claim_fee_rate}*${TABLE}.tcs_claims else ${seed_rate}*${claim_fee_rate}*${TABLE}.tcs_claims end ;;
     value_format_name: decimal_0
     group_label: "COR Expense Measures"
   }
@@ -4806,7 +4809,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: cor_actual_pure {
     label: "COR Actual Pure (AAUICL)"
     type: number
-    sql: 1.0*(${cat_cost_topup}+ ${seed_rate}*(${cat_cost}+${flood_re_levy}+${claims_handing_fee_aauicl}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_premium_pure},0) ;;
+    sql: 1.0*(${cat_cost_topup}+ ${seed_rate}*(${cat_cost}+${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}-${fixed_commission_costs})/nullif(${earned_premium_pure},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4814,7 +4817,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: cor_actual_pure_netcatre {
     label: "COR Actual Pure Net Catre (AAUICL)"
     type: number
-    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${claims_handing_fee_aauicl}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_premium_pure_netcatre},0) ;;
+    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}-${fixed_commission_costs})/nullif(${earned_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4838,7 +4841,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: group_cor_actual_pure {
     label: "Group COR Actual Pure (AAUICL)"
     type: number
-    sql: 1.0*(${cat_cost_topup}+${seed_rate}*(${cat_cost}+${flood_re_levy}+${claims_handing_fee_aauicl}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_gross_premium_pure},0) ;;
+    sql: 1.0*(${cat_cost_topup}+${seed_rate}*(${cat_cost}+${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}-${fixed_commission_costs})/nullif(${earned_gross_premium_pure},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4846,7 +4849,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: group_cor_actual_pure_netcatre {
     label: "Group COR Actual Pure Net Catre (AAUICL)"
     type: number
-    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${claims_handing_fee_aauicl}+${incurred_total})-${fixed_commission_costs})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
+    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}-${fixed_commission_costs})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
