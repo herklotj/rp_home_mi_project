@@ -23,6 +23,20 @@ view: lk_h_tcs_claims {
     hidden: yes
   }
 
+  dimension: chargeable_contents_flag {
+    label: "Chargeable Incident - Contents"
+    type: yesno
+    sql: ${TABLE}.incurred_cts > 0 and ${TABLE}.TCS_CLAIMS = 1;;
+    hidden: no
+ }
+
+  dimension: chargeable_buildings_flag {
+    label: "Chargeable Incident - Buildings"
+    type: yesno
+    sql: ${TABLE}.incurred_bds > 0 and ${TABLE}.TCS_CLAIMS = 1;;
+    hidden: no
+  }
+
   dimension: lcm_label {
     label: "Last Calendar Month"
     type: string
