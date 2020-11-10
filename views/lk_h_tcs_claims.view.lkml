@@ -28,6 +28,7 @@ view: lk_h_tcs_claims {
     type: yesno
     sql: ${TABLE}.incurred_cts > 0 and ${TABLE}.TCS_CLAIMS = 1;;
     hidden: no
+    group_label: "Claim Flags"
  }
 
   dimension: chargeable_buildings_flag {
@@ -35,6 +36,7 @@ view: lk_h_tcs_claims {
     type: yesno
     sql: ${TABLE}.incurred_bds > 0 and ${TABLE}.TCS_CLAIMS = 1;;
     hidden: no
+    group_label: "Claim Flags"
   }
 
   dimension: lcm_label {
