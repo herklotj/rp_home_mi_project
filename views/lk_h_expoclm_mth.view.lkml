@@ -62,13 +62,13 @@ view: lk_h_expoclm_mth {
   ### ASAT November 1st 2020 ###
   dimension: cat_xol_topup_rate {
     type: number
-    sql: case when ${cat_period} = 'Aug16 - Sep17' then ${TABLE}.earned_premium*0.0000
-              when ${cat_period} = 'Oct17 - Sep18' then ${TABLE}.earned_premium*0.0080
-              when ${cat_period} = 'Oct18 - Sep19' then ${TABLE}.earned_premium*0.0098
-              when ${cat_period} = 'Oct19 - Sep20' then ${TABLE}.earned_premium*0.0098
-              when ${cat_period} = 'Oct20 - Sep21' then ${TABLE}.earned_premium*0.0126
+    sql: case when ${cat_period} = 'Aug16 - Sep17' then 0.0000
+              when ${cat_period} = 'Oct17 - Sep18' then 0.0080
+              when ${cat_period} = 'Oct18 - Sep19' then 0.0098
+              when ${cat_period} = 'Oct19 - Sep20' then 0.0098
+              when ${cat_period} = 'Oct20 - Sep21' then 0.0126
               else 0 end ;;
-    hidden: yes
+    hidden: no
     value_format_name: percent_2
   }
 
@@ -86,6 +86,19 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_2
   }
 
+### ASAT November 4th 2020 ###
+  dimension: flood_re_rate_v2 {
+    type: number
+    sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then 0.0364
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2017 then 0.0375
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2018 then 0.0388
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then 0.0389
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then 0.0389
+              else 0.0389 end ;;
+    hidden: yes
+    value_format_name: percent_2
+  }
+
   ### ASAT September 30th 2020 ###
   dimension: latest_abe_rate {
     type: number
@@ -99,9 +112,29 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_1
   }
 
+
+### ASAT November 1st 2020 ###
+  dimension: aauicl_expense_rate {
+    type: number
+    sql: case when ${TABLE}.policy_period_fuwy = '2017' then 25.1
+              when ${TABLE}.policy_period_fuwy = '2018' then 8.8
+              when ${TABLE}.policy_period_fuwy = '2019' then 6.9
+              when ${TABLE}.policy_period_fuwy = '2020' then 6.1
+              else 6.1 end ;;
+    hidden: yes
+    value_format_name: decimal_0
+  }
+
+
   ########
 
 
+  dimension: flood_re_perc {
+    label: "Flood Re Perc"
+    type: number
+    sql: 1.0*(${TABLE}.sect1_net_written_premium+${TABLE}.sect2_net_written_premium+${TABLE}.sect4_net_written_premium)/nullif((${TABLE}.sect1_net_written_premium+${TABLE}.sect2_net_written_premium+${TABLE}.sect3_net_written_premium+${TABLE}.sect3a_net_written_premium+${TABLE}.sect4_net_written_premium),0) ;;
+    value_format_name: "decimal_2"
+  }
 
 
   dimension: aa_membership {
@@ -1071,13 +1104,11 @@ view: lk_h_expoclm_mth {
   dimension: cfi_ind {
     type: number
     sql: ${TABLE}.cfi_ind ;;
-    hidden: yes
   }
 
   dimension: cfi_ind_lapse {
     type: number
     sql: ${TABLE}.cfi_ind_lapse ;;
-    hidden: yes
   }
 
   dimension: cfi_ind_lapse_bds {
@@ -2639,8 +2670,9 @@ view: lk_h_expoclm_mth {
   }
 
   dimension: policy_period_fuwy {
-    type: number
+    type: string
     sql: ${TABLE}.policy_period_fuwy ;;
+    label: "FUWY Period"
   }
 
   dimension: policy_period_qs {
@@ -2747,7 +2779,7 @@ view: lk_h_expoclm_mth {
   dimension: postcode_area {
     type: string
     sql: CASE WHEN substring(${TABLE}.postcode_full,2,1) NOT IN ('0','1','2','3','4','5','6','7','8','9') THEN LEFT (${TABLE}.postcode_full,2)
-ELSE LEFT (${TABLE}.postcode_full,1) END ;;
+      ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   }
 
   dimension_group: proposer1_dob {
@@ -4682,7 +4714,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: earned_premium_netcatre {
     label: "Earned Premium Net CatRe"
     type: sum
-    sql:  ${TABLE}.earned_premium*(1-${cat_xol_rate}) ;;
+    sql:  ${TABLE}.earned_premium*(1-${cat_xol_rate})-(${seed_rate}*${TABLE}.earned_premium*${cat_xol_topup_rate}) ;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4699,7 +4731,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: earned_premium_pure_netcatre {
     label: "Earned Premium Net CatRe (AAUICL)"
     type: sum
-    sql:  ${seed_rate}*${TABLE}.earned_premium*(1-${cat_xol_rate}) - (${TABLE}.earned_premium*${cat_xol_topup_rate}) ;;
+    sql:  ${seed_rate}*${TABLE}.earned_premium*(1-${cat_xol_rate}) - (${seed_rate}*${TABLE}.earned_premium*${cat_xol_topup_rate}) ;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4715,7 +4747,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: earned_gross_premium_netcatre {
     label: "Earned Gross Premium Net CatRe"
     type: sum
-    sql:  ${TABLE}.earned_premium*(1-${cat_xol_rate}) + ${TABLE}.earned_commission ;;
+    sql:  ${TABLE}.earned_premium*(1-${cat_xol_rate})-(${seed_rate}*${TABLE}.earned_premium*${cat_xol_topup_rate}) + ${TABLE}.earned_commission ;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4732,7 +4764,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: earned_gross_premium_pure_netcatre {
     label: "Earned Gross Premium Net CatRe (AAUICL)"
     type: sum
-    sql:  ${seed_rate}*${TABLE}.earned_premium*(1-${cat_xol_rate}) - (${TABLE}.earned_premium*${cat_xol_topup_rate}) + ${TABLE}.earned_commission;;
+    sql:  ${seed_rate}*${TABLE}.earned_premium*(1-${cat_xol_rate}) - (${seed_rate}*${TABLE}.earned_premium*${cat_xol_topup_rate}) + ${TABLE}.earned_commission;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4752,7 +4784,23 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: cat_cost_topup {
     label: "Cat XoL Cost (Top Up Layer)"
     type: sum
-    sql: ${TABLE}.earned_premium*${cat_xol_topup_rate} ;;
+    sql: ${seed_rate}*${TABLE}.earned_premium*${cat_xol_topup_rate} ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
+  measure: flood_re_relevant_earned_premium {
+    label: "Flood Re Relevant Earned Gross Premium"
+    type: sum
+    sql: (${TABLE}.sect1_net_written_premium+${TABLE}.sect2_net_written_premium+${TABLE}.sect4_net_written_premium+(${TABLE}.broker_commission_xfees*${flood_re_perc}))*${TABLE}.exposure ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
+  measure: flood_re_levy_v2 {
+    label: "Flood Re Levy v2"
+    type: sum
+    sql: (${TABLE}.sect1_net_written_premium+${TABLE}.sect2_net_written_premium+${TABLE}.sect4_net_written_premium+(${TABLE}.broker_commission_xfees*${flood_re_perc}))*${TABLE}.exposure*${flood_re_rate_v2} ;;
     value_format_name: decimal_0
     group_label: "COR Expense Measures"
   }
@@ -4789,6 +4837,14 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
     group_label: "COR Expense Measures"
   }
 
+  measure: aauicl_expenses {
+    label: "AAUICL Expenses"
+    type: sum
+    sql: ${TABLE}.exposure*${aauicl_expense_rate} ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
   measure: abe_projected_incurred{
     label: "ABE Projected Incurred"
     type: sum
@@ -4799,10 +4855,10 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
 
 #### COR Calculations ###
 
- measure: cor_actual {
+  measure: cor_actual {
     label: "COR Actual"
     type: number
-    sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${claims_handing_fee}+${incurred_total})/nullif(${premium_earned},0) ;;
+    sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${claims_handing_fee}+${incurred_total}+${aauicl_expenses})/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4810,7 +4866,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: cor_actual_netcatre {
     label: "COR Actual Net CatRe"
     type: number
-    sql: 1.0*(${flood_re_levy}+${claims_handing_fee}+${incurred_total})/nullif(${earned_premium_netcatre},0) ;;
+    sql: 1.0*(${flood_re_levy}+${claims_handing_fee}+${incurred_total}+${aauicl_expenses})/nullif(${earned_premium_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4818,7 +4874,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: cor_actual_pure {
     label: "COR Actual Pure (AAUICL)"
     type: number
-    sql: 1.0*(${cat_cost_topup}+ ${seed_rate}*(${cat_cost}+${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}-${fixed_commission_costs})/nullif(${earned_premium_pure},0) ;;
+    sql: 1.0*(${cat_cost_topup}+${seed_rate}*(${cat_cost}+${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_costs})/nullif(${earned_premium_pure},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4826,7 +4882,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: cor_actual_pure_netcatre {
     label: "COR Actual Pure Net Catre (AAUICL)"
     type: number
-    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}-${fixed_commission_costs})/nullif(${earned_premium_pure_netcatre},0) ;;
+    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_costs})/nullif(${earned_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4834,7 +4890,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: group_cor_actual {
     label: "Group COR Actual"
     type: number
-    sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${claims_handing_fee}+${incurred_total})/nullif(${earned_gross_premium},0) ;;
+    sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${claims_handing_fee}+${incurred_total}+${aauicl_expenses})/nullif(${earned_gross_premium},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4842,7 +4898,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: group_cor_actual_netcatre {
     label: "Group COR Actual Net CatRe"
     type: number
-    sql: 1.0*(${flood_re_levy}+${claims_handing_fee}+${incurred_total})/nullif(${earned_gross_premium_netcatre},0) ;;
+    sql: 1.0*(${flood_re_levy}+${claims_handing_fee}+${incurred_total}+${aauicl_expenses})/nullif(${earned_gross_premium_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4850,7 +4906,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: group_cor_actual_pure {
     label: "Group COR Actual Pure (AAUICL)"
     type: number
-    sql: 1.0*(${cat_cost_topup}+${seed_rate}*(${cat_cost}+${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}-${fixed_commission_costs})/nullif(${earned_gross_premium_pure},0) ;;
+    sql: 1.0*(${cat_cost_topup}+${seed_rate}*(${cat_cost}+${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_costs})/nullif(${earned_gross_premium_pure},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4858,7 +4914,7 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
   measure: group_cor_actual_pure_netcatre {
     label: "Group COR Actual Pure Net Catre (AAUICL)"
     type: number
-    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}-${fixed_commission_costs})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
+    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_costs})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4899,7 +4955,29 @@ ELSE LEFT (${TABLE}.postcode_full,1) END ;;
     group_label: "QS Ratios"
   }
 
+  measure: cat_cost_topup_ratio {
+    label: "Cat Cost (Top-Up) Ratio"
+    type: number
+    sql: 1.0*${cat_cost_topup}/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+    group_label: "QS Ratios"
+  }
 
+  measure: claim_fee_ratio {
+    label: "Claims Handling Fee Ratio"
+    type: number
+    sql: ${claims_handing_fee}/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+    group_label: "QS Ratios"
+  }
+
+  measure: aauicl_expenses_ratio{
+    label: "AAUICL Expenses Ratio"
+    type: number
+    sql: ${aauicl_expenses}/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+    group_label: "QS Ratios"
+  }
 
 
 
