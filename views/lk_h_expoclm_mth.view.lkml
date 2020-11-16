@@ -24,9 +24,9 @@ view: lk_h_expoclm_mth {
   }
 
   ### ASAT November 1st 2020 ###
-  dimension: seed_rate {
+  dimension: cede_rate {
     type: number
-    sql: 0.2 ;;
+    sql: 0.8 ;;
     hidden: yes
     value_format_name: percent_1
   }
@@ -72,22 +72,8 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_2
   }
 
-
   ### ASAT November 4th 2020 ###
   dimension: flood_re_rate {
-    type: number
-    sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then 0.0565
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2017 then 0.0567
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2018 then 0.0561
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then 0.0537
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then 0.0513
-              else 0 end ;;
-    hidden: yes
-    value_format_name: percent_2
-  }
-
-### ASAT November 4th 2020 ###
-  dimension: flood_re_rate_v2 {
     type: number
     sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then 0.0364
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2017 then 0.0375
@@ -123,6 +109,27 @@ view: lk_h_expoclm_mth {
               else 6.1 end ;;
     hidden: yes
     value_format_name: decimal_0
+  }
+
+### ASAT November 1st 2020 ###
+  dimension: assumed_claim_freq_inf {
+    type: number
+    sql: case when ${TABLE}.cover_type = 'Joint' then 0.041
+              when ${TABLE}.cover_type = 'Building' then 0.033
+              when ${TABLE}.cover_type = 'Contents' then 0.021
+              else 0.041 end ;;
+    hidden: no
+    value_format_name: percent_1
+  }
+
+  dimension: assumed_claim_freq_wlc {
+    type: number
+    sql: case when ${TABLE}.cover_type = 'Joint' then 0.055
+              when ${TABLE}.cover_type = 'Building' then 0.047
+              when ${TABLE}.cover_type = 'Contents' then 0.022
+              else 0.055 end ;;
+    hidden: no
+    value_format_name: percent_1
   }
 
 
@@ -3292,6 +3299,14 @@ view: lk_h_expoclm_mth {
     group_label: "COR Expense Measures"
   }
 
+  measure: incurred_total_aauicl {
+    label: "Total Incurred (AAUICL)"
+    type: sum
+    sql:  ${TABLE}.total_incurred*(1-${cede_rate}) ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
   measure: bds_incurred {
     label: "Incurred - BDS"
     type: sum
@@ -3387,21 +3402,21 @@ view: lk_h_expoclm_mth {
   }
 
   measure: modelled_claim_frequency_inf {
-    label: "Modelled Claims Frequency"
+    label: "Modelled Claims Frequency (INF)"
     type: number
     sql:  1.0*${rfq_inf_earned}/nullif(${exposure_combined},0) ;;
     value_format_name: percent_1
   }
 
   measure: modelled_claim_frequency_inf_bds {
-    label: "Modelled Claims Frequency - BDS"
+    label: "Modelled Claims Frequency - BDS (INF)"
     type: number
     sql:  1.0*${bds_earned_rfq_inf}/nullif(${bds_exposure},0) ;;
     value_format_name: percent_1
   }
 
   measure: modelled_claim_frequency_inf_cts {
-    label: "Modelled Claims Frequency - CTS"
+    label: "Modelled Claims Frequency - CTS (INF)"
     type: number
     sql:  1.0*${cts_earned_rfq_inf}/nullif(${cts_exposure},0) ;;
     value_format_name: percent_1
@@ -3429,7 +3444,7 @@ view: lk_h_expoclm_mth {
   }
 
   measure: modelled_loss_ratio_inf {
-    label: "Modelled Loss Ratio"
+    label: "Modelled Loss Ratio (INF)"
     type: number
     sql:  1.0*${rpm_inf_earned}/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
@@ -4714,7 +4729,7 @@ view: lk_h_expoclm_mth {
   measure: earned_premium_netcatre {
     label: "Earned Premium Net CatRe"
     type: sum
-    sql:  ${TABLE}.earned_premium*(1-${cat_xol_rate})-(${seed_rate}*${TABLE}.earned_premium*${cat_xol_topup_rate}) ;;
+    sql:  ${TABLE}.earned_premium*(1-${cat_xol_rate})-((1-${cede_rate})*${TABLE}.earned_premium*${cat_xol_topup_rate}) ;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4722,7 +4737,7 @@ view: lk_h_expoclm_mth {
   measure: earned_premium_pure {
     label: "Earned Premium (AAUICL)"
     type: sum
-    sql:  ${seed_rate}*${TABLE}.earned_premium;;
+    sql:  (1-${cede_rate})*${TABLE}.earned_premium;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4731,7 +4746,7 @@ view: lk_h_expoclm_mth {
   measure: earned_premium_pure_netcatre {
     label: "Earned Premium Net CatRe (AAUICL)"
     type: sum
-    sql:  ${seed_rate}*${TABLE}.earned_premium*(1-${cat_xol_rate}) - (${seed_rate}*${TABLE}.earned_premium*${cat_xol_topup_rate}) ;;
+    sql:  (1-${cede_rate})*${TABLE}.earned_premium*(1-${cat_xol_rate}) - ((1-${cede_rate})*${TABLE}.earned_premium*${cat_xol_topup_rate}) ;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4747,7 +4762,7 @@ view: lk_h_expoclm_mth {
   measure: earned_gross_premium_netcatre {
     label: "Earned Gross Premium Net CatRe"
     type: sum
-    sql:  ${TABLE}.earned_premium*(1-${cat_xol_rate})-(${seed_rate}*${TABLE}.earned_premium*${cat_xol_topup_rate}) + ${TABLE}.earned_commission ;;
+    sql:  ${TABLE}.earned_premium*(1-${cat_xol_rate})-((1-${cede_rate})*${TABLE}.earned_premium*${cat_xol_topup_rate}) + ${TABLE}.earned_commission ;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4755,7 +4770,7 @@ view: lk_h_expoclm_mth {
   measure: earned_gross_premium_pure {
     label: "Earned Gross Premium (AAUICL)"
     type: sum
-    sql:  ${seed_rate}*${TABLE}.earned_premium + ${TABLE}.earned_commission;;
+    sql:  (1-${cede_rate})*${TABLE}.earned_premium + ${TABLE}.earned_commission;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4764,7 +4779,7 @@ view: lk_h_expoclm_mth {
   measure: earned_gross_premium_pure_netcatre {
     label: "Earned Gross Premium Net CatRe (AAUICL)"
     type: sum
-    sql:  ${seed_rate}*${TABLE}.earned_premium*(1-${cat_xol_rate}) - (${seed_rate}*${TABLE}.earned_premium*${cat_xol_topup_rate}) + ${TABLE}.earned_commission;;
+    sql:  (1-${cede_rate})*${TABLE}.earned_premium*(1-${cat_xol_rate}) - ((1-${cede_rate})*${TABLE}.earned_premium*${cat_xol_topup_rate}) + ${TABLE}.earned_commission;;
     value_format_name: decimal_0
     group_label: "COR Income Measures"
   }
@@ -4781,10 +4796,18 @@ view: lk_h_expoclm_mth {
     group_label: "COR Expense Measures"
   }
 
+  measure: cat_cost_aauicl {
+    label: "Cat XoL Cost (AAUICL)"
+    type: sum
+    sql: ${TABLE}.earned_premium*${cat_xol_rate}*(1-${cede_rate}) ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
   measure: cat_cost_topup {
     label: "Cat XoL Cost (Top Up Layer)"
     type: sum
-    sql: ${seed_rate}*${TABLE}.earned_premium*${cat_xol_topup_rate} ;;
+    sql: (1-${cede_rate})*${TABLE}.earned_premium*${cat_xol_topup_rate} ;;
     value_format_name: decimal_0
     group_label: "COR Expense Measures"
   }
@@ -4797,18 +4820,18 @@ view: lk_h_expoclm_mth {
     group_label: "COR Expense Measures"
   }
 
-  measure: flood_re_levy_v2 {
-    label: "Flood Re Levy v2"
+  measure: flood_re_levy {
+    label: "Flood Re Levy"
     type: sum
-    sql: (${TABLE}.sect1_net_written_premium+${TABLE}.sect2_net_written_premium+${TABLE}.sect4_net_written_premium+(${TABLE}.broker_commission_xfees*${flood_re_perc}))*${TABLE}.exposure*${flood_re_rate_v2} ;;
+    sql: (${TABLE}.sect1_net_written_premium+${TABLE}.sect2_net_written_premium+${TABLE}.sect4_net_written_premium+(${TABLE}.broker_commission_xfees*${flood_re_perc}))*${TABLE}.exposure*${flood_re_rate} ;;
     value_format_name: decimal_0
     group_label: "COR Expense Measures"
   }
 
-  measure: flood_re_levy {
-    label: "Flood Re Levy"
+  measure: flood_re_levy_aauicl {
+    label: "Flood Re Levy (AAUICL)"
     type: sum
-    sql: ${TABLE}.earned_premium*${flood_re_rate} ;;
+    sql: (${TABLE}.sect1_net_written_premium+${TABLE}.sect2_net_written_premium+${TABLE}.sect4_net_written_premium+(${TABLE}.broker_commission_xfees*${flood_re_perc}))*${TABLE}.exposure*${flood_re_rate}*(1-${cede_rate}) ;;
     value_format_name: decimal_0
     group_label: "COR Expense Measures"
   }
@@ -4817,6 +4840,14 @@ view: lk_h_expoclm_mth {
     label: "Fixed Commission (£)"
     type: sum
     sql: ${fixed_commission_rate}*${TABLE}.earned_premium ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
+  measure: fixed_commission_income {
+    label: "Fixed Commission Income (£)"
+    type: sum
+    sql: ${cede_rate}*${fixed_commission_rate}*${TABLE}.earned_premium ;;
     value_format_name: decimal_0
     group_label: "COR Expense Measures"
   }
@@ -4832,7 +4863,7 @@ view: lk_h_expoclm_mth {
   measure: claims_handing_fee_aauicl {
     label: "Claims Handling Fee (Incurred)"
     type: sum
-    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then ${claim_fee_rate}*${TABLE}.tcs_claims else ${seed_rate}*${claim_fee_rate}*${TABLE}.tcs_claims end ;;
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then ${claim_fee_rate}*${TABLE}.tcs_claims else (1-${cede_rate})*${claim_fee_rate}*${TABLE}.tcs_claims end ;;
     value_format_name: decimal_0
     group_label: "COR Expense Measures"
   }
@@ -4853,7 +4884,55 @@ view: lk_h_expoclm_mth {
     group_label: "COR Incurred Measures"
   }
 
-#### COR Calculations ###
+  measure: assumed_claim_fees_inf {
+    label: "Modelled Claim Fees INF"
+    type: sum
+    sql: ${TABLE}.exposure*${assumed_claim_freq_inf}*${claim_fee_rate} ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
+  measure: assumed_claim_fees_inf_aauicl {
+    label: "Modelled Claim Fees INF (AAUICL)"
+    type: sum
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then ${TABLE}.exposure*${assumed_claim_freq_inf}*${claim_fee_rate} else (1-${cede_rate})*${TABLE}.exposure*${assumed_claim_freq_inf}*${claim_fee_rate} end ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
+  measure: assumed_claim_fees_wlc {
+    label: "Modelled Claim Fees WLC"
+    type: sum
+    sql: ${TABLE}.exposure*${assumed_claim_freq_wlc}*${claim_fee_rate} ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
+  measure: assumed_claim_fees_wlc_aauicl {
+    label: "Modelled Claim Fees WLC (AAUICL)"
+    type: sum
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then ${TABLE}.exposure*${assumed_claim_freq_wlc}*${claim_fee_rate} else (1-${cede_rate})*${TABLE}.exposure*${assumed_claim_freq_wlc}*${claim_fee_rate} end ;;
+    value_format_name: decimal_0
+    group_label: "COR Expense Measures"
+  }
+
+  measure: rpm_inf_earned_aauicl{
+    label: "Earned RPM INF (AAUICL)"
+    type: sum
+    sql:  ${TABLE}.EARNED_RPM_INF*(1-${cede_rate}) ;;
+    value_format_name: decimal_0
+    group_label: "COR Incurred Measures"
+  }
+
+  measure: rpm_wlc_earned_aauicl{
+    label: "Earned RPM WLC (AAUICL)"
+    type: sum
+    sql:  ${TABLE}.EARNED_RPM_WLC*(1-${cede_rate}) ;;
+    value_format_name: decimal_0
+    group_label: "COR Incurred Measures"
+  }
+
+#### COR Actual Calculations ###
 
   measure: cor_actual {
     label: "COR Actual"
@@ -4874,7 +4953,7 @@ view: lk_h_expoclm_mth {
   measure: cor_actual_pure {
     label: "COR Actual Pure (AAUICL)"
     type: number
-    sql: 1.0*(${cat_cost_topup}+${seed_rate}*(${cat_cost}+${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_costs})/nullif(${earned_premium_pure},0) ;;
+    sql: 1.0*(${cat_cost_topup}+${cat_cost_aauicl}+${flood_re_levy_aauicl}+${incurred_total_aauicl}+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_premium_pure},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4882,7 +4961,7 @@ view: lk_h_expoclm_mth {
   measure: cor_actual_pure_netcatre {
     label: "COR Actual Pure Net Catre (AAUICL)"
     type: number
-    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_costs})/nullif(${earned_premium_pure_netcatre},0) ;;
+    sql: 1.0*(${flood_re_levy_aauicl}+${incurred_total_aauicl}+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
@@ -4906,19 +4985,85 @@ view: lk_h_expoclm_mth {
   measure: group_cor_actual_pure {
     label: "Group COR Actual Pure (AAUICL)"
     type: number
-    sql: 1.0*(${cat_cost_topup}+${seed_rate}*(${cat_cost}+${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_costs})/nullif(${earned_gross_premium_pure},0) ;;
+    sql: 1.0*(${cat_cost_topup}+${cat_cost_aauicl}+${flood_re_levy_aauicl}+${incurred_total_aauicl}+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_gross_premium_pure},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
 
   measure: group_cor_actual_pure_netcatre {
-    label: "Group COR Actual Pure Net Catre (AAUICL)"
+    label: "Group COR Actual Pure Net CatRe (AAUICL)"
     type: number
-    sql: 1.0*(${seed_rate}*(${flood_re_levy}+${incurred_total})+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_costs})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
+    sql: 1.0*(${flood_re_levy_aauicl}+${incurred_total_aauicl}+${claims_handing_fee_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
   }
 
+
+#### COR Modelled (INF) Calculations ###
+
+  measure: cor_modelled_normal_weather {
+    label: "COR Modelled Normal Weather"
+    type: number
+    sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${assumed_claim_fees_inf}+${rpm_inf_earned}+${aauicl_expenses})/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: cor_modelled_normal_weather_net_catre {
+    label: "COR Modelled Normal Weather Net CatRe"
+    type: number
+    sql: 1.0*(${flood_re_levy}+${assumed_claim_fees_inf}+${rpm_inf_earned}+${aauicl_expenses})/nullif(${earned_premium_netcatre},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: cor_modelled_normal_weather_aauicl {
+    label: "COR Modelled Normal Weather (AAUICL)"
+    type: number
+    sql: 1.0*(${cat_cost_topup}+${cat_cost_aauicl}+${flood_re_levy_aauicl}+${rpm_inf_earned_aauicl}+${assumed_claim_fees_inf_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_premium_pure},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: cor_modelled_normal_weather_net_catre_aauicl {
+    label: "COR Modelled Normal Weather Net CatRe (AAUICL)"
+    type: number
+    sql: 1.0*(${flood_re_levy_aauicl}+${rpm_inf_earned_aauicl}+${assumed_claim_fees_inf_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_premium_pure_netcatre},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: group_cor_modelled_normal_weather {
+    label: "Group COR Modelled Normal Weather"
+    type: number
+    sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${assumed_claim_fees_inf}+${rpm_inf_earned}+${aauicl_expenses})/nullif(${earned_gross_premium},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: group_cor_modelled_normal_weather_net_catre {
+    label: "Group COR Modelled Normal Weather Net CatRe"
+    type: number
+    sql: 1.0*(${flood_re_levy}+${assumed_claim_fees_inf}+${rpm_inf_earned}+${aauicl_expenses})/nullif(${earned_gross_premium_netcatre},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: group_cor_modelled_normal_weather_aauicl {
+    label: "Group COR Modelled Normal Weather (AAUICL)"
+    type: number
+    sql: 1.0*(${cat_cost_topup}+${cat_cost_aauicl}+${flood_re_levy_aauicl}+${rpm_inf_earned_aauicl}+${assumed_claim_fees_inf_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_gross_premium_pure},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: group_cor_modelled_normal_weather_net_catre_aauicl {
+    label: "Group COR Modelled Normal Weather Net CatRe (AAUICL)"
+    type: number
+    sql: 1.0*(${flood_re_levy_aauicl}+${rpm_inf_earned_aauicl}+${assumed_claim_fees_inf_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
 
 
 ##### QS Measure Ratios
