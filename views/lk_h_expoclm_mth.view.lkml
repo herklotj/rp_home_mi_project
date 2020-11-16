@@ -5073,7 +5073,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${assumed_claim_fees_wlc}+${rpm_wlc_earned}+${aauicl_expenses})/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
-    group_label: "COR Modelled Measures (INF)"
+    group_label: "COR Modelled Measures (WLC)"
   }
 
   measure: cor_modelled_weather_loaded_net_catre {
@@ -5081,7 +5081,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 1.0*(${flood_re_levy}+${assumed_claim_fees_wlc}+${rpm_wlc_earned}+${aauicl_expenses})/nullif(${earned_premium_netcatre},0) ;;
     value_format_name: percent_1
-    group_label: "COR Modelled Measures (INF)"
+    group_label: "COR Modelled Measures (WLC)"
   }
 
   measure: cor_modelled_weather_loaded_aauicl {
@@ -5089,7 +5089,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 1.0*(${cat_cost_topup}+${cat_cost_aauicl}+${flood_re_levy_aauicl}+${rpm_wlc_earned_aauicl}+${assumed_claim_fees_wlc_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_premium_pure},0) ;;
     value_format_name: percent_1
-    group_label: "COR Modelled Measures (INF)"
+    group_label: "COR Modelled Measures (WLC)"
   }
 
   measure: cor_modelled_weather_loaded_net_catre_aauicl {
@@ -5097,7 +5097,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 1.0*(${flood_re_levy_aauicl}+${rpm_wlc_earned_aauicl}+${assumed_claim_fees_wlc_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
-    group_label: "COR Modelled Measures (INF)"
+    group_label: "COR Modelled Measures (WLC)"
   }
 
   measure: group_cor_modelled_weather_loaded {
@@ -5105,7 +5105,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${assumed_claim_fees_wlc}+${rpm_wlc_earned}+${aauicl_expenses})/nullif(${earned_gross_premium},0) ;;
     value_format_name: percent_1
-    group_label: "COR Modelled Measures (INF)"
+    group_label: "COR Modelled Measures (WLC)"
   }
 
   measure: group_cor_modelled_weather_loaded_net_catre {
@@ -5113,7 +5113,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 1.0*(${flood_re_levy}+${assumed_claim_fees_wlc}+${rpm_wlc_earned}+${aauicl_expenses})/nullif(${earned_gross_premium_netcatre},0) ;;
     value_format_name: percent_1
-    group_label: "COR Modelled Measures (INF)"
+    group_label: "COR Modelled Measures (WLC)"
   }
 
   measure: group_cor_modelled_weather_loaded_aauicl {
@@ -5121,7 +5121,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 1.0*(${cat_cost_topup}+${cat_cost_aauicl}+${flood_re_levy_aauicl}+${rpm_wlc_earned_aauicl}+${assumed_claim_fees_wlc_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_gross_premium_pure},0) ;;
     value_format_name: percent_1
-    group_label: "COR Modelled Measures (INF)"
+    group_label: "COR Modelled Measures (WLC)"
   }
 
   measure: group_cor_modelled_weather_loaded_net_catre_aauicl {
@@ -5129,7 +5129,7 @@ view: lk_h_expoclm_mth {
     type: number
     sql: 1.0*(${flood_re_levy_aauicl}+${rpm_wlc_earned_aauicl}+${assumed_claim_fees_wlc_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
     value_format_name: percent_1
-    group_label: "COR Modelled Measures (INF)"
+    group_label: "COR Modelled Measures (WLC)"
   }
 
 ##### QS Measure Ratios
