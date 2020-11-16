@@ -5066,6 +5066,72 @@ view: lk_h_expoclm_mth {
   }
 
 
+#### COR Modelled (WLC) Calculations ###
+
+  measure: cor_modelled_weather_loaded {
+    label: "COR Modelled Weather Loaded"
+    type: number
+    sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${assumed_claim_fees_wlc}+${rpm_wlc_earned}+${aauicl_expenses})/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: cor_modelled_weather_loaded_net_catre {
+    label: "COR Modelled Weather Loaded Net CatRe"
+    type: number
+    sql: 1.0*(${flood_re_levy}+${assumed_claim_fees_wlc}+${rpm_wlc_earned}+${aauicl_expenses})/nullif(${earned_premium_netcatre},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: cor_modelled_weather_loaded_aauicl {
+    label: "COR Modelled Weather Loaded (AAUICL)"
+    type: number
+    sql: 1.0*(${cat_cost_topup}+${cat_cost_aauicl}+${flood_re_levy_aauicl}+${rpm_wlc_earned_aauicl}+${assumed_claim_fees_wlc_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_premium_pure},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: cor_modelled_weather_loaded_net_catre_aauicl {
+    label: "COR Modelled Weather Loaded Net CatRe (AAUICL)"
+    type: number
+    sql: 1.0*(${flood_re_levy_aauicl}+${rpm_wlc_earned_aauicl}+${assumed_claim_fees_wlc_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_premium_pure_netcatre},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: group_cor_modelled_weather_loaded {
+    label: "Group COR Modelled Weather Loaded"
+    type: number
+    sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${assumed_claim_fees_wlc}+${rpm_wlc_earned}+${aauicl_expenses})/nullif(${earned_gross_premium},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: group_cor_modelled_weather_loaded_net_catre {
+    label: "Group COR Modelled Weather Loaded Net CatRe"
+    type: number
+    sql: 1.0*(${flood_re_levy}+${assumed_claim_fees_wlc}+${rpm_wlc_earned}+${aauicl_expenses})/nullif(${earned_gross_premium_netcatre},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: group_cor_modelled_weather_loaded_aauicl {
+    label: "Group COR Modelled Weather Loaded (AAUICL)"
+    type: number
+    sql: 1.0*(${cat_cost_topup}+${cat_cost_aauicl}+${flood_re_levy_aauicl}+${rpm_wlc_earned_aauicl}+${assumed_claim_fees_wlc_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_gross_premium_pure},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: group_cor_modelled_weather_loaded_net_catre_aauicl {
+    label: "Group COR Modelled Weather Loaded Net CatRe (AAUICL)"
+    type: number
+    sql: 1.0*(${flood_re_levy_aauicl}+${rpm_wlc_earned_aauicl}+${assumed_claim_fees_wlc_aauicl}+${aauicl_expenses}-${fixed_commission_income})/nullif(${earned_gross_premium_pure_netcatre},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
 ##### QS Measure Ratios
 
   measure: abe_by_uw_year{
