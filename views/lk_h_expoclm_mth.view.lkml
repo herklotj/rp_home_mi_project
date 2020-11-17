@@ -3699,34 +3699,6 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_1
   }
 
-  measure: claims_fee_ratio {
-    label: "Claims Fee Ratio"
-    type: number
-    sql:  ${claims_handing_fee}/nullif(${premium_earned},0) ;;
-    value_format_name: percent_1
-  }
-
-  measure: claims_fee_ratio_aauicl {
-    label: "Claims Fee Ratio (AAUICL)"
-    type: number
-    sql:  ${claims_handing_fee}/nullif((0.2*${premium_earned})+(0.8*0.16*${premium_earned}),0) ;;
-    value_format_name: percent_1
-  }
-
-  measure: loss_claims_fee_ratio {
-    label: "Loss & Claims Fee Ratio"
-    type: number
-    sql:  (${claims_handing_fee}+${incurred_total})/nullif(${premium_earned},0) ;;
-    value_format_name: percent_1
-  }
-
-  measure: loss_claims_fee_ratio_aauicl {
-    label: "Loss & Claims Fee Ratio (AAUICL)"
-    type: number
-    sql: (${claims_handing_fee}+(0.2*${incurred_total}))/nullif((0.2*${premium_earned})+(0.8*0.16*${premium_earned}),0) ;;
-    value_format_name: percent_1
-  }
-
   measure: bds_incurred_cap50k {
     label: "Incurred - BDS (50K Cap)"
     type: sum
@@ -5182,12 +5154,20 @@ view: lk_h_expoclm_mth {
     group_label: "QS Ratios"
   }
 
-  measure: aauicl_expenses_ratio{
+  measure: aauicl_expenses_ratio {
     label: "AAUICL Expenses Ratio"
     type: number
     sql: ${aauicl_expenses}/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
     group_label: "QS Ratios"
+  }
+
+  measure: aauicl_expense_ratio {
+    label: "AAUICL Expense Ratio"
+    type: number
+    sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${claims_handing_fee}+${aauicl_expenses})/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Measures"
   }
 
 
