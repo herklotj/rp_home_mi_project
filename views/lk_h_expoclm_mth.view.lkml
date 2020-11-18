@@ -3069,11 +3069,29 @@ view: lk_h_expoclm_mth {
   }
 
   dimension: uw_tenure {
+    label: "UW Tenure"
     type: number
     sql: ${TABLE}.uw_tenure ;;
   }
 
+  dimension: uw_tenure_5 {
+    label: "UW Tenure (5)"
+    type: tier
+    tiers: [0,1,2,3,4,5]
+    style: integer
+    sql: ${TABLE}.uw_tenure ;;
+  }
+
+  dimension: uw_tenure_3 {
+    label: "UW Tenure (3)"
+    type: tier
+    tiers: [0,1,2,3]
+    style: integer
+    sql: ${TABLE}.uw_tenure ;;
+  }
+
   dimension: aa_tenure {
+    label: "AA Tenure"
     type: number
     sql: ${TABLE}.aa_tenure ;;
   }
@@ -3096,6 +3114,22 @@ view: lk_h_expoclm_mth {
   dimension: xol_street_no {
     type: string
     sql: ${TABLE}.xol_street_no ;;
+  }
+
+  dimension: cor_modelled_weather_loaded_dist {
+    label: "COR Modelled Weather Loaded"
+    type: tier
+    style:  interval
+    tiers: [0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5]
+    value_format_name: percent_0
+    sql:  1.0*(((1-${cede_rate})*${TABLE}.earned_premium*${cat_xol_topup_rate})
+              +(${TABLE}.earned_premium*${cat_xol_rate})
+              +((${TABLE}.sect1_net_written_premium+${TABLE}.sect2_net_written_premium+${TABLE}.sect4_net_written_premium+(${TABLE}.broker_commission_xfees*${flood_re_perc}))*${TABLE}.exposure*${flood_re_rate})
+              +(${TABLE}.exposure*${assumed_claim_freq_wlc}*${claim_fee_rate})
+              +(${TABLE}.EARNED_RPM_WLC)
+              +(${TABLE}.exposure*${aauicl_expense_rate}))
+              /
+              nullif(${TABLE}.earned_premium,0) ;;
   }
 
   measure: count {
@@ -5168,6 +5202,22 @@ view: lk_h_expoclm_mth {
     sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${claims_handing_fee}+${aauicl_expenses})/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
     group_label: "COR Measures"
+  }
+
+  measure: modelled_expense_ratio_inf {
+    label: "AAUICL Modelled Expense Ratio (INF)"
+    type: number
+    sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${assumed_claim_fees_inf}+${aauicl_expenses})/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (INF)"
+  }
+
+  measure: modelled_expense_ratio_wlc {
+    label: "AAUICL Modelled Expense Ratio (WLC)"
+    type: number
+    sql: 1.0*(${cat_cost_topup}+${cat_cost}+${flood_re_levy}+${assumed_claim_fees_wlc}+${aauicl_expenses})/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+    group_label: "COR Modelled Measures (WLC)"
   }
 
 
