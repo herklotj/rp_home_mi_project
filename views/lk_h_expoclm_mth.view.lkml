@@ -5181,9 +5181,25 @@ view: lk_h_expoclm_mth {
   }
 
   measure: claim_fee_ratio {
-    label: "Claims Handling Fee Ratio"
+    label: "Claims Fee Ratio"
     type: number
     sql: ${claims_handing_fee}/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+    group_label: "QS Ratios"
+  }
+
+  measure: modelled_claim_fee_ratio_inf {
+    label: "Modelled Claims Fee Ratio (INF)"
+    type: number
+    sql: ${assumed_claim_fees_inf}/nullif(${premium_earned},0) ;;
+    value_format_name: percent_1
+    group_label: "QS Ratios"
+  }
+
+  measure: modelled_claim_fee_ratio_wlc {
+    label: "Modelled Claims Fee Ratio (WLC)"
+    type: number
+    sql: ${assumed_claim_fees_wlc}/nullif(${premium_earned},0) ;;
     value_format_name: percent_1
     group_label: "QS Ratios"
   }
