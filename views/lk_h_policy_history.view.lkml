@@ -1206,7 +1206,8 @@ view: lk_h_policy_history {
     label: "Plan Loss Ratio"
     type: sum
     sql: case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2017-10-01') THEN 0.635 else
-        case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2018-10-01') THEN 0.615 else 0.623 end end ;;
+      case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2018-10-01') THEN 0.615 else
+      case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2020-10-01') THEN 0.623 else 0.625 end end end ;;
     value_format_name: percent_1
     hidden: yes
   }
