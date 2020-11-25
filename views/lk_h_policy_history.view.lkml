@@ -228,13 +228,20 @@ view: lk_h_policy_history {
   dimension: cover_type {
     label: "Cover Type"
     type: string
-    sql: ${TABLE}.cover_type ;;
+    sql: case when ${TABLE}.cover_type = 'Building' then 'a/Buildings Only'
+              when ${TABLE}.cover_type = 'Contents' then 'b/Contents Only'
+              when ${TABLE}.cover_type = 'Joint' then 'c/Joint'
+              else ${TABLE}.cover_type end ;;
   }
+
 
   dimension: cover_type_customer {
     label: "Cover Type Customer"
     type: string
-    sql: ${TABLE}.cover_type_customer ;;
+    sql: case when ${TABLE}.cover_type_customer = 'Buildings Only' then 'a/Buildings Only'
+              when ${TABLE}.cover_type_customer = 'Contents Only' then 'b/Contents Only'
+              when ${TABLE}.cover_type_customer = 'Combined' then 'c/Combined'
+              else ${TABLE}.cover_type_customer end ;;
   }
 
   dimension: home_cover_level {
