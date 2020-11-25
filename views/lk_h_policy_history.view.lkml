@@ -228,8 +228,8 @@ view: lk_h_policy_history {
   dimension: cover_type {
     label: "Cover Type"
     type: string
-    sql: case when ${TABLE}.cover_type = 'Building' then 'a/Buildings Only'
-              when ${TABLE}.cover_type = 'Contents' then 'b/Contents Only'
+    sql: case when ${TABLE}.cover_type = 'Buildings Only' then 'a/Buildings Only'
+              when ${TABLE}.cover_type = 'Contents Only' then 'b/Contents Only'
               when ${TABLE}.cover_type = 'Joint' then 'c/Joint'
               else ${TABLE}.cover_type end ;;
   }
