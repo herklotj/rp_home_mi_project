@@ -1183,6 +1183,7 @@ view: lk_h_expoclm_mth {
   }
 
   dimension: sub_channel {
+    label: "Sub-Channel"
     type: string
     sql: case when ${TABLE}.provenance_code IN(089,098,293,433,434,467,833,834) then 'Money Supermarket' else
          case when ${TABLE}.provenance_code IN(091,092,105,106,827,828,829,830) then 'Compare the Market' else
