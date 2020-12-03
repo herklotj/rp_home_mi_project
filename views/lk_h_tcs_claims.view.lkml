@@ -1,5 +1,52 @@
 view: lk_h_tcs_claims {
-  sql_table_name: actian.lk_h_tcs_claims ;;
+  derived_table: {
+    sql:
+
+    SELECT a.*,
+             b.uw_year_actian,
+             b.fuw_year_actian
+      FROM actian.lk_h_tcs_claims a
+        LEFT JOIN (SELECT DISTINCT transaction_id,
+                          policy_number AS uw_policy_no,
+                          policy_start_date,
+                          policy_end_date,
+                          CASE
+                            WHEN policy_start_date < '2017-08-01' THEN 1
+                            WHEN policy_start_date < '2018-08-01' THEN 2
+                            WHEN policy_start_date < '2019-08-01' THEN 3
+                            WHEN policy_start_date < '2020-08-01' THEN 4
+                            WHEN policy_start_date < '2021-08-01' THEN 5
+                            WHEN policy_start_date < '2022-08-01' THEN 6
+                            ELSE 0
+                          END AS uw_year_actian,
+                          CASE
+                            WHEN policy_start_date < '2017-02-01' THEN 2017
+                            WHEN policy_start_date < '2018-02-01' THEN 2018
+                            WHEN policy_start_date < '2019-02-01' THEN 2019
+                            WHEN policy_start_date < '2020-02-01' THEN 2020
+                            WHEN policy_start_date < '2021-02-01' THEN 2021
+                            WHEN policy_start_date < '2022-02-01' THEN 2022
+                            ELSE 0
+                          END AS fuw_year_actian
+                   FROM actian.home_cover
+                   WHERE policy_status IN ('N','R')) b
+               ON a.uw_policy_no = b.uw_policy_no
+              AND b.policy_start_date <= incidentdate
+              AND incidentdate <= b.policy_end_date
+    ;;
+  }
+
+  dimension: uw_year_actian {
+    label: "Policy UW Year"
+    type: string
+    sql: ${TABLE}.uw_year_actian ;;
+  }
+
+  dimension: fuw_year_actian {
+    label: "Policy FUW Year"
+    type: string
+    sql: ${TABLE}.fuw_year_actian ;;
+  }
 
   dimension: chargeable_incident_flag {
     label: "Chargeable Incident Flag"
