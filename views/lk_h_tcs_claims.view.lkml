@@ -252,6 +252,7 @@ view: lk_h_tcs_claims {
       week,
       month,
       quarter,
+      fiscal_quarter,
       year,
       fiscal_year
     ]
