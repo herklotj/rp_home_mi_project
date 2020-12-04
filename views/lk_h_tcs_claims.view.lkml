@@ -38,13 +38,13 @@ view: lk_h_tcs_claims {
 
   dimension: uw_year_actian {
     label: "Policy UW Year"
-    type: string
+    type: number
     sql: ${TABLE}.uw_year_actian ;;
   }
 
   dimension: fuw_year_actian {
     label: "Policy FUW Year"
-    type: string
+    type: number
     sql: ${TABLE}.fuw_year_actian ;;
   }
 
