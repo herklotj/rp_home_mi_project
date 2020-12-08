@@ -114,9 +114,9 @@ view: lk_h_expoclm_mth {
 ### ASAT November 1st 2020 ###
   dimension: assumed_claim_freq_inf {
     type: number
-    sql: case when ${TABLE}.cover_type = 'Joint' then 0.041
-              when ${TABLE}.cover_type = 'Building' then 0.033
-              when ${TABLE}.cover_type = 'Contents' then 0.021
+    sql: case when ${TABLE}.cover_type = 'c/Joint' then 0.041
+              when ${TABLE}.cover_type = 'a/Buildings Only' then 0.033
+              when ${TABLE}.cover_type = 'b/Contents Only' then 0.021
               else 0.041 end ;;
     hidden: no
     value_format_name: percent_1
@@ -124,9 +124,9 @@ view: lk_h_expoclm_mth {
 
   dimension: assumed_claim_freq_wlc {
     type: number
-    sql: case when ${TABLE}.cover_type = 'Joint' then 0.055
-              when ${TABLE}.cover_type = 'Building' then 0.047
-              when ${TABLE}.cover_type = 'Contents' then 0.022
+    sql: case when ${TABLE}.cover_type = 'c/Joint' then 0.055
+              when ${TABLE}.cover_type = 'a/Buildings Only' then 0.047
+              when ${TABLE}.cover_type = 'b/Contents Only' then 0.022
               else 0.055 end ;;
     hidden: no
     value_format_name: percent_1
@@ -1550,20 +1550,14 @@ view: lk_h_expoclm_mth {
   dimension: cover_type {
     label: "Cover Type"
     type: string
-    sql: case when ${TABLE}.cover_type = 'Building' then 'a/Buildings Only'
-              when ${TABLE}.cover_type = 'Contents' then 'b/Contents Only'
-              when ${TABLE}.cover_type = 'Joint' then 'c/Joint'
-              else ${TABLE}.cover_type end ;;
+    sql: ${TABLE}.cover_type ;;
   }
 
 
   dimension: cover_type_customer {
     label: "Cover Type Customer"
     type: string
-    sql: case when ${TABLE}.cover_type_customer = 'Buildings Only' then 'a/Buildings Only'
-              when ${TABLE}.cover_type_customer = 'Contents Only' then 'b/Contents Only'
-              when ${TABLE}.cover_type_customer = 'Combined' then 'c/Combined'
-              else ${TABLE}.cover_type_customer end ;;
+    sql: ${TABLE}.cover_type_customer ;;
   }
 
   dimension: cover_type_requested {
