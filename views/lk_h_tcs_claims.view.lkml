@@ -31,8 +31,8 @@ view: lk_h_tcs_claims {
                    FROM actian.home_cover
                    WHERE policy_status IN ('N','R')) b
                ON a.uw_policy_no = b.uw_policy_no
-              AND b.policy_start_date <= incidentdate
-              AND incidentdate <= b.policy_end_date
+              AND b.policy_start_date <= DATE_TRUNC('DAY',incidentdate)
+              AND DATE_TRUNC('DAY',incidentdate) <= b.policy_end_date
     ;;
   }
 
@@ -59,6 +59,13 @@ view: lk_h_tcs_claims {
     label: "Settled Claim Flag"
     type: yesno
     sql:${TABLE}.FCA_ACCEPTED_PAID + ${TABLE}.FCA_REJECTED + ${TABLE}.FCA_OTHER_SETTLED > 0 ;;
+    group_label: "Claim Flags"
+  }
+
+  dimension: settled_inmonth {
+    label: "Settled In-Month"
+    type: yesno
+    sql: ${TABLE}.notificationmonth = ${TABLE}.settledmonth ;;
     group_label: "Claim Flags"
   }
 
