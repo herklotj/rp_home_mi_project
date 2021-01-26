@@ -14,38 +14,65 @@ view: lk_h_forecast {
     sql: cast(${TABLE}.inception_month as timestamp) ;;
   }
 
-  measure: aauicl_nb_forecast {
-    label: "AAUICL NB Written Forecast"
+  measure: aauicl_written_premium_budget {
+    label: "AAUICL Written Premium Budget"
     type: sum
-    sql: ${TABLE}.aauicl_written_nb ;;
+    sql: ${TABLE}.budget_written_premium_bds_nb + ${TABLE}.budget_written_premium_bds_rb_sw + ${TABLE}.budget_written_premium_cts_nb + ${TABLE}.budget_written_premium_cts_rb_sw + ${TABLE}.budget_written_premium_bds_rb_ren + ${TABLE}.budget_written_premium_cts_rb_ren ;;
     value_format_name: decimal_0
+    group_label: "Budget - Premium"
   }
 
-  measure: aauicl_ren_forecast {
-    label: "AAUICL Ren Written Forecast"
+  measure: aauicl_cancelled_premium_budget {
+    label: "AAUICL Cancelled Premium Budget"
     type: sum
-    sql: ${TABLE}.aauicl_written_ren ;;
+    sql: ${TABLE}.budget_cancelled_premium_nb + ${TABLE}.budget_cancelled_premium_rb_sw + ${TABLE}.budget_cancelled_premium_rb_ren ;;
     value_format_name: decimal_0
+    group_label: "Budget - Premium"
   }
 
-  measure: aauicl_sw_forecast {
-    label: "AAUICL XQ Written Forecast"
+  measure: aauicl_gwp_budget {
+    label: "AAUICL GWP Budget"
     type: sum
-    sql: ${TABLE}.aauicl_written_sw ;;
+    sql: (${TABLE}.budget_written_premium_bds_nb + ${TABLE}.budget_written_premium_bds_rb_sw + ${TABLE}.budget_written_premium_cts_nb + ${TABLE}.budget_written_premium_cts_rb_sw + ${TABLE}.budget_written_premium_bds_rb_ren + ${TABLE}.budget_written_premium_cts_rb_ren)
+          - (${TABLE}.budget_cancelled_premium_nb + ${TABLE}.budget_cancelled_premium_rb_sw + ${TABLE}.budget_cancelled_premium_rb_ren) ;;
     value_format_name: decimal_0
+    group_label: "Budget - Premium"
   }
 
-  measure: broker_nb_forecast {
-    label: "Broker NB Written Forecast"
+
+
+
+
+  measure: aauicl_written_premium_forecast {
+    label: "AAUICL Written Premium Forecast"
     type: sum
-    sql: ${TABLE}.broker_written_nb ;;
+    sql: ${TABLE}.forecast_written_premium_bds_nb + ${TABLE}.forecast_written_premium_bds_rb_sw + ${TABLE}.forecast_written_premium_cts_nb + ${TABLE}.forecast_written_premium_cts_rb_sw + ${TABLE}.forecast_written_premium_bds_rb_ren + ${TABLE}.forecast_written_premium_cts_rb_ren ;;
     value_format_name: decimal_0
+    group_label: "Forecast - Premium"
   }
 
-  measure: broker_rb_forecast {
-    label: "Broker RB Written Forecast"
+  measure: aauicl_cancelled_premium_forecast {
+    label: "AAUICL Cancelled Premium Forecast"
     type: sum
-    sql: ${TABLE}.broker_written_rb ;;
+    sql: ${TABLE}.forecast_cancelled_premium_nb + ${TABLE}.forecast_cancelled_premium_rb_sw + ${TABLE}.forecast_cancelled_premium_rb_ren ;;
+    value_format_name: decimal_0
+    group_label: "Forecast - Premium"
+  }
+
+  measure: aauicl_gwp_forecast {
+    label: "AAUICL GWP Forecast"
+    type: sum
+    sql: (${TABLE}.forecast_written_premium_bds_nb + ${TABLE}.forecast_written_premium_bds_rb_sw + ${TABLE}.forecast_written_premium_cts_nb + ${TABLE}.forecast_written_premium_cts_rb_sw + ${TABLE}.forecast_written_premium_bds_rb_ren + ${TABLE}.forecast_written_premium_cts_rb_ren)
+      - (${TABLE}.forecast_cancelled_premium_nb + ${TABLE}.forecast_cancelled_premium_rb_sw + ${TABLE}.forecast_cancelled_premium_rb_ren) ;;
+    value_format_name: decimal_0
+    group_label: "Forecast - Premium"
+  }
+
+
+  measure: qs_premium_limit{
+    label: "Quota Share GWP Limit"
+    type: sum
+    sql: ${TABLE}.qs_gwp_limit ;;
     value_format_name: decimal_0
   }
 

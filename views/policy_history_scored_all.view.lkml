@@ -1414,6 +1414,53 @@ view: lk_h_policy_history_scored_all {
     value_format_name: decimal_0
   }
 
+  measure: aauicl_deductible_BDS {
+    label: "AAUICL Deductible BDS (Flood/Storm)"
+    type: sum
+    sql:  case when ${TABLE}.aauicl_ind_bds = 1 then
+          100 +
+          case
+          when ${TABLE}.p_volxsbds = 'a/0' then 0
+          when ${TABLE}.p_volxsbds = 'b/50' then 50
+          when ${TABLE}.p_volxsbds = 'c/100' then 100
+          when ${TABLE}.p_volxsbds = 'd/250' then 250
+          when ${TABLE}.p_volxsbds = 'e/500' then 500
+          else 0 end
+          else 0 end
+          ;;
+    value_format_name: decimal_0
+    hidden: yes
+   # FOR PERILS DATA
+  }
+
+  measure: aauicl_deductible_CTS {
+    label: "AAUICL Deductible CTS (Flood/Storm)"
+    type: sum
+    sql:  case when ${TABLE}.aauicl_ind_cts = 1 then
+          100 +
+          case
+          when ${TABLE}.p_volxscts = 'a/0' then 0
+          when ${TABLE}.p_volxscts = 'b/50' then 50
+          when ${TABLE}.p_volxscts = 'c/100' then 100
+          when ${TABLE}.p_volxscts = 'd/250' then 250
+          when ${TABLE}.p_volxscts = 'e/500' then 500
+          else 0 end
+          else 0 end
+          ;;
+    value_format_name: decimal_0
+    hidden: yes
+      # FOR PERILS DATA
+  }
+
+  measure: aauicl_deductible_tot {
+    label: "AAUICL Deductible TOT (Flood/Storm)"
+    type: number
+    sql: ${aauicl_deductible_BDS}+${aauicl_deductible_CTS} ;;
+    value_format_name: decimal_0
+    hidden: yes
+    # FOR PERILS DATA
+  }
+
 
 
 

@@ -1064,21 +1064,21 @@ view: lk_h_policy_history {
     label: "AAUICL Average RPM BDS"
     type: number
     sql:  ${aauicl_rpm_buildings}/nullif(${aauicl_covers_bds},0) ;;
-    value_format_name: decimal_0
+    value_format_name: decimal_1
   }
 
   measure: average_rpm_contents {
     label: "AAUICL Average RPM CTS"
     type: number
     sql:  ${aauicl_rpm_contents}/nullif(${aauicl_covers_cts},0) ;;
-    value_format_name: decimal_0
+    value_format_name: decimal_1
   }
 
   measure: average_rpm_total {
     label: "AAUICL Average RPM TOT"
     type: number
     sql:  ${aauicl_rpm_total}/nullif(${aauicl_covers_tot},0) ;;
-    value_format_name: decimal_0
+    value_format_name: decimal_1
   }
 
 
