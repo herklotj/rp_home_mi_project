@@ -843,6 +843,12 @@ view: lk_h_policy_history {
     group_label: "Geographical"
   }
 
+  dimension: aauicl_policy_ind {
+    label: "AAUICL Policy"
+    type: yesno
+    sql: ${TABLE}.aauicl_ind_bds = 1 or aauicl_ind_cts = 1 ;;
+  }
+
 
 
 
@@ -1437,6 +1443,181 @@ view: lk_h_policy_history {
     sql:  ${TABLE}.ipt_amount ;;
     value_format_name: decimal_0
   }
+
+  #### BDS RPM ####
+
+   measure: rpm_inc_inf_bds_ad {
+    label: "RPM INC INF BDS AD"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_bds_ad ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_bds_eow {
+    label: "RPM INC INF BDS EoW"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_bds_eow ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_bds_fire {
+    label: "RPM INC INF BDS Fire"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_bds_fire ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_bds_flood {
+    label: "RPM INC INF BDS Flood"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_bds_flood ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_wlc_bds_flood {
+    label: "RPM INC WLC BDS Flood"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_wlc_bds_flood ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_bds_other {
+    label: "RPM INC INF BDS Other"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_bds_other ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_bds_storm {
+    label: "RPM INC INF BDS Storm"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_bds_storm ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_wlc_bds_storm {
+    label: "RPM INC WLC BDS Storm"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_wlc_bds_storm ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_bds_subsidence {
+    label: "RPM INC INF BDS Subsidence"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_bds_subsidence ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_wlc_bds_subsidence {
+    label: "RPM INC WLC BDS Subsidence"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_wlc_bds_subsidence ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_bds_theft {
+    label: "RPM INC INF BDS Theft"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_bds_theft ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  #### CTS RPM ####
+
+  measure: rpm_inc_inf_cts_ad {
+    label: "RPM INC INF CTS AD"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_cts_ad ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_cts_eow {
+    label: "RPM INC INF CTS EoW"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_cts_eow ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_cts_fire {
+    label: "RPM INC INF CTS Fire"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_cts_fire ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_cts_flood {
+    label: "RPM INC INF CTS Flood"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_cts_flood ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_wlc_cts_flood {
+    label: "RPM INC WLC CTS Flood"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_wlc_cts_flood ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_cts_other {
+    label: "RPM INC INF CTS Other"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_cts_other ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_cts_storm {
+    label: "RPM INC INF CTS Storm"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_cts_storm ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_wlc_cts_storm {
+    label: "RPM INC WLC CTS Storm"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_wlc_cts_storm ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_cts_theft {
+    label: "RPM INC INF CTS Theft"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_cts_theft ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+  measure: rpm_inc_inf_pps_combined {
+    label: "RPM INC INF PPS Combined"
+    type: sum
+    sql:  ${TABLE}.rpm_inc_inf_pps_combined ;;
+    value_format_name: decimal_0
+    group_label: "Section/Peril RPM"
+  }
+
+
+
 
 
 

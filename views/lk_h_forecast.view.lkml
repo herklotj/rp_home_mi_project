@@ -6,6 +6,7 @@ view: lk_h_forecast {
   dimension_group: inception_month {
     type: time
     timeframes: [
+      date,
       month,
       quarter,
       year,
@@ -13,6 +14,23 @@ view: lk_h_forecast {
     ]
     sql: cast(${TABLE}.inception_month as timestamp) ;;
   }
+
+  dimension: uw_year {
+    type: number
+    sql: case when ${inception_month_date} >= (TIMESTAMP '2016-08-01') AND ${inception_month_date} < (TIMESTAMP '2017-08-01') then 1
+              when ${inception_month_date} >= (TIMESTAMP '2017-08-01') AND ${inception_month_date} < (TIMESTAMP '2018-08-01') then 2
+              when ${inception_month_date} >= (TIMESTAMP '2018-08-01') AND ${inception_month_date} < (TIMESTAMP '2019-08-01') then 3
+              when ${inception_month_date} >= (TIMESTAMP '2019-08-01') AND ${inception_month_date} < (TIMESTAMP '2020-08-01') then 4
+              when ${inception_month_date} >= (TIMESTAMP '2020-08-01') AND ${inception_month_date} < (TIMESTAMP '2021-08-01') then 5
+              when ${inception_month_date} >= (TIMESTAMP '2021-08-01') AND ${inception_month_date} < (TIMESTAMP '2022-08-01') then 6
+              when ${inception_month_date} >= (TIMESTAMP '2022-08-01') AND ${inception_month_date} < (TIMESTAMP '2023-08-01') then 7
+              when ${inception_month_date} >= (TIMESTAMP '2023-08-01') AND ${inception_month_date} < (TIMESTAMP '2024-08-01') then 8
+              when ${inception_month_date} >= (TIMESTAMP '2024-08-01') AND ${inception_month_date} < (TIMESTAMP '2025-08-01') then 9
+              when ${inception_month_date} >= (TIMESTAMP '2025-08-01') AND ${inception_month_date} < (TIMESTAMP '2026-08-01') then 10
+         else null end   ;;
+    label: "UW Year"
+  }
+
 
   measure: aauicl_written_premium_budget {
     label: "AAUICL Written Premium Budget"
