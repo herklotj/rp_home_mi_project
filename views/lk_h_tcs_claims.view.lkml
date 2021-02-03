@@ -113,6 +113,27 @@ view: lk_h_tcs_claims {
     hidden: yes
   }
 
+  dimension_group: load_datetime {
+    type: time
+    timeframes: [
+      time,
+      date,
+      month,
+      quarter,
+      year,
+      fiscal_quarter,
+      fiscal_year
+    ]
+    sql: cast(${TABLE}.load_dttm as timestamp) ;;
+    hidden: yes
+  }
+
+  dimension: load_mth_formatted {
+    sql: ${load_datetime_month} ;;
+    html: {{ rendered_value | append: "-01" | date: "%B %Y" }};;
+  }
+
+
   dimension: claim_peril {
     label: "Claim Peril"
     type: string
