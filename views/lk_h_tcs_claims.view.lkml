@@ -507,6 +507,16 @@ view: lk_h_tcs_claims {
     group_label: "Incurred Distributions"
   }
 
+  dimension: incurred_banded_v2 {
+    label: "Incurred Banded (V2)"
+    type: tier
+    style:  integer
+    tiers: [100,1500,2500,5000,10000,25000,50000]
+    value_format_name: gbp_0
+    sql: ${TABLE}.totalincurred;;
+    group_label: "Incurred Distributions"
+  }
+
   dimension: incurred_banded_bds {
     label: "Incurred Banded BDS (£5,000)"
     type: tier
