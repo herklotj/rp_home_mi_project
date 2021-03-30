@@ -58,8 +58,38 @@ view: lk_h_forecast {
   }
 
 
+  measure: broker_written_volumes_budget {
+    label: "Broker Written Volumes Budget"
+    type: sum
+    sql: ${TABLE}.budget_panel_volumes_bds_nb + ${TABLE}.budget_panel_volumes_cts_nb + ${TABLE}.budget_panel_volumes_bds_rb + ${TABLE}.budget_panel_volumes_cts_rb ;;
+    value_format_name: decimal_0
+    group_label: "Budget - Volumes"
+  }
 
+  measure: aauicl_written_volumes_budget {
+    label: "AAUICL Written Volumes Budget"
+    type: sum
+    sql: ${TABLE}.budget_aauicl_volumes_bds_nb + ${TABLE}.budget_aauicl_volumes_cts_nb + ${TABLE}.budget_aauicl_volumes_bds_rb_sw + ${TABLE}.budget_aauicl_volumes_cts_rb_sw + + ${TABLE}.budget_aauicl_volumes_bds_rb_ren + ${TABLE}.budget_aauicl_volumes_cts_rb_ren ;;
+    value_format_name: decimal_0
+    group_label: "Budget - Volumes"
+  }
 
+  measure: aauicl_cancelled_volumes_budget {
+    label: "AAUICL Cancelled Volumes Budget"
+    type: sum
+    sql: ${TABLE}.budget_cancelled_volumes_nb + ${TABLE}.budget_cancelled_volumes_rb_sw + ${TABLE}.budget_cancelled_volumes_rb_ren ;;
+    value_format_name: decimal_0
+    group_label: "Budget - Volumes"
+  }
+
+  measure: aauicl_volumes_budget {
+    label: "AAUICL Volumes Budget"
+    type: sum
+    sql:(${TABLE}.budget_aauicl_volumes_bds_nb + ${TABLE}.budget_aauicl_volumes_cts_nb + ${TABLE}.budget_aauicl_volumes_bds_rb_sw + ${TABLE}.budget_aauicl_volumes_cts_rb_sw + + ${TABLE}.budget_aauicl_volumes_bds_rb_ren + ${TABLE}.budget_aauicl_volumes_cts_rb_ren)
+      - (${TABLE}.budget_cancelled_volumes_nb + ${TABLE}.budget_cancelled_volumes_rb_sw + ${TABLE}.budget_cancelled_volumes_rb_ren);;
+    value_format_name: decimal_0
+    group_label: "Budget - Volumes"
+  }
 
   measure: aauicl_written_premium_forecast {
     label: "AAUICL Written Premium Forecast"
@@ -84,6 +114,40 @@ view: lk_h_forecast {
       - (${TABLE}.forecast_cancelled_premium_nb + ${TABLE}.forecast_cancelled_premium_rb_sw + ${TABLE}.forecast_cancelled_premium_rb_ren) ;;
     value_format_name: decimal_0
     group_label: "Forecast - Premium"
+  }
+
+
+  measure: broker_written_volumes_forecast {
+    label: "Broker Written Volumes Forecast"
+    type: sum
+    sql: ${TABLE}.forecast_panel_volumes_bds_nb + ${TABLE}.forecast_panel_volumes_cts_nb + ${TABLE}.forecast_panel_volumes_bds_rb + ${TABLE}.forecast_panel_volumes_cts_rb ;;
+    value_format_name: decimal_0
+    group_label: "Forecast - Volumes"
+  }
+
+  measure: aauicl_written_volumes_forecast {
+    label: "AAUICL Written Volumes Forecast"
+    type: sum
+    sql: ${TABLE}.forecast_aauicl_volumes_bds_nb + ${TABLE}.forecast_aauicl_volumes_cts_nb + ${TABLE}.forecast_aauicl_volumes_bds_rb_sw + ${TABLE}.forecast_aauicl_volumes_cts_rb_sw + + ${TABLE}.forecast_aauicl_volumes_bds_rb_ren + ${TABLE}.forecast_aauicl_volumes_cts_rb_ren ;;
+    value_format_name: decimal_0
+    group_label: "Forecast - Volumes"
+  }
+
+  measure: aauicl_cancelled_volumes_forecast {
+    label: "AAUICL Cancelled Volumes Forecast"
+    type: sum
+    sql: ${TABLE}.forecast_cancelled_volumes_nb + ${TABLE}.forecast_cancelled_volumes_rb_sw + ${TABLE}.forecast_cancelled_volumes_rb_ren ;;
+    value_format_name: decimal_0
+    group_label: "Forecast - Volumes"
+  }
+
+  measure: aauicl_volumes_forecast {
+    label: "AAUICL Volumes Forecast"
+    type: sum
+    sql:(${TABLE}.forecast_aauicl_volumes_bds_nb + ${TABLE}.forecast_aauicl_volumes_cts_nb + ${TABLE}.forecast_aauicl_volumes_bds_rb_sw + ${TABLE}.forecast_aauicl_volumes_cts_rb_sw + + ${TABLE}.forecast_aauicl_volumes_bds_rb_ren + ${TABLE}.forecast_aauicl_volumes_cts_rb_ren)
+      - (${TABLE}.forecast_cancelled_volumes_nb + ${TABLE}.forecast_cancelled_volumes_rb_sw + ${TABLE}.forecast_cancelled_volumes_rb_ren);;
+    value_format_name: decimal_0
+    group_label: "Forecast - Volumes"
   }
 
 

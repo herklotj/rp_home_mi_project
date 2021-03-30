@@ -146,6 +146,34 @@ view: lk_h_cancel_history {
        load_dttm,
        cancel_effective_dttm_t AS cancel_effective_dttm,
        cancel_reason,
+       CASE
+         WHEN cancel_reason = 0 THEN 'Not Cancelled'
+         WHEN cancel_reason = 1 THEN 'Sold Property'
+         WHEN cancel_reason = 3 THEN 'Autocancel - policy lines only'
+         WHEN cancel_reason = 4 THEN 'Adjustment Decline - AQ Accepted'
+         WHEN cancel_reason = 5 THEN 'Adjustment Decline - AQ Refused'
+         WHEN cancel_reason = 10 THEN 'Policyholder Deceased'
+         WHEN cancel_reason = 13 THEN 'Auto renewed in error'
+         WHEN cancel_reason = 15 THEN 'Complaint'
+         WHEN cancel_reason = 16 THEN 'Free Insurance'
+         WHEN cancel_reason = 20 THEN 'Sold to wrong insurer'
+         WHEN cancel_reason = 21 THEN 'Cheaper quote obtained'
+         WHEN cancel_reason = 22 THEN 'Non receipt of payment/documents'
+         WHEN cancel_reason = 24 THEN '14-day cooling off'
+         WHEN cancel_reason = 25 THEN 'Void Insurance'
+         WHEN cancel_reason = 26 THEN 'NTU'
+         WHEN cancel_reason = 27 THEN 'Lapse'
+         WHEN cancel_reason = 29 THEN 'Unpaid Direct Debit'
+         WHEN cancel_reason = 30 THEN 'Unpaid CC payment'
+         WHEN cancel_reason = 36 THEN 'CC Policy Cancelled at Renewal'
+         WHEN cancel_reason = 40 THEN 'Chargeback'
+         WHEN cancel_reason = 57 THEN 'PolicyLine Cancel due to Upgrade'
+         WHEN cancel_reason = 58 THEN 'Standard policy cancelled to setup an Enhanced Home policy'
+         WHEN cancel_reason = 59 THEN 'Enhanced policy cancelled to setup an Standard Home policy'
+         WHEN cancel_reason = 60 THEN 'Enhanced policy cancelled to setup an Home Plus policy'
+         WHEN cancel_reason IS NULL THEN 'No reason given'
+         ELSE 'Unknown'
+       END AS cancel_reason_desc,
        policy_cancel_date_t AS policy_cancel_date,
        policy_cancel_mth_t AS policy_cancel_mth,
        policy_cancel_yr_t AS policy_cancel_yr,
@@ -346,6 +374,11 @@ WHERE cancel_effective_dttm_t IS NOT NULL
     sql: ${TABLE}.cancel_reason ;;
   }
 
+  dimension: cancel_reason_desc {
+    type: string
+    sql: ${TABLE}.cancel_reason_desc ;;
+  }
+
   dimension: cover_type {
     type: string
     sql: ${TABLE}.cover_type ;;
@@ -506,6 +539,11 @@ WHERE cancel_effective_dttm_t IS NOT NULL
   dimension: cfi_ind_lapse {
     type: number
     sql: ${TABLE}.cfi_ind_lapse ;;
+  }
+
+  dimension: cfi_ind {
+    type: number
+    sql: ${TABLE}.cfi_ind ;;
   }
 
   measure: broker_covers_bds {
