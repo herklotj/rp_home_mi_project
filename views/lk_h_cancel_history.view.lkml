@@ -173,6 +173,20 @@ view: lk_h_cancel_history {
          WHEN cancel_reason = 60 THEN 'Enhanced policy cancelled to setup an Home Plus policy'
          WHEN cancel_reason IS NULL THEN 'No reason given'
          ELSE 'Unknown'
+       END AS cancel_reason_desc_raw,
+       CASE
+         WHEN cancel_reason = 24 THEN '14-day cooling off'
+         WHEN cancel_reason = 13 THEN 'Auto-renewed in error'
+         WHEN cancel_reason = 25 THEN 'Cancelled by insurer'
+         WHEN cancel_reason = 21 THEN 'Cheaper quote obtained'
+         WHEN cancel_reason in(4,5) THEN 'MTA decline'
+         WHEN cancel_reason is null THEN 'No payment made (CFI)'
+         WHEN cancel_reason in(29,22) THEN 'Non-receipt of payment/documents'
+         WHEN cancel_reason = 26 THEN 'NTU'
+         WHEN cancel_reason in(3,15,16,20,27,55,57,58,59,60) THEN 'Other'
+         WHEN cancel_reason = 10 THEN 'Policyholder deceased'
+         WHEN cancel_reason = 1 THEN 'Sold property'
+         ELSE 'Unknown'
        END AS cancel_reason_desc,
        policy_cancel_date_t AS policy_cancel_date,
        policy_cancel_mth_t AS policy_cancel_mth,
