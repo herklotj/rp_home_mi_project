@@ -358,13 +358,13 @@ view: lk_h_policy_history_scored_all {
   dimension: area_bds_margin {
     type: string
     sql: ${TABLE}.area_bds_margin ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: area_cts_margin {
     type: string
     sql: ${TABLE}.area_cts_margin ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: area_eow {
@@ -839,10 +839,6 @@ view: lk_h_policy_history_scored_all {
               else 'England' end;;
     group_label: "Geographical"
   }
-
-
-
-
 
 
   ### Measures
