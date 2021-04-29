@@ -546,6 +546,18 @@ view: lk_h_tcs_claims {
          case when ${TABLE}.incurred_bds = 0 and ${TABLE}.incurred_cts = 0 then 'N/A' else null end end end end;;
   }
 
+  dimension: lifecycle_dimension {
+    label: "Lifecycle Banded"
+    type: tier
+    style:  integer
+    tiers: [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200]
+    value_format_name: decimal_0
+    sql: case when ${TABLE}.FCA_ACCEPTED_PAID = 1 or ${TABLE}.FCA_REJECTED = 1 or ${TABLE}.FCA_OTHER_SETTLED = 1 then
+    to_date(${TABLE}.closeddate) - to_date(${TABLE}.notificationdate) else null end;;
+  }
+
+
+
 
   #### Measures ###
 
