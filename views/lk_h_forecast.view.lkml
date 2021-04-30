@@ -158,5 +158,12 @@ view: lk_h_forecast {
     value_format_name: decimal_0
   }
 
+  measure: forecast_loss_ratio {
+    label: "Plan Loss Ratio"
+    type: sum
+    sql: ${TABLE}.forecast_loss_ratio ;;
+    value_format_name: percent_1
+  }
+
 
 }
