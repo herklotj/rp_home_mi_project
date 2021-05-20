@@ -360,13 +360,13 @@ view: lk_h_policy_history {
   dimension: area_bds_margin {
     type: string
     sql: ${TABLE}.area_bds_margin ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: area_cts_margin {
     type: string
     sql: ${TABLE}.area_cts_margin ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: area_eow {
