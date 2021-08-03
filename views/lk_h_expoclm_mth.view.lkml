@@ -33,8 +33,10 @@ view: lk_h_expoclm_mth {
 
   dimension: claim_fee_rate {
     type: number
-    sql: case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01')) then 175 else 210 end ;;
-    hidden: yes
+    sql: case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01')) then 175
+              when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then 210 else
+              200 end ;;
+    hidden: no
     value_format_name: decimal_0
   }
 
@@ -85,14 +87,14 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_2
   }
 
-  ### ASAT March 31st 2021 ###
+  ### ASAT June 30th 2021 ###
   dimension: latest_abe_rate {
     type: number
     sql: case when ${TABLE}.policy_period_qs = '1' then 0.650
               when ${TABLE}.policy_period_qs = '2' then 0.580
-              when ${TABLE}.policy_period_qs = '3' then 0.517
-              when ${TABLE}.policy_period_qs = '4' then 0.450
-              when ${TABLE}.policy_period_qs = '5' then 0.388
+              when ${TABLE}.policy_period_qs = '3' then 0.519
+              when ${TABLE}.policy_period_qs = '4' then 0.442
+              when ${TABLE}.policy_period_qs = '5' then 0.406
               else 0 end ;;
     hidden: yes
     value_format_name: percent_1
@@ -3162,6 +3164,14 @@ view: lk_h_expoclm_mth {
               nullif(${TABLE}.earned_premium,0) ;;
   }
 
+  dimension: chargeable_incident {
+    label: "Chargeable Incident"
+    type: number
+    sql:  case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then ${TABLE}.tcs_claims else
+      ${TABLE}.tcs_claims + ${TABLE}.tcs_enquiries end ;;
+    value_format_name: decimal_0
+  }
+
   measure: count {
     type: count
     drill_fields: [detail*]
@@ -3409,7 +3419,7 @@ view: lk_h_expoclm_mth {
   measure: claims_handing_fee {
     label: "Claims Handling Fee"
     type: sum
-    sql: ${claim_fee_rate}*${TABLE}.tcs_claims ;;
+    sql: ${claim_fee_rate}*${chargeable_incident} ;;
     value_format_name: gbp_0
     group_label: "COR Expense Measures"
   }
@@ -3713,6 +3723,13 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_1
   }
 
+  measure: enquiries_tcs {
+    label: "TCS Enquiries"
+    type: sum
+    sql:  ${TABLE}.TCS_ENQUIRIES ;;
+    value_format_name: decimal_0
+  }
+
   measure: incidents_tcs {
     label: "TCS Incidents"
     type: sum
@@ -3731,6 +3748,14 @@ view: lk_h_expoclm_mth {
     label: "TCS Claims"
     type: sum
     sql:  ${TABLE}.TCS_CLAIMS ;;
+    value_format_name: decimal_0
+  }
+
+  measure: chargeable_incidents {
+    label: "Chargeable Incidents"
+    type: sum
+    sql:  case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then ${TABLE}.tcs_claims else
+              ${TABLE}.tcs_claims + ${TABLE}.tcs_enquiries end ;;
     value_format_name: decimal_0
   }
 
@@ -4891,7 +4916,7 @@ view: lk_h_expoclm_mth {
   measure: claims_handing_fee_qs {
     label: "Claims Handling Fee (Quota Share)"
     type: sum
-    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0 else ${claim_fee_rate}*${TABLE}.tcs_claims end ;;
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then 0 else ${claim_fee_rate}*${chargeable_incident} end ;;
     value_format_name: decimal_0
     group_label: "COR Expense Measures"
   }
@@ -4899,7 +4924,7 @@ view: lk_h_expoclm_mth {
   measure: claims_handing_fee_aauicl {
     label: "Claims Handling Fee (Incurred)"
     type: sum
-    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then ${claim_fee_rate}*${TABLE}.tcs_claims else (1-${cede_rate})*${claim_fee_rate}*${TABLE}.tcs_claims end ;;
+    sql: case when ${TABLE}.policy_period_qs in(1,2,3) then ${claim_fee_rate}*${chargeable_incident} else (1-${cede_rate})*${claim_fee_rate}*${chargeable_incident} end ;;
     value_format_name: decimal_0
     group_label: "COR Expense Measures"
   }

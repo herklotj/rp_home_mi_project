@@ -849,6 +849,11 @@ view: lk_h_policy_history {
     sql: ${TABLE}.aauicl_ind_bds = 1 or aauicl_ind_cts = 1 ;;
   }
 
+  dimension: uprn {
+    label: "UPRN"
+    type: number
+    sql: ${TABLE}.uprn ;;
+  }
 
 
 

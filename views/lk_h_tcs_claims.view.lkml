@@ -51,8 +51,26 @@ view: lk_h_tcs_claims {
   dimension: chargeable_incident_flag {
     label: "Chargeable Incident Flag"
     type: yesno
-    sql: ${TABLE}.tcs_claims = 1 ;;
+    sql: ((CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE) < (TIMESTAMP '2021-07-01')) and ${TABLE}.tcs_claims = 1)
+          or ((CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE) >= (TIMESTAMP '2021-07-01')) and (${TABLE}.tcs_claims = 1 or ${TABLE}.tcs_enquiries = 1)) ;;
     group_label: "Claim Flags"
+  }
+
+  dimension: chargeable_incident {
+    label: "Chargeable Incident"
+    type: number
+    sql:  case when (CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then ${TABLE}.tcs_claims else
+      ${TABLE}.tcs_claims + ${TABLE}.tcs_enquiries end ;;
+    value_format_name: decimal_0
+  }
+
+  dimension: claim_fee_rate {
+    type: number
+    sql: case when (CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01')) then 175
+              when (CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then 210 else
+              200 end ;;
+    hidden: no
+    value_format_name: decimal_0
   }
 
   dimension: settled_claim_flag {
@@ -80,7 +98,7 @@ view: lk_h_tcs_claims {
   dimension: chargeable_contents_flag {
     label: "Chargeable Incident - Contents"
     type: yesno
-    sql: ${TABLE}.incurred_cts > 0 and ${TABLE}.TCS_CLAIMS = 1;;
+    sql: ${TABLE}.incurred_cts > 0 and ${chargeable_incident} = 1;;
     hidden: no
     group_label: "Claim Flags"
  }
@@ -88,7 +106,7 @@ view: lk_h_tcs_claims {
   dimension: chargeable_buildings_flag {
     label: "Chargeable Incident - Buildings"
     type: yesno
-    sql: ${TABLE}.incurred_bds > 0 and ${TABLE}.TCS_CLAIMS = 1;;
+    sql: ${TABLE}.incurred_bds > 0 and ${chargeable_incident} = 1;;
     hidden: no
     group_label: "Claim Flags"
   }
@@ -1117,6 +1135,13 @@ view: lk_h_tcs_claims {
   measure: tcsclaims {
     label: "Chargeable Incidents"
     type: sum
+    sql: case when (CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then ${TABLE}.tcs_claims else
+      ${TABLE}.tcs_claims + ${TABLE}.tcs_enquiries end ;;
+  }
+
+  measure: tcs_claims {
+    label: "TCS Claims"
+    type: sum
     sql: ${TABLE}.tcs_claims ;;
   }
 
@@ -1180,14 +1205,14 @@ view: lk_h_tcs_claims {
     label: "Chargeable Incidents - Weather"
     type: sum
     sql: case when ${TABLE}.CLAIM_PERIL in('FLOOD','STORM')
-        then ${TABLE}.TCS_CLAIMS else null end;;
+        then ${chargeable_incident} else null end;;
   }
 
   measure: chargeable_nonweather {
     label: "Chargeable Incidents - Non-Weather"
     type: sum
     sql: case when ${TABLE}.CLAIM_PERIL in('AD','EOW','THEFT','OTHER','FIRE','SUBSIDENCE')
-        then ${TABLE}.TCS_CLAIMS else null end;;
+        then ${chargeable_incident} else null end;;
   }
 
   ### Insurer Insights ###
@@ -1262,8 +1287,7 @@ view: lk_h_tcs_claims {
   measure: claims_handing_fee {
     label: "Claims Handling Fee"
     type: sum
-    sql: case when (CAST(lk_h_tcs_claims.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
-      THEN ${TABLE}.tcs_claims*175 else ${TABLE}.tcs_claims*210 end ;;
+    sql: ${claim_fee_rate}*${chargeable_incident} ;;
     value_format_name: gbp_0
     group_label: "Incurred"
   }
@@ -1273,8 +1297,7 @@ view: lk_h_tcs_claims {
     type: sum
     sql: case when (((CAST(lk_h_tcs_claims.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) )))))
           THEN
-         case when (CAST(lk_h_tcs_claims.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01'))
-          THEN ${TABLE}.tcs_claims*175 else ${TABLE}.tcs_claims*210 end
+         ${claim_fee_rate}*${chargeable_incident}
          else 0 end;;
     value_format_name: gbp_0
     group_label: "Incurred"
@@ -1285,7 +1308,7 @@ view: lk_h_tcs_claims {
     label: "Chargeable Incidents LCM"
     type: sum
     sql: case when (((CAST(lk_h_tcs_claims.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE) ) >= ((TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ))) AND (CAST(lk_h_tcs_claims.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE) ) < ((TIMESTAMPADD(month,1, TIMESTAMPADD(month,-1, DATE_TRUNC('month', DATE_TRUNC('day', CURRENT_TIMESTAMP)) ) )))))
-      THEN ${TABLE}.tcs_claims else 0 end ;;
+      THEN ${chargeable_incident} else 0 end ;;
     hidden: yes
   }
 
@@ -1480,7 +1503,7 @@ view: lk_h_tcs_claims {
     label: "Chargeable Incidents - Contents"
     type: sum
     sql: case when ${TABLE}.incurred_cts > 0
-      then ${TABLE}.TCS_CLAIMS else null end;;
+      then ${chargeable_incident} else null end;;
       hidden: yes
 
   }
@@ -1489,7 +1512,7 @@ view: lk_h_tcs_claims {
     label: "Chargeable Incidents - Buildings"
     type: sum
     sql: case when ${TABLE}.incurred_bds > 0
-      then ${TABLE}.TCS_CLAIMS else null end;;
+      then ${chargeable_incident} else null end;;
       hidden: yes
   }
 
