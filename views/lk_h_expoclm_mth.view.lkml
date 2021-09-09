@@ -90,7 +90,7 @@ view: lk_h_expoclm_mth {
   ### ASAT June 30th 2021 ###
   dimension: latest_abe_rate {
     type: number
-    sql: case when ${TABLE}.policy_period_qs = '1' then 0.650
+    sql: case when ${TABLE}.policy_period_qs = '1' then 0.655
               when ${TABLE}.policy_period_qs = '2' then 0.580
               when ${TABLE}.policy_period_qs = '3' then 0.519
               when ${TABLE}.policy_period_qs = '4' then 0.442

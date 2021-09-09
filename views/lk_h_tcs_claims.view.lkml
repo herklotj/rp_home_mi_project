@@ -36,6 +36,12 @@ view: lk_h_tcs_claims {
     ;;
   }
 
+  dimension: claim_source {
+    label: "Claim Source"
+    type: string
+    sql: ${TABLE}.source ;;
+  }
+
   dimension: uw_year_actian {
     label: "Policy UW Year"
     type: number
