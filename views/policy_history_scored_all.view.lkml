@@ -1101,12 +1101,28 @@ view: lk_h_policy_history_scored_all {
 
 
 
-  measure: net_loss_ratio {
+   measure: net_loss_ratio {
     label: "AAUICL Net Modelled Loss Ratio"
     type: number
     sql:  1.0*${aauicl_rpm_total}/nullif(${aauicl_net_premium_tot},0) ;;
     value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
 
+  measure: net_loss_ratio_bds{
+    label: "AAUICL Net Modelled Loss Ratio BDS"
+    type: number
+    sql:  1.0*${aauicl_rpm_buildings}/nullif(${aauicl_net_premium_bds},0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
+
+  measure: net_loss_ratio_cts{
+    label: "AAUICL Net Modelled Loss Ratio CTS"
+    type: number
+    sql:  1.0*${aauicl_rpm_contents}/nullif(${aauicl_net_premium_cts},0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
   }
 
   measure: gross_loss_ratio {
@@ -1114,6 +1130,23 @@ view: lk_h_policy_history_scored_all {
     type: number
     sql:  1.0*${aauicl_rpm_total}/nullif((${aauicl_net_premium_tot}+${aauicl_commission_tot}),0) ;;
     value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
+
+  measure: gross_loss_ratio_bds {
+    label: "AAUICL Gross Modelled Loss Ratio BDS"
+    type: number
+    sql:  1.0*${aauicl_rpm_buildings}/nullif((${aauicl_net_premium_bds}+${aauicl_commission_bds}),0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
+
+  measure: gross_loss_ratio_cts {
+    label: "AAUICL Gross Modelled Loss Ratio CTS"
+    type: number
+    sql:  1.0*${aauicl_rpm_contents}/nullif((${aauicl_net_premium_cts}+${aauicl_commission_cts}),0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
   }
 
   measure: net_loss_ratio_inf {
@@ -1121,7 +1154,23 @@ view: lk_h_policy_history_scored_all {
     type: number
     sql:  1.0*${aauicl_rpm_inf_total}/nullif(${aauicl_net_premium_tot},0) ;;
     value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
 
+  measure: net_loss_ratio_inf_bds{
+    label: "AAUICL Net Modelled Loss Ratio INF BDS"
+    type: number
+    sql:  1.0*${aauicl_rpm_inf_buildings}/nullif(${aauicl_net_premium_bds},0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
+
+  measure: net_loss_ratio_inf_cts{
+    label: "AAUICL Net Modelled Loss Ratio INF CTS"
+    type: number
+    sql:  1.0*${aauicl_rpm_inf_contents}/nullif(${aauicl_net_premium_cts},0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
   }
 
   measure: gross_loss_ratio_inf {
@@ -1129,6 +1178,23 @@ view: lk_h_policy_history_scored_all {
     type: number
     sql:  1.0*${aauicl_rpm_inf_total}/nullif((${aauicl_net_premium_tot}+${aauicl_commission_tot}),0) ;;
     value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
+
+  measure: gross_loss_ratio_inf_bds {
+    label: "AAUICL Gross Modelled Loss Ratio INF BDS"
+    type: number
+    sql:  1.0*${aauicl_rpm_inf_buildings}/nullif((${aauicl_net_premium_bds}+${aauicl_commission_bds}),0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
+
+  measure: gross_loss_ratio_inf_cts {
+    label: "AAUICL Gross Modelled Loss Ratio INF CTS"
+    type: number
+    sql:  1.0*${aauicl_rpm_inf_contents}/nullif((${aauicl_net_premium_cts}+${aauicl_commission_cts}),0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
   }
 
   measure: net_loss_ratio_wlc {
@@ -1136,7 +1202,23 @@ view: lk_h_policy_history_scored_all {
     type: number
     sql:  1.0*${aauicl_rpm_wlc_total}/nullif(${aauicl_net_premium_tot},0) ;;
     value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
 
+  measure: net_loss_ratio_wlc_bds {
+    label: "AAUICL Net Modelled Loss Ratio WLC BDS"
+    type: number
+    sql:  1.0*${aauicl_rpm_wlc_buildings}/nullif(${aauicl_net_premium_bds},0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
+
+  measure: net_loss_ratio_wlc_cts {
+    label: "AAUICL Net Modelled Loss Ratio WLC CTS"
+    type: number
+    sql:  1.0*${aauicl_rpm_wlc_contents}/nullif(${aauicl_net_premium_cts},0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
   }
 
   measure: gross_loss_ratio_wlc {
@@ -1144,6 +1226,23 @@ view: lk_h_policy_history_scored_all {
     type: number
     sql:  1.0*${aauicl_rpm_wlc_total}/nullif((${aauicl_net_premium_tot}+${aauicl_commission_tot}),0) ;;
     value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
+
+  measure: gross_loss_ratio_wlc_bds {
+    label: "AAUICL Gross Modelled Loss Ratio WLC BDS"
+    type: number
+    sql:  1.0*${aauicl_rpm_wlc_buildings}/nullif((${aauicl_net_premium_bds}+${aauicl_commission_bds}),0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
+  }
+
+  measure: gross_loss_ratio_wlc_cts {
+    label: "AAUICL Gross Modelled Loss Ratio WLC CTS"
+    type: number
+    sql:  1.0*${aauicl_rpm_wlc_contents}/nullif((${aauicl_net_premium_cts}+${aauicl_commission_cts}),0) ;;
+    value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
   }
 
   measure: net_loss_ratio_wlu {
@@ -1151,6 +1250,7 @@ view: lk_h_policy_history_scored_all {
     type: number
     sql:  1.0*${aauicl_rpm_wlu_total}/nullif(${aauicl_net_premium_tot},0) ;;
     value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
 
   }
 
@@ -1159,6 +1259,7 @@ view: lk_h_policy_history_scored_all {
     type: number
     sql:  1.0*${aauicl_rpm_wlu_total}/nullif((${aauicl_net_premium_tot}+${aauicl_commission_tot}),0) ;;
     value_format_name: percent_1
+    group_label: "Modelled Loss Ratio"
   }
 
 
