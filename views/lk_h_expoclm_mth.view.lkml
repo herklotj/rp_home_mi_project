@@ -3172,6 +3172,30 @@ view: lk_h_expoclm_mth {
     value_format_name: decimal_0
   }
 
+  dimension: ratekey {
+    label: "Ratekey"
+    type: number
+    sql: CASE
+         WHEN ${TABLE}.transaction_dttm < (TIMESTAMP '2021-09-14') THEN
+           CASE
+             WHEN ${TABLE}.broker_nb_rb = 'NB' THEN 1
+             WHEN ${TABLE}.broker_nb_rb = 'RB' THEN 2
+             ELSE NULL
+           END
+         WHEN ${TABLE}.transaction_dttm >= (TIMESTAMP '2021-09-14') THEN
+           CASE
+             WHEN dob IN (25,26,27,28,29,30,31) THEN 3
+             ELSE
+               CASE
+                 WHEN ${TABLE}.broker_nb_rb = 'NB' THEN 1
+                 WHEN ${TABLE}.broker_nb_rb = 'RB' THEN 2
+                 ELSE NULL
+               END
+             END
+             ELSE NULL
+           END;;
+  }
+
   measure: count {
     type: count
     drill_fields: [detail*]
