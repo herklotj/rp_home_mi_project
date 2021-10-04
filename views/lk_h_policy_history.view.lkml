@@ -879,6 +879,32 @@ view: lk_h_policy_history {
            END;;
   }
 
+  dimension: ratekey_test {
+    label: "Ratekey (2)"
+    type: number
+    sql: CASE
+         WHEN broker_nb_rb = 'NB' THEN
+           CASE
+             WHEN transaction_dttm <(TIMESTAMP '2021-09-14') THEN 1
+             WHEN transaction_dttm >= (TIMESTAMP '2021-09-14') THEN
+               CASE
+                 WHEN dob IN (25,26,27,28,29,30,31) THEN 3
+                 ELSE 1
+               END
+             END
+             WHEN broker_nb_rb = 'RB' THEN
+               CASE
+                 WHEN (CAST(policy_start_date AS TIMESTAMP WITHOUT TIME ZONE) <(TIMESTAMP '2021-10-14')) THEN 2
+                 WHEN (CAST(policy_start_date AS TIMESTAMP WITHOUT TIME ZONE) >= (TIMESTAMP '2021-10-14')) THEN
+                   CASE
+                     WHEN dob IN (25,26,27,28,29,30,31) THEN 3
+                     ELSE 2
+                   END
+                 END
+                 ELSE NULL
+               END;;
+  }
+
 
 
 

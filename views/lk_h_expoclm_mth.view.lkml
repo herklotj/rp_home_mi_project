@@ -4,7 +4,7 @@ view: lk_h_expoclm_mth {
 
   #### MANUAL ENTRY DIMENSIONS e.g. Cat Costs/Periods, Flood Re rates, ABE by UWYR etc. ###
 
-  ### ASAT November 1st 2020 ###
+  ### ASAT October 4th 2021 ###
   dimension: cat_period {
     type: string
     sql: case when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2017-10-01')))
@@ -19,6 +19,8 @@ view: lk_h_expoclm_mth {
                     then 'Oct20 - Sep21'
               when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2021-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2022-10-01')))
                     then 'Oct21 - Sep22'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2022-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2023-10-01')))
+                    then 'Oct22 - Sep23'
               else null end   ;;
     label: "Cat Period"
   }
@@ -48,7 +50,7 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_0
   }
 
-  ### ASAT November 1st 2020 ###
+  ### ASAT October 4th 2021 ###
   dimension: cat_xol_rate {
     type: number
     sql: case when ${cat_period} = 'Aug16 - Sep17' then 0.0800
@@ -56,12 +58,13 @@ view: lk_h_expoclm_mth {
               when ${cat_period} = 'Oct18 - Sep19' then 0.0917
               when ${cat_period} = 'Oct19 - Sep20' then 0.0917
               when ${cat_period} = 'Oct20 - Sep21' then 0.0951
+              when ${cat_period} = 'Oct21 - Sep22' then 0.0971
               else 0 end;;
     hidden: yes
     value_format_name: percent_2
   }
 
-  ### ASAT November 1st 2020 ###
+  ### ASAT October 4th 2021 ###
   dimension: cat_xol_topup_rate {
     type: number
     sql: case when ${cat_period} = 'Aug16 - Sep17' then 0.0000
@@ -69,6 +72,7 @@ view: lk_h_expoclm_mth {
               when ${cat_period} = 'Oct18 - Sep19' then 0.0098
               when ${cat_period} = 'Oct19 - Sep20' then 0.0098
               when ${cat_period} = 'Oct20 - Sep21' then 0.0126
+              when ${cat_period} = 'Oct21 - Sep22' then 0.01328
               else 0 end ;;
     hidden: no
     value_format_name: percent_2
