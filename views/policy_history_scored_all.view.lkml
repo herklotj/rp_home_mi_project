@@ -840,28 +840,55 @@ view: lk_h_policy_history_scored_all {
     group_label: "Geographical"
   }
 
+
   dimension: ratekey {
     label: "Ratekey"
     type: number
-    sql: CASE
-         WHEN ${TABLE}.transaction_dttm < (TIMESTAMP '2021-09-14') THEN
-           CASE
-             WHEN ${TABLE}.broker_nb_rb = 'NB' THEN 1
-             WHEN ${TABLE}.broker_nb_rb = 'RB' THEN 2
-             ELSE NULL
-           END
-         WHEN ${TABLE}.transaction_dttm >= (TIMESTAMP '2021-09-14') THEN
-           CASE
-             WHEN dob IN (25,26,27,28,29,30,31) THEN 3
-             ELSE
-               CASE
-                 WHEN ${TABLE}.broker_nb_rb = 'NB' THEN 1
-                 WHEN ${TABLE}.broker_nb_rb = 'RB' THEN 2
-                 ELSE NULL
-               END
-             END
-             ELSE NULL
-           END;;
+    sql: case
+      when broker_nb_rb = 'NB' then
+      case
+        when transaction_dttm < (TIMESTAMP '2021-09-14') then 1
+        when transaction_dttm >= (TIMESTAMP '2021-09-14')
+        and transaction_dttm < (TIMESTAMP '2021-10-01') then
+        case
+          when dob in (25, 26, 27, 28, 29, 30, 31) then 3
+          else 1
+        end
+        when transaction_dttm >= (TIMESTAMP '2021-10-01')
+        and transaction_dttm < (TIMESTAMP '2021-11-01') then
+        case
+          when dob in (16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31) then 3
+          else 1
+        end
+        when transaction_dttm >= (TIMESTAMP '2021-11-01') then
+        case
+          when dob in (25, 26, 27, 28, 29, 30, 31) then 3
+          else 1
+        end
+      end
+      when broker_nb_rb = 'RB' then
+      case
+        when policy_start_date < '2021-10-14' then 2
+        when policy_start_date >= '2021-10-14'
+        and policy_start_date < '2021-11-01' then
+        case
+          when dob in (25, 26, 27, 28, 29, 30, 31) then 3
+          else 2
+        end
+        when policy_start_date >= '2021-11-01'
+        and policy_start_date < '2021-12-01' then
+        case
+          when dob in (16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31) then 3
+          else 2
+        end
+        when policy_start_date >= '2021-12-01' then
+        case
+          when dob in (25, 26, 27, 28, 29, 30, 31) then 3
+          else 2
+        end
+      end
+      else null
+      end ;;
   }
 
 
