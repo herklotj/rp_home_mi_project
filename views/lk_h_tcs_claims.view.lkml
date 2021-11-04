@@ -1523,9 +1523,9 @@ view: lk_h_tcs_claims {
   }
 
   measure: percentile_98 {
-    label: "Percentile_98"
+    label: "Accepted Paid Amount - Percentile_98"
     type: number
-    sql: PERCENTILE_CONT(.98) within group (ORDER BY totalincurred);;
+    sql: PERCENTILE_CONT(.98) within group (ORDER BY fca_accepted_paid_amount);;
     hidden: no
   }
 
