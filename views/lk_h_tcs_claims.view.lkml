@@ -1530,5 +1530,20 @@ view: lk_h_tcs_claims {
     value_format_name: decimal_0
   }
 
+  measure: percentile_90 {
+    label: "Accepted Paid Amount - Percentile_90"
+    type: number
+    sql: PERCENTILE_CONT(.90) within group (ORDER BY fca_accepted_paid_amount);;
+    hidden: no
+    value_format_name: decimal_0
+  }
+
+  measure: percentile_75 {
+    label: "Accepted Paid Amount - Percentile_75"
+    type: number
+    sql: PERCENTILE_CONT(.75) within group (ORDER BY fca_accepted_paid_amount);;
+    hidden: no
+    value_format_name: decimal_0
+  }
 
 }
