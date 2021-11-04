@@ -858,12 +858,12 @@ view: lk_h_policy_history_scored_all {
           when dob in (16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31) then 3
           else 1
         end
-        when transaction_dttm >= (TIMESTAMP '2021-11-01') and transaction_dttm < (TIMESTAMP '2021-12-01') then
+        when transaction_dttm >= (TIMESTAMP '2021-11-01') and transaction_dttm < (TIMESTAMP '2021-12-16') then
         case
           when dob in (25, 26, 27, 28, 29, 30, 31) then 3
           else 1
         end
-        when transaction_dttm >= (TIMESTAMP '2021-12-01') then 3
+        when transaction_dttm >= (TIMESTAMP '2021-12-16') then 3
       end
       when broker_nb_rb = 'RB' then
       case
@@ -878,12 +878,12 @@ view: lk_h_policy_history_scored_all {
           when dob in (16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31) then 3
           else 2
         end
-        when policy_start_date >= '2021-12-01' and policy_start_date < '2022-01-01' then
+        when policy_start_date >= '2021-12-01' and policy_start_date < '2022-01-16' then
         case
           when dob in (25, 26, 27, 28, 29, 30, 31) then 3
           else 2
         end
-        when policy_start_date >= '2021-12-01' then 3
+        when policy_start_date >= '2022-01-16' then 3
       end
       else null
       end ;;
