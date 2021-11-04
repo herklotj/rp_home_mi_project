@@ -1522,5 +1522,12 @@ view: lk_h_tcs_claims {
       hidden: yes
   }
 
+  measure: percentile_98 {
+    label: "Percentile_98"
+    type: number
+    sql: PERCENTILE_CONT(.98) within group (ORDER BY totalincurred);;
+    hidden: no
+  }
+
 
 }
