@@ -848,44 +848,42 @@ view: lk_h_policy_history_scored_all {
       when broker_nb_rb = 'NB' then
       case
         when transaction_dttm < (TIMESTAMP '2021-09-14') then 1
-        when transaction_dttm >= (TIMESTAMP '2021-09-14')
-        and transaction_dttm < (TIMESTAMP '2021-10-01') then
+        when transaction_dttm >= (TIMESTAMP '2021-09-14') and transaction_dttm < (TIMESTAMP '2021-10-01') then
         case
           when dob in (25, 26, 27, 28, 29, 30, 31) then 3
           else 1
         end
-        when transaction_dttm >= (TIMESTAMP '2021-10-01')
-        and transaction_dttm < (TIMESTAMP '2021-11-01') then
+        when transaction_dttm >= (TIMESTAMP '2021-10-01') and transaction_dttm < (TIMESTAMP '2021-11-01') then
         case
           when dob in (16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31) then 3
           else 1
         end
-        when transaction_dttm >= (TIMESTAMP '2021-11-01') then
+        when transaction_dttm >= (TIMESTAMP '2021-11-01') and transaction_dttm < (TIMESTAMP '2021-12-01') then
         case
           when dob in (25, 26, 27, 28, 29, 30, 31) then 3
           else 1
         end
+        when transaction_dttm >= (TIMESTAMP '2021-12-01') then 3
       end
       when broker_nb_rb = 'RB' then
       case
         when policy_start_date < '2021-10-14' then 2
-        when policy_start_date >= '2021-10-14'
-        and policy_start_date < '2021-11-01' then
+        when policy_start_date >= '2021-10-14' and policy_start_date < '2021-11-01' then
         case
           when dob in (25, 26, 27, 28, 29, 30, 31) then 3
           else 2
         end
-        when policy_start_date >= '2021-11-01'
-        and policy_start_date < '2021-12-01' then
+        when policy_start_date >= '2021-11-01' and policy_start_date < '2021-12-01' then
         case
           when dob in (16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31) then 3
           else 2
         end
-        when policy_start_date >= '2021-12-01' then
+        when policy_start_date >= '2021-12-01' and policy_start_date < '2022-01-01' then
         case
           when dob in (25, 26, 27, 28, 29, 30, 31) then 3
           else 2
         end
+        when policy_start_date >= '2021-12-01' then 3
       end
       else null
       end ;;
