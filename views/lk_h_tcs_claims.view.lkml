@@ -1527,6 +1527,7 @@ view: lk_h_tcs_claims {
     type: number
     sql: PERCENTILE_CONT(.98) within group (ORDER BY fca_accepted_paid_amount);;
     hidden: no
+    value_format_name: decimal_0
   }
 
 
