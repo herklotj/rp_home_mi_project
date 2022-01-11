@@ -78,15 +78,16 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_2
   }
 
-  ### ASAT June 1st 2021 ###
+  ### ASAT January 11th 2022 (Placeholder for 2021 based on 25% levy reduction) ###
   dimension: flood_re_rate {
     type: number
     sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then 0.0364
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2017 then 0.0375
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2018 then 0.0388
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then 0.0387
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then 0.0386
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then 0.0389
-              else 0.0389 end ;;
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2021 then 0.0292
+              else 0.0292 end ;;
     hidden: yes
     value_format_name: percent_2
   }
