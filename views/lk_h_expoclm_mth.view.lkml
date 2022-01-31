@@ -92,7 +92,7 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_2
   }
 
-  ### ASAT September 30th 2021 ###
+  ### ASAT December 31st 2021 ###
   dimension: latest_abe_rate {
     type: number
     sql: case when ${TABLE}.policy_period_qs = '1' then 0.652
