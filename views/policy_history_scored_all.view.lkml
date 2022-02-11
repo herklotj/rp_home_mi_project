@@ -1633,6 +1633,56 @@ view: lk_h_policy_history_scored_all {
   }
 
 
+  ### Add-on Sales ###
+
+  measure: addon_ind_hle {
+    label: "Add-on HLE"
+    type: sum
+    sql:  ${TABLE}.addon_ind_hle ;;
+    value_format_name: decimal_0
+    group_label: "Add-on Sales"
+  }
+
+  measure: addon_ind_hec {
+    label: "Add-on HEC"
+    type: sum
+    sql:  ${TABLE}.addon_ind_hec ;;
+    value_format_name: decimal_0
+    group_label: "Add-on Sales"
+  }
+
+  measure: addon_ind_her {
+    label: "Add-on HER"
+    type: sum
+    sql:  ${TABLE}.addon_ind_her ;;
+    value_format_name: decimal_0
+    group_label: "Add-on Sales"
+  }
+
+  measure: addon_ind_hle_commission {
+    label: "Add-on HLE Commission"
+    type: sum
+    sql:  ${TABLE}.addon_commission_hle ;;
+    value_format_name: decimal_0
+    group_label: "Add-on Sales"
+  }
+
+  measure: addon_ind_hec_commission {
+    label: "Add-on HEC Commission"
+    type: sum
+    sql:  ${TABLE}.addon_commission_hec ;;
+    value_format_name: decimal_0
+    group_label: "Add-on Sales"
+  }
+
+  measure: addon_ind_her_commission {
+    label: "Add-on HER Commission"
+    type: sum
+    sql:  ${TABLE}.addon_commission_her ;;
+    value_format_name: decimal_0
+    group_label: "Add-on Sales"
+  }
+
 
 
 
