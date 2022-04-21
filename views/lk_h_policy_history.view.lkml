@@ -909,49 +909,6 @@ view: lk_h_policy_history {
       end ;;
   }
 
-  ### Projection Dimensions
-
-  dimension: days_through_month {
-    label: "% days through month"
-    type: number
-    value_format_name: percent_0
-    sql: case when ${TABLE}.policy_start_mth < date_trunc('month',${TABLE}.load_dttm) then 1
-              when ${TABLE}.policy_start_mth > date_trunc('month',${TABLE}.load_dttm) then 0
-              else cast(dayofmonth(${TABLE}.load_dttm-1) as float8)/cast(nullif(dayofmonth(last_day(${TABLE}.policy_start_mth)),0) as float8) end ;;
-  }
-
-  dimension: days_through_prev_month {
-    label: "% days through prev month"
-    type: number
-    value_format_name: percent_0
-    sql: case when add_months(date_trunc('month',${TABLE}.policy_start_mth),-1) < date_trunc('month',${TABLE}.load_dttm) then 1
-              when add_months(date_trunc('month',${TABLE}.policy_start_mth),-1) > date_trunc('month',${TABLE}.load_dttm) then 0
-              else cast(dayofmonth(${TABLE}.load_dttm-1) as float8)/cast(nullif(dayofmonth(last_day(add_months(date_trunc('month',${TABLE}.policy_start_mth),-1))),0) as float8) end ;;
-  }
-
-  dimension: NB_incepts_inmonth_remaining {
-    label: "% NB incepts remaining from in-month transactions"
-    type: number
-    value_format_name: percent_0
-    sql: case when ${TABLE}.policy_start_mth < date_trunc('month',${TABLE}.load_dttm) then 0
-              when ${TABLE}.policy_start_mth > date_trunc('month',${TABLE}.load_dttm) then 0.71
-              else ((0.377*(${days_through_month}**4))+(-0.25*(${days_through_month}**3))+(0.22*(${days_through_month}**2))+(-1.33*${days_through_month})+1)*0.71 end ;;
-  }
-
-  dimension: NB_incepts_prevmonth_remaining {
-    label: "% NB incepts remaining from previous-month transactions"
-    type: number
-    value_format_name: percent_0
-    sql: case when add_months(date_trunc('month',${TABLE}.policy_start_mth),-1) < date_trunc('month',${TABLE}.load_dttm) then 0
-              when add_months(date_trunc('month',${TABLE}.policy_start_mth),-1) > date_trunc('month',${TABLE}.load_dttm) then 0.29
-              else
-              case when ${days_through_prev_month} < 0.2 then 0.29
-                   else ((-4*(BN136^4))+(7.6*(BN136^3))+(-5.45*(BN136^2))+(0.82*BN136)+0.98)*0.29 end end
-              ;;
-  }
-
-
-
 
 
 
@@ -1416,8 +1373,9 @@ view: lk_h_policy_history {
     label: "Plan Loss Ratio"
     type: sum
     sql: case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2017-10-01') THEN 0.635 else
-      case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2018-10-01') THEN 0.615 else
-      case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2020-10-01') THEN 0.623 else 0.625 end end end ;;
+         case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2018-10-01') THEN 0.615 else
+         case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2020-10-01') THEN 0.623 else
+         case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2022-02-01') THEN 0.625 else 0.640 end end end end ;;
     value_format_name: percent_1
     hidden: yes
   }
@@ -1868,6 +1826,74 @@ view: lk_h_policy_history {
     value_format_name: decimal_0
     group_label: "Add-on Sales"
   }
+
+
+
+  ### PROJECTIONS ###
+
+  dimension: days_through_month {
+    label: "% days through month"
+    type: number
+    value_format_name: percent_0
+    sql: case when ${TABLE}.policy_start_mth < date_trunc('month',${TABLE}.load_dttm) then 1
+              when ${TABLE}.policy_start_mth > date_trunc('month',${TABLE}.load_dttm) then 0
+              else cast(dayofmonth(${TABLE}.load_dttm-1) as float8)/cast(nullif(dayofmonth(last_day(${TABLE}.policy_start_mth)),0) as float8) end ;;
+    group_label: "Projection Dimensions"
+  }
+
+  dimension: days_through_prev_month {
+    label: "% days through prev month"
+    type: number
+    value_format_name: percent_0
+    sql: case when add_months(date_trunc('month',${TABLE}.policy_start_mth),-1) < date_trunc('month',${TABLE}.load_dttm) then 1
+              when add_months(date_trunc('month',${TABLE}.policy_start_mth),-1) > date_trunc('month',${TABLE}.load_dttm) then 0
+              else cast(dayofmonth(${TABLE}.load_dttm-1) as float8)/cast(nullif(dayofmonth(last_day(add_months(date_trunc('month',${TABLE}.policy_start_mth),-1))),0) as float8) end ;;
+    group_label: "Projection Dimensions"
+  }
+
+  dimension: NB_incepts_inmonth_remaining {
+    label: "% NB incepts remaining from in-month transactions"
+    type: number
+    value_format_name: percent_0
+    sql: case when ${TABLE}.policy_start_mth < date_trunc('month',${TABLE}.load_dttm) then 0
+              when ${TABLE}.policy_start_mth > date_trunc('month',${TABLE}.load_dttm) then 0.71
+              else ((0.377*(${days_through_month}**4))+(-0.25*(${days_through_month}**3))+(0.22*(${days_through_month}**2))+(-1.33*${days_through_month})+1)*0.71 end ;;
+    group_label: "Projection Dimensions"
+  }
+
+  dimension: NB_incepts_prevmonth_remaining {
+    label: "% NB incepts remaining from previous-month transactions"
+    type: number
+    value_format_name: percent_0
+    sql: case when add_months(date_trunc('month',${TABLE}.policy_start_mth),-1) < date_trunc('month',${TABLE}.load_dttm) then 0
+              when add_months(date_trunc('month',${TABLE}.policy_start_mth),-1) > date_trunc('month',${TABLE}.load_dttm) then 0.29
+              else
+              case when ${days_through_prev_month} < 0.2 then 0.29
+                   else ((-4*(${days_through_prev_month}**4))+(7.6*(${days_through_prev_month}**3))+(-5.45*(${days_through_prev_month}**2))+(0.82*${days_through_prev_month})+0.98)*0.29 end end
+              ;;
+    group_label: "Projection Dimensions"
+  }
+
+
+
+  measure: broker_nb_bds_covers_written_inmonth {
+    label: "Broker Covers BDS NB Written In-Month"
+    filters: [broker_nb_rb: "NB"]
+    type: sum
+    sql:  case when ${TABLE}.policy_start_mth = ${TABLE}.policy_written_mth then ${TABLE}.broker_ind_bds else 0 end ;;
+    value_format_name: decimal_0
+    group_label: "Projection Measures"
+  }
+
+  measure: broker_nb_cts_covers_written_inmonth {
+    label: "Broker Covers CTS NB Written In-Month"
+    filters: [broker_nb_rb: "NB"]
+    type: sum
+    sql:  case when ${TABLE}.policy_start_mth = ${TABLE}.policy_written_mth then ${TABLE}.broker_ind_cts else 0 end ;;
+    value_format_name: decimal_0
+    group_label: "Projection Measures"
+  }
+
 
 
 }

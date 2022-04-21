@@ -117,6 +117,39 @@ view: lk_h_forecast {
   }
 
 
+  measure: broker_written_volumes_forecast_bds_nb {
+    label: "Broker Written Volumes Forecast NB (BDS)"
+    type: sum
+    sql: ${TABLE}.forecast_panel_volumes_bds_nb ;;
+    value_format_name: decimal_0
+    group_label: "Forecast - Volumes"
+  }
+
+  measure: broker_written_volumes_forecast_cts_nb {
+    label: "Broker Written Volumes Forecast NB (CTS)"
+    type: sum
+    sql: ${TABLE}.forecast_panel_volumes_cts_nb ;;
+    value_format_name: decimal_0
+    group_label: "Forecast - Volumes"
+  }
+
+  measure: broker_written_volumes_forecast_bds_rb {
+    label: "Broker Written Volumes Forecast RB (BDS)"
+    type: sum
+    sql: ${TABLE}.forecast_panel_volumes_bds_rb ;;
+    value_format_name: decimal_0
+    group_label: "Forecast - Volumes"
+  }
+
+  measure: broker_written_volumes_forecast_cts_rb {
+    label: "Broker Written Volumes Forecast RB (CTS)"
+    type: sum
+    sql: ${TABLE}.forecast_panel_volumes_cts_rb ;;
+    value_format_name: decimal_0
+    group_label: "Forecast - Volumes"
+  }
+
+
   measure: broker_written_volumes_forecast {
     label: "Broker Written Volumes Forecast"
     type: sum
