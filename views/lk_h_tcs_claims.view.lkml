@@ -4,12 +4,14 @@ view: lk_h_tcs_claims {
 
     SELECT a.*,
              b.uw_year_actian,
-             b.fuw_year_actian
+             b.fuw_year_actian,
+             b.post_code
       FROM actian.lk_h_tcs_claims a
         LEFT JOIN (SELECT DISTINCT transaction_id,
                           policy_number AS uw_policy_no,
                           policy_start_date,
                           policy_end_date,
+                          post_code,
                           CASE
                             WHEN policy_start_date < '2017-08-01' THEN 1
                             WHEN policy_start_date < '2018-08-01' THEN 2
@@ -17,6 +19,10 @@ view: lk_h_tcs_claims {
                             WHEN policy_start_date < '2020-08-01' THEN 4
                             WHEN policy_start_date < '2021-08-01' THEN 5
                             WHEN policy_start_date < '2022-08-01' THEN 6
+                            WHEN policy_start_date < '2023-08-01' THEN 7
+                            WHEN policy_start_date < '2024-08-01' THEN 8
+                            WHEN policy_start_date < '2025-08-01' THEN 9
+                            WHEN policy_start_date < '2026-08-01' THEN 10
                             ELSE 0
                           END AS uw_year_actian,
                           CASE
@@ -26,6 +32,10 @@ view: lk_h_tcs_claims {
                             WHEN policy_start_date < '2020-02-01' THEN 2020
                             WHEN policy_start_date < '2021-02-01' THEN 2021
                             WHEN policy_start_date < '2022-02-01' THEN 2022
+                            WHEN policy_start_date < '2023-02-01' THEN 2023
+                            WHEN policy_start_date < '2024-02-01' THEN 2024
+                            WHEN policy_start_date < '2025-02-01' THEN 2025
+                            WHEN policy_start_date < '2026-02-01' THEN 2026
                             ELSE 0
                           END AS fuw_year_actian
                    FROM actian.home_cover
@@ -579,6 +589,20 @@ view: lk_h_tcs_claims {
     sql: case when ${TABLE}.FCA_ACCEPTED_PAID = 1 or ${TABLE}.FCA_REJECTED = 1 or ${TABLE}.FCA_OTHER_SETTLED = 1 then
     to_date(${TABLE}.closeddate) - to_date(${TABLE}.notificationdate) else null end;;
   }
+
+  dimension: postcode {
+    label: "Postcode"
+    type: string
+    sql: ${TABLE}.post_code ;;
+  }
+
+  dimension: cresta_id {
+    type: string
+    sql: CONCAT('GBR_',case when substring(${TABLE}.post_code,2,1) not in ('0','1','2','3','4','5','6','7','8','9') then left(${TABLE}.post_code,2) else left(${TABLE}.post_code,1) end) ;;
+    label: "CRESTA ID"
+  }
+
+
 
 
 
