@@ -617,7 +617,7 @@ view: lk_h_tcs_claims {
   measure: claim_non_nil_sum {
     label: "Claim (Non-Nil)"
     type: sum
-    sql: greatest(${TABLE}.claim_bds,${TABLE}.claim_cts) ;;
+    sql: case when ${TABLE}.incurred_bds > 0 or ${TABLE}.incurred_cts > 0 then 1 else 0 end ;;
     group_label: "Claim Counts"
   }
 
