@@ -72,6 +72,13 @@ view: lk_h_tcs_claims {
     group_label: "Claim Flags"
   }
 
+  dimension: claim_nonnil_flag {
+    label: "Claim Non-Nil Flag"
+    type: yesno
+    sql: ${TABLE}.incurred_bds > 0 or ${TABLE}.incurred_cts > 0 ;;
+    group_label: "Claim Flags"
+  }
+
   dimension: chargeable_incident {
     label: "Chargeable Incident"
     type: number
