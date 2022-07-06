@@ -148,11 +148,6 @@ view: lk_h_tcs_claims {
   }
 
 
-  measure: chris_Test{
-    label: "Data Load Status"
-    sql: CASE WHEN (${lk_h_tcs_claims.load_dttm_count} < 20) then 'DATA LOAD IN PROGRESS' else max(${lk_h_tcs_claims.load_dttm_time}) end ;;
-    hidden: yes
-  }
 
 
   dimension_group: load_datetime {
