@@ -192,6 +192,23 @@ view: lk_h_cancel_history {
          WHEN cancel_reason = 1 THEN 'Sold property'
          ELSE 'Unknown'
        END AS cancel_reason_desc,
+       CASE
+         WHEN cancel_reason = 21 THEN 'Better terms elsewhere'
+         WHEN cancel_reason = 25 THEN 'Cancelled by firm (fraud)'
+         WHEN cancel_reason in(61,62) THEN 'Cancelled by firm (misinterpretation)'
+         WHEN cancel_reason in(4,5,64) THEN 'Cancelled by firm (significant change in risk)'
+         WHEN cancel_reason in(22,29,30,37,63) or cancel_reason is null THEN 'Cancelled by firm (unpaid premium)'
+         WHEN cancel_reason = 10 THEN 'Deceased'
+         WHEN cancel_reason = 15 THEN 'Dissatisfication with service'
+         WHEN cancel_reason in(1,24,26) THEN 'No longer required'
+         WHEN cancel_reason in(3,16,20,40,57,58,59,60) THEN 'Other'
+         WHEN cancel_reason in(13,27,36) THEN 'Unwanted renewal'
+         ELSE 'Unknown'
+       END AS cancel_reason_gfsc,
+      CASE
+         WHEN cancel_reason = 24 or cancel_reason is null then 'Yes'
+         ELSE 'No'
+       END AS cancel_coolingoff_gfsc,
        policy_cancel_date_t AS policy_cancel_date,
        policy_cancel_mth_t AS policy_cancel_mth,
        policy_cancel_yr_t AS policy_cancel_yr,
@@ -395,6 +412,16 @@ WHERE cancel_effective_dttm_t IS NOT NULL
   dimension: cancel_reason_desc {
     type: string
     sql: ${TABLE}.cancel_reason_desc ;;
+  }
+
+  dimension: cancel_reason_gfsc {
+    type: string
+    sql: ${TABLE}.cancel_reason_gfsc ;;
+  }
+
+  dimension: cancel_coolingoff_gfsc {
+    type: string
+    sql: ${TABLE}.cancel_coolingoff_gfsc ;;
   }
 
   dimension: cover_type {
