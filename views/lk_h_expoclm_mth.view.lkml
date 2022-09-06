@@ -84,10 +84,11 @@ view: lk_h_expoclm_mth {
     sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then 0.0364
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2017 then 0.0375
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2018 then 0.0388
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then 0.0386
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then 0.0387
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then 0.0389
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2021 then 0.0292
-              else 0.0292 end ;;
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2021 then 0.0291
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2022 then 0.0291
+              else 0.0291 end ;;
     hidden: yes
     value_format_name: percent_2
   }
