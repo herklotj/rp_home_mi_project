@@ -50,7 +50,7 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_0
   }
 
-  ### ASAT October 4th 2021 ###
+  ### ASAT October 31st 2022 ###
   dimension: cat_xol_rate {
     type: number
     sql: case when ${cat_period} = 'Aug16 - Sep17' then 0.0800
@@ -59,12 +59,13 @@ view: lk_h_expoclm_mth {
               when ${cat_period} = 'Oct19 - Sep20' then 0.0917
               when ${cat_period} = 'Oct20 - Sep21' then 0.0951
               when ${cat_period} = 'Oct21 - Sep22' then 0.0971
+              when ${cat_period} = 'Oct22 - Sep23' then 0.1250
               else 0 end;;
     hidden: yes
     value_format_name: percent_2
   }
 
-  ### ASAT October 4th 2021 ###
+  ### ASAT October 31st 2022 ###
   dimension: cat_xol_topup_rate {
     type: number
     sql: case when ${cat_period} = 'Aug16 - Sep17' then 0.0000
@@ -73,6 +74,7 @@ view: lk_h_expoclm_mth {
               when ${cat_period} = 'Oct19 - Sep20' then 0.0098
               when ${cat_period} = 'Oct20 - Sep21' then 0.0126
               when ${cat_period} = 'Oct21 - Sep22' then 0.01328
+              when ${cat_period} = 'Oct22 - Sep23' then 0.01552
               else 0 end ;;
     hidden: no
     value_format_name: percent_2
@@ -93,15 +95,16 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_2
   }
 
-  ### ASAT June 30th 2022 ###
+  ### ASAT September 30th 2022 ###
   dimension: latest_abe_rate {
     type: number
-    sql: case when ${TABLE}.policy_period_qs = '1' then 0.644
+    sql: case when ${TABLE}.policy_period_qs = '1' then 0.643
               when ${TABLE}.policy_period_qs = '2' then 0.564
               when ${TABLE}.policy_period_qs = '3' then 0.528
-              when ${TABLE}.policy_period_qs = '4' then 0.464
-              when ${TABLE}.policy_period_qs = '5' then 0.491
-              when ${TABLE}.policy_period_qs = '6' then 0.555
+              when ${TABLE}.policy_period_qs = '4' then 0.469
+              when ${TABLE}.policy_period_qs = '5' then 0.500
+              when ${TABLE}.policy_period_qs = '6' then 0.808
+              when ${TABLE}.policy_period_qs = '7' then 0.490
               else 0 end ;;
     hidden: yes
     value_format_name: percent_1
