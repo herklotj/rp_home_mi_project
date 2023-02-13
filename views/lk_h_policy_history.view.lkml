@@ -1375,7 +1375,8 @@ view: lk_h_policy_history {
     sql: case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2017-10-01') THEN 0.635 else
          case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2018-10-01') THEN 0.615 else
          case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2020-10-01') THEN 0.623 else
-         case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2022-02-01') THEN 0.625 else 0.640 end end end end ;;
+         case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2022-02-01') THEN 0.625 else
+         case when lk_h_policy_history.transaction_dttm  < (TIMESTAMP '2022-10-01') THEN 0.640 else 0.610 end end end end end ;;
     value_format_name: percent_1
     hidden: yes
   }
