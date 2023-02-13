@@ -893,12 +893,12 @@ view: lk_h_policy_history_scored_all {
     label: "BDS Margin Aggregation Load"
     type: string
     sql: case when ${TABLE}.area_bds_margin = 1 then '0%'
-              when ${TABLE}.area_bds_margin = 2 then '7.5%'
-              when ${TABLE}.area_bds_margin = 3 then '10%'
-              when ${TABLE}.area_bds_margin = 4 then '12.5%'
-              when ${TABLE}.area_bds_margin = 5 then '15%'
-              when ${TABLE}.area_bds_margin = 6 then '17.5%'
-              when ${TABLE}.area_bds_margin = 7 then '20%'
+              when ${TABLE}.area_bds_margin = 2 then '15%'
+              when ${TABLE}.area_bds_margin = 3 then '17.5%'
+              when ${TABLE}.area_bds_margin = 4 then '20%'
+              when ${TABLE}.area_bds_margin = 5 then '22.5%'
+              when ${TABLE}.area_bds_margin = 6 then '25%'
+              when ${TABLE}.area_bds_margin = 7 then '27.5%'
               else '' end;;
   }
 
@@ -906,12 +906,12 @@ view: lk_h_policy_history_scored_all {
     label: "CTS Margin Aggregation Load"
     type: string
     sql: case when ${TABLE}.area_cts_margin = 1 then '0%'
-              when ${TABLE}.area_cts_margin = 2 then '7.5%'
-              when ${TABLE}.area_cts_margin = 3 then '10%'
-              when ${TABLE}.area_cts_margin = 4 then '12.5%'
-              when ${TABLE}.area_cts_margin = 5 then '15%'
-              when ${TABLE}.area_cts_margin = 6 then '17.5%'
-              when ${TABLE}.area_cts_margin = 7 then '20%'
+              when ${TABLE}.area_cts_margin = 2 then '15%'
+              when ${TABLE}.area_cts_margin = 3 then '17.5%'
+              when ${TABLE}.area_cts_margin = 4 then '20%'
+              when ${TABLE}.area_cts_margin = 5 then '22.5%'
+              when ${TABLE}.area_cts_margin = 6 then '25%'
+              when ${TABLE}.area_cts_margin = 7 then '27.5%'
               else '' end;;
   }
 
