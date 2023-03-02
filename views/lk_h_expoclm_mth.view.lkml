@@ -80,7 +80,7 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_2
   }
 
-  ### ASAT January 11th 2022 (Placeholder for 2021 based on 25% levy reduction) ###
+  ### ASAT March 2nd 2023 ###
   dimension: flood_re_rate {
     type: number
     sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then 0.0364
@@ -89,22 +89,23 @@ view: lk_h_expoclm_mth {
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then 0.0387
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then 0.0389
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2021 then 0.0291
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2022 then 0.0291
-              else 0.0291 end ;;
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2022 then 0.0301
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2023 then 0.0301
+              else 0.0301 end ;;
     hidden: yes
     value_format_name: percent_2
   }
 
-  ### ASAT September 30th 2022 ###
+  ### ASAT January 31st 2023 ###
   dimension: latest_abe_rate {
     type: number
     sql: case when ${TABLE}.policy_period_qs = '1' then 0.643
-              when ${TABLE}.policy_period_qs = '2' then 0.564
-              when ${TABLE}.policy_period_qs = '3' then 0.528
-              when ${TABLE}.policy_period_qs = '4' then 0.469
-              when ${TABLE}.policy_period_qs = '5' then 0.500
-              when ${TABLE}.policy_period_qs = '6' then 0.808
-              when ${TABLE}.policy_period_qs = '7' then 0.490
+              when ${TABLE}.policy_period_qs = '2' then 0.571
+              when ${TABLE}.policy_period_qs = '3' then 0.526
+              when ${TABLE}.policy_period_qs = '4' then 0.468
+              when ${TABLE}.policy_period_qs = '5' then 0.509
+              when ${TABLE}.policy_period_qs = '6' then 0.879
+              when ${TABLE}.policy_period_qs = '7' then 0.789
               else 0 end ;;
     hidden: yes
     value_format_name: percent_1
