@@ -4,7 +4,7 @@ view: lk_h_expoclm_mth {
 
   #### MANUAL ENTRY DIMENSIONS e.g. Cat Costs/Periods, Flood Re rates, ABE by UWYR etc. ###
 
-  ### ASAT October 4th 2021 ###
+  ### ASAT October 31st 2023 ###
   dimension: cat_period {
     type: string
     sql: case when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2017-10-01')))
@@ -21,6 +21,8 @@ view: lk_h_expoclm_mth {
                     then 'Oct21 - Sep22'
               when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2022-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2023-10-01')))
                     then 'Oct22 - Sep23'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2023-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2024-10-01')))
+                    then 'Oct23 - Sep24'
               else null end   ;;
     label: "Cat Period"
   }
@@ -50,7 +52,7 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_0
   }
 
-  ### ASAT October 31st 2022 ###
+  ### ASAT October 31st 2023 ###
   dimension: cat_xol_rate {
     type: number
     sql: case when ${cat_period} = 'Aug16 - Sep17' then 0.0800
@@ -60,12 +62,13 @@ view: lk_h_expoclm_mth {
               when ${cat_period} = 'Oct20 - Sep21' then 0.0951
               when ${cat_period} = 'Oct21 - Sep22' then 0.0971
               when ${cat_period} = 'Oct22 - Sep23' then 0.1250
+              when ${cat_period} = 'Oct23 - Sep24' then 0.1307
               else 0 end;;
     hidden: yes
     value_format_name: percent_2
   }
 
-  ### ASAT October 31st 2022 ###
+  ### ASAT October 31st 2023 ###
   dimension: cat_xol_topup_rate {
     type: number
     sql: case when ${cat_period} = 'Aug16 - Sep17' then 0.0000
@@ -75,12 +78,13 @@ view: lk_h_expoclm_mth {
               when ${cat_period} = 'Oct20 - Sep21' then 0.0126
               when ${cat_period} = 'Oct21 - Sep22' then 0.01328
               when ${cat_period} = 'Oct22 - Sep23' then 0.01552
+              when ${cat_period} = 'Oct23 - Sep24' then 0.02009
               else 0 end ;;
     hidden: no
     value_format_name: percent_2
   }
 
-  ### ASAT March 2nd 2023 ###
+  ### ASAT October 31st 2023 ###
   dimension: flood_re_rate {
     type: number
     sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then 0.0364
@@ -89,24 +93,24 @@ view: lk_h_expoclm_mth {
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then 0.0387
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then 0.0389
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2021 then 0.0291
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2022 then 0.0301
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2023 then 0.0301
-              else 0.0301 end ;;
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2022 then 0.0302
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2023 then 0.0302
+              else 0.0302 end ;;
     hidden: yes
     value_format_name: percent_2
   }
 
-  ### ASAT June 30th 2023 ###
+  ### ASAT October 31st 2023 ###
   dimension: latest_abe_rate {
     type: number
     sql: case when ${TABLE}.policy_period_qs = '1' then 0.642
-              when ${TABLE}.policy_period_qs = '2' then 0.581
-              when ${TABLE}.policy_period_qs = '3' then 0.523
-              when ${TABLE}.policy_period_qs = '4' then 0.463
-              when ${TABLE}.policy_period_qs = '5' then 0.517
-              when ${TABLE}.policy_period_qs = '6' then 1.041
-              when ${TABLE}.policy_period_qs = '7' then 0.902
-              when ${TABLE}.policy_period_qs = '8' then 0.902
+              when ${TABLE}.policy_period_qs = '2' then 0.582
+              when ${TABLE}.policy_period_qs = '3' then 0.524
+              when ${TABLE}.policy_period_qs = '4' then 0.462
+              when ${TABLE}.policy_period_qs = '5' then 0.523
+              when ${TABLE}.policy_period_qs = '6' then 1.049
+              when ${TABLE}.policy_period_qs = '7' then 0.796
+              when ${TABLE}.policy_period_qs = '8' then 0.692
               else 0 end ;;
     hidden: yes
     value_format_name: percent_1
