@@ -84,7 +84,7 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_2
   }
 
-  ### ASAT March 1st 2024 ###
+  ### ASAT August 6th 2024 ###
   dimension: flood_re_rate {
     type: number
     sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then 0.0364
@@ -93,9 +93,10 @@ view: lk_h_expoclm_mth {
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2019 then 0.0387
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2020 then 0.0389
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2021 then 0.0291
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2022 then 0.0302
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2023 then 0.0268
-              else 0.0268 end ;;
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2022 then 0.0303
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2023 then 0.0267
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2024 then 0.0317
+              else 0.0317 end ;;
     hidden: yes
     value_format_name: percent_2
   }
