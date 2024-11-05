@@ -90,8 +90,9 @@ view: lk_h_tcs_claims {
   dimension: claim_fee_rate {
     type: number
     sql: case when (CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01')) then 175
-              when (CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then 210 else
-              200 end ;;
+              when (CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then 210
+              when (CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2024-02-01')) then 200 else
+              220 end ;;
     hidden: no
     value_format_name: decimal_0
   }

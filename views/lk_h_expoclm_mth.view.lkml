@@ -4,7 +4,7 @@ view: lk_h_expoclm_mth {
 
   #### MANUAL ENTRY DIMENSIONS e.g. Cat Costs/Periods, Flood Re rates, ABE by UWYR etc. ###
 
-  ### ASAT October 31st 2023 ###
+  ### ASAT November 5th 2024 ###
   dimension: cat_period {
     type: string
     sql: case when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2016-08-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2017-10-01')))
@@ -23,6 +23,8 @@ view: lk_h_expoclm_mth {
                     then 'Oct22 - Sep23'
               when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2023-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2024-10-01')))
                     then 'Oct23 - Sep24'
+              when (((cast(${TABLE}.exposure_mth as timestamp) ) >= (TIMESTAMP '2024-10-01') AND (cast(${TABLE}.exposure_mth as timestamp) ) < (TIMESTAMP '2025-07-01')))
+                    then 'Oct24 - Jun25'
               else null end   ;;
     label: "Cat Period"
   }
@@ -38,8 +40,9 @@ view: lk_h_expoclm_mth {
   dimension: claim_fee_rate {
     type: number
     sql: case when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01')) then 175
-              when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then 210 else
-              200 end ;;
+              when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then 210
+              when (CAST(${TABLE}.exposure_mth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2024-02-01')) then 200
+              else 220 end ;;
     hidden: no
     value_format_name: decimal_0
   }
@@ -52,7 +55,7 @@ view: lk_h_expoclm_mth {
     value_format_name: percent_0
   }
 
-  ### ASAT October 31st 2023 ###
+  ### ASAT November 5th 2024 ###
   dimension: cat_xol_rate {
     type: number
     sql: case when ${cat_period} = 'Aug16 - Sep17' then 0.0800
@@ -63,12 +66,13 @@ view: lk_h_expoclm_mth {
               when ${cat_period} = 'Oct21 - Sep22' then 0.0971
               when ${cat_period} = 'Oct22 - Sep23' then 0.1250
               when ${cat_period} = 'Oct23 - Sep24' then 0.1307
+              when ${cat_period} = 'Oct24 - Jun25' then 0.11368
               else 0 end;;
     hidden: yes
     value_format_name: percent_2
   }
 
-  ### ASAT October 31st 2023 ###
+  ### ASAT November 5th 2024 ###
   dimension: cat_xol_topup_rate {
     type: number
     sql: case when ${cat_period} = 'Aug16 - Sep17' then 0.0000
@@ -79,12 +83,13 @@ view: lk_h_expoclm_mth {
               when ${cat_period} = 'Oct21 - Sep22' then 0.01328
               when ${cat_period} = 'Oct22 - Sep23' then 0.01552
               when ${cat_period} = 'Oct23 - Sep24' then 0.02009
+              when ${cat_period} = 'Oct24 - Jun25' then 0.01712
               else 0 end ;;
     hidden: no
     value_format_name: percent_2
   }
 
-  ### ASAT August 6th 2024 ###
+  ### ASAT November 5th 2024 ###
   dimension: flood_re_rate {
     type: number
     sql: case when date_part('year',${TABLE}.annual_cover_start_dttm) = 2016 then 0.0364
@@ -95,23 +100,24 @@ view: lk_h_expoclm_mth {
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2021 then 0.0291
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2022 then 0.0303
               when date_part('year',${TABLE}.annual_cover_start_dttm) = 2023 then 0.0267
-              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2024 then 0.0317
-              else 0.0317 end ;;
+              when date_part('year',${TABLE}.annual_cover_start_dttm) = 2024 then 0.0316
+              else 0.0316 end ;;
     hidden: yes
     value_format_name: percent_2
   }
 
-  ### ASAT June 30th 2024 ###
+  ### ASAT September 30th 2024 ###
   dimension: latest_abe_rate {
     type: number
-    sql: case when ${TABLE}.policy_period_qs = '1' then 0.646
-              when ${TABLE}.policy_period_qs = '2' then 0.607
-              when ${TABLE}.policy_period_qs = '3' then 0.533
-              when ${TABLE}.policy_period_qs = '4' then 0.475
-              when ${TABLE}.policy_period_qs = '5' then 0.531
-              when ${TABLE}.policy_period_qs = '6' then 1.108
-              when ${TABLE}.policy_period_qs = '7' then 0.856
-              when ${TABLE}.policy_period_qs = '8' then 0.752
+    sql: case when ${TABLE}.policy_period_qs = '1' then 0.649
+              when ${TABLE}.policy_period_qs = '2' then 0.610
+              when ${TABLE}.policy_period_qs = '3' then 0.541
+              when ${TABLE}.policy_period_qs = '4' then 0.479
+              when ${TABLE}.policy_period_qs = '5' then 0.547
+              when ${TABLE}.policy_period_qs = '6' then 1.156
+              when ${TABLE}.policy_period_qs = '7' then 0.884
+              when ${TABLE}.policy_period_qs = '8' then 0.730
+              when ${TABLE}.policy_period_qs = '9' then 0.937
               else 0 end ;;
     hidden: yes
     value_format_name: percent_1

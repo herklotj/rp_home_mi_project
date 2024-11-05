@@ -146,6 +146,10 @@ view: lk_h_policy_history {
                     then '6'
               when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2022-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2023-07-31')))
                     then '7'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2023-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2024-07-31')))
+                    then '8'
+              when (((cast(${TABLE}.inception_dt as timestamp) ) >= (TIMESTAMP '2024-08-01') AND (cast(${TABLE}.inception_dt as timestamp) ) <= (TIMESTAMP '2025-07-31')))
+                    then '9'
               else null end   ;;
     label: "QS Period - Inception"
   }
