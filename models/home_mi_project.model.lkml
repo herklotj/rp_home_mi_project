@@ -11,8 +11,8 @@ map_layer: oslaua_map {
 }
 
 datagroup: home_mi_project_default_datagroup {
-  # sql_trigger: SELECT MAX(id) FROM etl_log;;
-  max_cache_age: "1 hour"
+  sql_trigger: SELECT MAX(load_dttm) FROM actian.lk_h_policy_history_scored;;
+  max_cache_age: "48 hours"
 }
 
 persist_with: home_mi_project_default_datagroup
