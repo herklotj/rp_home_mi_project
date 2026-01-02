@@ -283,10 +283,10 @@ FROM (SELECT c.*,
                    b.cancel_cooling_bds,
                    b.cancel_cooling_cts
             FROM (SELECT *
-                  FROM actian.lk_h_policy_history
+                  FROM dbuser.sas_h_policy_history
                   WHERE schedule_cover_start_dttm = annual_cover_start_dttm
                   AND   cfi_ind = 0) a
-              LEFT JOIN actian.lk_h_cancel_history b
+              LEFT JOIN dbuser.sas_h_cancel_history b
                      ON a.tia_reference = b.tia_reference
                     AND a.annual_cover_start_dttm = b.annual_cover_start_dttm) c) d
 WHERE cancel_effective_dttm_t IS NOT NULL

@@ -1,5 +1,5 @@
 view: lk_h_forecast {
-  sql_table_name: actian.lk_h_forecast ;;
+  sql_table_name: dbuser.lk_h_forecast ;;
 
 
 

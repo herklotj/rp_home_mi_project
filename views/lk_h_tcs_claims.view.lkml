@@ -6,7 +6,7 @@ view: lk_h_tcs_claims {
              b.uw_year_actian,
              b.fuw_year_actian,
              b.post_code
-      FROM actian.lk_h_tcs_claims a
+      FROM dbuser.sas_h_tcs_claims a
         LEFT JOIN (SELECT DISTINCT transaction_id,
                           policy_number AS uw_policy_no,
                           policy_start_date,
@@ -38,7 +38,7 @@ view: lk_h_tcs_claims {
                             WHEN policy_start_date < '2026-02-01' THEN 2026
                             ELSE 0
                           END AS fuw_year_actian
-                   FROM actian.home_cover
+                   FROM dbuser.home_ftp_cover
                    WHERE policy_status IN ('N','R')) b
                ON a.uw_policy_no = b.uw_policy_no
               AND b.policy_start_date <= DATE_TRUNC('DAY',incidentdate)

@@ -6,7 +6,7 @@ view: lk_h_policy_history_scored_all {
            CASE WHEN substring(postcode_full,2,1) NOT IN ('0','1','2','3','4','5','6','7','8','9') THEN LEFT (postcode_full,2)
            ELSE LEFT (postcode_full,1) end as postcode_area
 
-    FROM actian.lk_h_policy_history_scored
+    FROM dbuser.sas_h_policy_history_scored
     WHERE CFI_IND = 0
     ;;
   }

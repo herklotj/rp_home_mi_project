@@ -1,5 +1,5 @@
 view: lk_h_adjustment_summary {
-  sql_table_name: actian.lk_h_adjustment_summary ;;
+  sql_table_name: dbuser.sas_h_adjustment_summary ;;
 
   dimension: aa_membership {
     type: string

@@ -1,5 +1,5 @@
 view: lk_h_expoclm_mth {
-  sql_table_name: actian.lk_h_expoclm_mth ;;
+  sql_table_name: dbuser.sas_h_expoclm_mth ;;
 
 
   #### MANUAL ENTRY DIMENSIONS e.g. Cat Costs/Periods, Flood Re rates, ABE by UWYR etc. ###

@@ -1,4 +1,4 @@
-connection: "echo_actian"
+connection: "av2"
 
 # include all the views
 include: "/views/**/*.view"
@@ -41,8 +41,4 @@ explore: lk_h_forecast {
 # explore: lk_h_retention_summary {}
 explore: lk_h_tcs_claims {
   label: "Home TCS Claims"
-}
-
-explore: lk_h_tcs_claims_excess {
-  label: "Home TCS Claims - Excess Issue"
 }

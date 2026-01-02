@@ -5,7 +5,7 @@ view: lk_h_policy_history {
     SELECT *,
            CASE WHEN substring(postcode_full,2,1) NOT IN ('0','1','2','3','4','5','6','7','8','9') THEN LEFT (postcode_full,2)
            ELSE LEFT (postcode_full,1) end as postcode_area
-    FROM actian.lk_h_policy_history_scored
+    FROM dbuser.sas_h_policy_history_scored
     WHERE SCHEDULE_COVER_START_DTTM = ANNUAL_COVER_START_DTTM
     AND   CFI_IND = 0
     ;;
