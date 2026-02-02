@@ -7,16 +7,21 @@ view: home_monthly_cdl {
 
 
 
-    dimension: inforce_date {
+    dimension_group: inforce_date {
       label: "Inforce Date"
-      type: number
-      sql: ${TABLE}.inforce_date;;
+      type: time
+      timeframes: [
+        month,
+        quarter,
+        year
+      ]
+      sql: CAST(${TABLE}.inforce_date AS TIMESTAMP WITHOUT TIME ZONE);;
     }
 
 
     measure: inforce_policies {
       label: "Inforce Policies"
-      type: number
+      type: sum
       sql: ${TABLE}.value ;;
     }
 
