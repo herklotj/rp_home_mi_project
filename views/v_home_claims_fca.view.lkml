@@ -126,4 +126,13 @@ view: v_home_claims_fca {
     group_label: "Incurred"
     }
 
+
+  measure: chargeable_incidents {
+    label: "Chargeable Incidents"
+    type: sum
+    sql: ${chargeable_incident} ;;
+    value_format_name: gbp_0
+    group_label: "Incurred"
+  }
+
   }
