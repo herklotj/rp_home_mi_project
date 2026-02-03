@@ -103,15 +103,15 @@ view: v_home_claims_fca {
       quarter,
       year
     ]
-    sql: CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE) ;;
+    sql: CAST(${TABLE}.notification_dttm AS TIMESTAMP WITHOUT TIME ZONE) ;;
     group_label: "Dates"
   }
 
   dimension: claim_fee_rate {
     type: number
-    sql: case when (CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01')) then 175
-              when (CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then 210
-              when (CAST(${TABLE}.notificationmonth AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2024-02-01')) then 200 else
+    sql: case when (CAST(${TABLE}.notification_dttm AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2020-02-01')) then 175
+              when (CAST(${TABLE}.notification_dttm AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2021-07-01')) then 210
+              when (CAST(${TABLE}.notification_dttm AS TIMESTAMP WITHOUT TIME ZONE)  < (TIMESTAMP '2024-02-01')) then 200 else
               220 end ;;
     hidden: no
     value_format_name: decimal_0
